@@ -3,6 +3,16 @@ import { Ripple } from "primereact/ripple";
 import classNames from "classnames";
 import "./AppPanel.css";
 
+/**
+ * display container for form and information components
+ * @param {object} props
+ * @param {boolean} props.toggleable state variable boolean for controling toggleable functionality
+ * @param {boolean} props.collapsed state variable boolean for controlling initial collapsed status
+ * @param {string} props.header the title that should be placed in the header of the panel
+ * @param {string} props.children the content that should be placed in the body of the panel
+ * @returns
+ */
+
 export default function AppPanel(props) {
   const template = (options) => {
     const toggleIcon = options.collapsed
