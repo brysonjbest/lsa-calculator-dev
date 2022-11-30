@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
-import './App.css'
+import AppButton from "./components/common/AppButton";
+import AppPanel from "./components/common/AppPanel";
+import PageHeader from "./components/common/PageHeader";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <div className="App">
@@ -27,8 +30,22 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <div>
+        <PageHeader title="Testing title" singleLine gradient1></PageHeader>
+        <AppButton
+          danger
+          icon="pi pi-check"
+          onClick={() => console.log("This is a test")}
+        >
+          Test Button
+        </AppButton>
+        <AppPanel toggleable collapsed header="Test2">
+          <p>Test content</p>
+          <p>test line 2</p>
+        </AppPanel>
+      </div>
     </div>
-  )
+  );
 }
 
 export default App
