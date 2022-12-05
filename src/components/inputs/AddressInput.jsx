@@ -7,7 +7,6 @@ import "./AddressInput.css";
 /**
  * Address Input reusable component. Conditional PO Box requirement for address's identified for supervisors.
  * @param {object} props
- * @param {boolean} props.manualComplete state variable boolean for controlling if autocomplete is used
  * @param {ref} props.submitReference reference for form submission to be handled by parent component
  * @param {boolean} props.manualComplete state variable boolean for controlling if autocomplete is used
  * @param {boolean} props.pobox state variable boolean for controlling P.O. Box field required
