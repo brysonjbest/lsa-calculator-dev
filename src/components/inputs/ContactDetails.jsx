@@ -35,6 +35,18 @@ export default function ContactDetails(props) {
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
 
+  const [formValues, setFormValues] = useState([
+    { field: "firstname", value: "" },
+    { field: "lastname", value: "" },
+    { field: "governmentemail", value: "" },
+    { field: "governmentphone", value: "" },
+    { field: "employeenumber", value: "" },
+    { field: "ministryorganization", value: null },
+    { field: "branch", value: "" },
+    { field: "personalphone", value: "" },
+    { field: "personalemail", value: "" },
+  ]);
+
   const defaultValues = {
     firstname: "",
     lastname: "",
@@ -44,7 +56,7 @@ export default function ContactDetails(props) {
     ministryorganization: null,
     branch: "",
     personalphone: "",
-    peronalemail: "",
+    personalemail: "",
   };
 
   const {
@@ -52,14 +64,20 @@ export default function ContactDetails(props) {
     formState: { errors },
     handleSubmit,
     reset,
-    register,
   } = useForm({ defaultValues });
 
   const onSubmit = (data) => {
+    console.log(formValues, "this is current form values in state");
+    console.log(data, "this is data");
+    const newFormValues = formValues.map(
+      (each) => (each.value = data[each.field])
+    );
+    setFormValues(newFormValues);
+    console.log(formValues, "this is updated form values");
     setFormData(data);
     setShowMessage(true);
 
-    reset();
+    // reset();
   };
 
   const getFormErrorMessage = (name, id) => {

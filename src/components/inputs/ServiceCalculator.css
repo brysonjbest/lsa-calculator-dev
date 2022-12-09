@@ -1,0 +1,8 @@
+ul {
+    list-style: none;
+}
+
+.service-calculator-fields {
+    display: flex;
+    justify-content: space-between;
+}
