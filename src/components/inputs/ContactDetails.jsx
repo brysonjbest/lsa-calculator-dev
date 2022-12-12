@@ -13,6 +13,7 @@ import "./ContactDetails.css";
  * @param {ref} props.submitReference reference for form submission to be handled by parent component
  * @param {boolean} props.basic state variable boolean for controlling if basic fields are displayed
  * @param {boolean} props.extended state variable boolean for controlling if all fields are displayed
+ * @param {boolean} props.delegated state variable boolean for controlling if all fields are displayed
  * @param {boolean} props.personalContact state variable boolean for controlling if personal contact information displayed
  * @param {string} props.panelName string describing what panel these contact details belong to ex: Supervisor, Personal
  * @param {() => void} props.formSubmit function to execute on form submission
@@ -35,6 +36,7 @@ export default function ContactDetails(props) {
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
 
+  //state has to be in the main view being submitted. This has to be moved up to be managed on the individual views for form submission to function.
   const [formValues, setFormValues] = useState([
     { field: "firstname", value: "" },
     { field: "lastname", value: "" },
@@ -200,144 +202,155 @@ export default function ContactDetails(props) {
                 </div>
               </div>
             ) : null}
-            {props.extended ? (
+            <div>
               <div className="contact-form-extended-details">
-                <div className="contact-form-field-container">
-                  <label
-                    htmlFor={`${panelGroupName}-government-phone`}
-                    className={classNames("block", {
-                      "p-error": errors.governmentphone,
-                    })}
-                  >
-                    {`${panelCapitalized} Government Phone Number`}
-                  </label>
-                  <Controller
-                    name="governmentphone"
-                    control={control}
-                    rules={{
-                      required: "Error: Government phone number is required.",
-                      pattern: {
-                        value:
-                          /^(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/,
-                        message: "Invalid phone number. E.g. (555)-555-5555",
-                      },
-                    }}
-                    render={({ field, fieldState }) => (
-                      <InputMask
-                        id={`${panelGroupName}-government-phone`}
-                        mask="(999) 999-9999? x99999"
-                        autoClear={false}
-                        {...field}
-                        placeholder={`${panelPlaceholder} government phone number Ex. (999) 999-9999 x99999`}
-                        aria-describedby={`${panelGroupName}-government-phone-help`}
-                        className={classNames("form-field block", {
-                          "p-invalid": fieldState.error,
-                        })}
-                      />
+                {props.extended ? (
+                  <div className="contact-form-field-container">
+                    <label
+                      htmlFor={`${panelGroupName}-government-phone`}
+                      className={classNames("block", {
+                        "p-error": errors.governmentphone,
+                      })}
+                    >
+                      {`${panelCapitalized} Government Phone Number`}
+                    </label>
+                    <Controller
+                      name="governmentphone"
+                      control={control}
+                      rules={{
+                        required: "Error: Government phone number is required.",
+                        pattern: {
+                          value:
+                            /^(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/,
+                          message: "Invalid phone number. E.g. (555)-555-5555",
+                        },
+                      }}
+                      render={({ field, fieldState }) => (
+                        <InputMask
+                          id={`${panelGroupName}-government-phone`}
+                          mask="(999) 999-9999? x99999"
+                          autoClear={false}
+                          {...field}
+                          placeholder={`${panelPlaceholder} government phone number Ex. (999) 999-9999 x99999`}
+                          aria-describedby={`${panelGroupName}-government-phone-help`}
+                          className={classNames("form-field block", {
+                            "p-invalid": fieldState.error,
+                          })}
+                        />
+                      )}
+                    />
+                    {getFormErrorMessage(
+                      "governmentphone",
+                      `${panelGroupName}-government-phone-help`
                     )}
-                  />
-                  {getFormErrorMessage(
-                    "governmentphone",
-                    `${panelGroupName}-government-phone-help`
-                  )}
-                </div>
-                <div className="contact-form-field-container">
-                  <label
-                    htmlFor={`${panelGroupName}-employeenumber`}
-                    className={classNames("block", {
-                      "p-error": errors.employeenumber,
-                    })}
-                  >
-                    {`${panelCapitalized} Employee Number`}
-                  </label>
-                  <Controller
-                    name="employeenumber"
-                    control={control}
-                    rules={{ required: "Error: Employee number is required." }}
-                    render={({ field, fieldState }) => (
-                      <InputText
-                        id={`${panelGroupName}-${field.name}`}
-                        aria-describedby={`${panelGroupName}-employeenumber-help`}
-                        {...field}
-                        className={classNames("form-field block", {
-                          "p-invalid": fieldState.error,
-                        })}
-                        placeholder={`${panelPlaceholder} employee number`}
-                      />
+                  </div>
+                ) : null}
+                {props.extended || props.delegated ? (
+                  <div className="contact-form-field-container">
+                    <label
+                      htmlFor={`${panelGroupName}-employeenumber`}
+                      className={classNames("block", {
+                        "p-error": errors.employeenumber,
+                      })}
+                    >
+                      {`${panelCapitalized} Employee Number`}
+                    </label>
+                    <Controller
+                      name="employeenumber"
+                      control={control}
+                      rules={{
+                        required: "Error: Employee number is required.",
+                      }}
+                      render={({ field, fieldState }) => (
+                        <InputText
+                          id={`${panelGroupName}-${field.name}`}
+                          aria-describedby={`${panelGroupName}-employeenumber-help`}
+                          {...field}
+                          className={classNames("form-field block", {
+                            "p-invalid": fieldState.error,
+                          })}
+                          placeholder={`${panelPlaceholder} employee number`}
+                        />
+                      )}
+                    />
+                    {getFormErrorMessage(
+                      "employeenumber",
+                      `${panelGroupName}-employeenumber-help`
                     )}
-                  />
-                  {getFormErrorMessage(
-                    "employeenumber",
-                    `${panelGroupName}-employeenumber-help`
-                  )}
-                </div>
-                <div className="contact-form-field-container">
-                  <label
-                    htmlFor={`${panelGroupName}-ministryorganization`}
-                    className={classNames("block", {
-                      "p-error": errors.ministryorganization,
-                    })}
-                  >
-                    {`${panelCapitalized} Ministry/Organization`}
-                  </label>
-                  <Controller
-                    name="ministryorganization"
-                    control={control}
-                    rules={{
-                      required: "Error: Ministry or Organization is required.",
-                    }}
-                    render={({ field, fieldState }) => (
-                      <Dropdown
-                        id={`${panelGroupName}-${field.name}`}
-                        value={field.value}
-                        onChange={(e) => field.onChange(e.value)}
-                        aria-describedby={`${panelGroupName}-ministryorganization-help`}
-                        options={organizations}
-                        optionLabel="text"
-                        className={classNames("form-field block", {
-                          "p-invalid": fieldState.error,
-                        })}
-                        placeholder={`Select ${panelPlaceholder} ministry or organization`}
-                      />
+                  </div>
+                ) : null}
+                {props.extended || props.delegated ? (
+                  <div className="contact-form-field-container">
+                    <label
+                      htmlFor={`${panelGroupName}-ministryorganization`}
+                      className={classNames("block", {
+                        "p-error": errors.ministryorganization,
+                      })}
+                    >
+                      {`${panelCapitalized} Ministry/Organization`}
+                    </label>
+                    <Controller
+                      name="ministryorganization"
+                      control={control}
+                      rules={{
+                        required:
+                          "Error: Ministry or Organization is required.",
+                      }}
+                      render={({ field, fieldState }) => (
+                        <Dropdown
+                          id={`${panelGroupName}-${field.name}`}
+                          value={field.value}
+                          onChange={(e) => field.onChange(e.value)}
+                          aria-describedby={`${panelGroupName}-ministryorganization-help`}
+                          options={organizations}
+                          optionLabel="text"
+                          className={classNames("form-field block", {
+                            "p-invalid": fieldState.error,
+                          })}
+                          placeholder={`Select ${panelPlaceholder} ministry or organization`}
+                        />
+                      )}
+                    />
+                    {getFormErrorMessage(
+                      "ministryorganization",
+                      `${panelGroupName}-ministryorganization-help`
                     )}
-                  />
-                  {getFormErrorMessage(
-                    "ministryorganization",
-                    `${panelGroupName}-ministryorganization-help`
-                  )}
-                </div>
-                <div className="contact-form-field-container">
-                  <label
-                    htmlFor={`${panelGroupName}-branch`}
-                    className={classNames("block", {
-                      "p-error": errors.branch,
-                    })}
-                  >
-                    {`${panelCapitalized} Branch`}
-                  </label>
-                  <Controller
-                    name="branch"
-                    control={control}
-                    rules={{ required: "Error: Branch is required." }}
-                    render={({ field, fieldState }) => (
-                      <InputText
-                        id={`${panelGroupName}-branch`}
-                        aria-describedby={`${panelGroupName}-branch-help`}
-                        {...field}
-                        className={classNames("form-field block", {
-                          "p-invalid": fieldState.error,
-                        })}
-                        placeholder={`${panelPlaceholder} branch`}
-                      />
+                  </div>
+                ) : null}
+                {props.extended ? (
+                  <div className="contact-form-field-container">
+                    <label
+                      htmlFor={`${panelGroupName}-branch`}
+                      className={classNames("block", {
+                        "p-error": errors.branch,
+                      })}
+                    >
+                      {`${panelCapitalized} Branch`}
+                    </label>
+                    <Controller
+                      name="branch"
+                      control={control}
+                      rules={{ required: "Error: Branch is required." }}
+                      render={({ field, fieldState }) => (
+                        <InputText
+                          id={`${panelGroupName}-branch`}
+                          aria-describedby={`${panelGroupName}-branch-help`}
+                          {...field}
+                          className={classNames("form-field block", {
+                            "p-invalid": fieldState.error,
+                          })}
+                          placeholder={`${panelPlaceholder} branch`}
+                        />
+                      )}
+                    />
+                    {getFormErrorMessage(
+                      "branch",
+                      `${panelGroupName}-branch-help`
                     )}
-                  />
-                  {getFormErrorMessage(
-                    "branch",
-                    `${panelGroupName}-branch-help`
-                  )}
-                </div>
+                  </div>
+                ) : null}
               </div>
-            ) : null}
+            </div>
             {props.personalContact ? (
               <div className="contact-form-personalcontact-details">
                 <div className="contact-form-field-container">

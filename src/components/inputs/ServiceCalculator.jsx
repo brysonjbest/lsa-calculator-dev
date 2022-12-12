@@ -1,21 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
-import { InputMask } from "primereact/inputmask";
 import { Calendar } from "primereact/calendar";
-
-import formServices from "../../services/settings.services";
-import classNames from "classnames";
 import "./ServiceCalculator.css";
 
 /**
- * Address Input reusable component. Conditional PO Box requirement for address's identified for supervisors.
+ * Service Calculator component calculates years of service from given year inputs.
  * @param {object} props
- * @param {ref} props.submitReference reference for form submission to be handled by parent component
- * @param {boolean} props.basic state variable boolean for controlling if basic fields are displayed
- * @param {boolean} props.extended state variable boolean for controlling if all fields are displayed
- * @param {boolean} props.personalContact state variable boolean for controlling if personal contact information displayed
- * @param {string} props.panelName string describing what panel these contact details belong to ex: Supervisor, Personal
  * @param {() => void} props.formSubmit function to execute on form submission
  * @returns
  */
