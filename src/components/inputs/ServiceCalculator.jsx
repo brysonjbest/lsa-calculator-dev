@@ -21,7 +21,7 @@ import "./ServiceCalculator.css";
  */
 
 export default function ServiceCalculator() {
-  const { register, control, handleSubmit, reset, watch, setValue } = useForm({
+  const { control, handleSubmit, reset, setValue, getValues } = useForm({
     defaultValues: {
       serviceCalculator: [{ startYear: "", endYear: "", years: "" }],
     },
@@ -39,36 +39,30 @@ export default function ServiceCalculator() {
 
   const onSubmit = (data) => console.log("data", data);
 
-  const ConditionalInput = ({ control, index, field }) => {
+  const YearCalculator = (index) => {
+    const start = getValues(`serviceCalculator.${index}.startYear`);
+    const end = getValues(`serviceCalculator.${index}.endYear`);
+    const startYear = start ? start.getFullYear() : new Date().getFullYear();
+    const endYear = end ? end.getFullYear() : new Date().getFullYear();
+    let lineItemYearsTotal =
+      endYear - startYear <= -1 ? 0 : endYear - startYear;
+    setValue(`serviceCalculator.${index}.years`, lineItemYearsTotal);
+  };
+
+  const TotalYears = ({ control }) => {
     const value = useWatch({
       name: "serviceCalculator",
       control,
-    })[index];
+    });
 
-    console.log(value, "this is value");
-    const startYear = value.startYear
-      ? value.startYear.getFullYear()
-      : new Date().getFullYear();
-    const endYear = value.endYear
-      ? value.endYear.getFullYear()
-      : new Date().getFullYear();
-
-    let totalYears = endYear - startYear <= -1 ? 0 : endYear - startYear;
-
-    return (
-      <Controller
-        name={`serviceCalculator.${index}.years`}
-        control={control}
-        render={({ field }) => (
-          <InputText
-            readOnly
-            id={field.name}
-            value={totalYears}
-            placeholder="0"
-          />
-        )}
-      />
+    const defaultYears = 0;
+    const mapYears = value.map((each) => each["years"]);
+    const testYears = mapYears.reduce(
+      (total, each) => total + each,
+      defaultYears
     );
+
+    return <>{testYears}</>;
   };
 
   return (
@@ -91,6 +85,7 @@ export default function ServiceCalculator() {
                           value={field.value}
                           onChange={(e) => {
                             field.onChange(e.value);
+                            YearCalculator(index);
                           }}
                           view="year"
                           dateFormat="yy"
@@ -103,7 +98,6 @@ export default function ServiceCalculator() {
                 </div>
                 <div className="end-date-column">
                   <label htmlFor="endYear">End Year</label>
-
                   <span className="p-float-label">
                     <Controller
                       name={`serviceCalculator.${index}.endYear`}
@@ -114,6 +108,7 @@ export default function ServiceCalculator() {
                           value={field.value}
                           onChange={(e) => {
                             field.onChange(e.value);
+                            YearCalculator(index);
                           }}
                           view="year"
                           dateFormat="yy"
@@ -127,9 +122,17 @@ export default function ServiceCalculator() {
                 <div className="year-calculation-column">
                   <label htmlFor="yearCalculation">Years of Service:</label>
                   <span className="p-float-label">
-                    <ConditionalInput
-                      key={item.id}
-                      {...{ control, index, item }}
+                    <Controller
+                      name={`serviceCalculator.${index}.years`}
+                      control={control}
+                      render={({ field }) => (
+                        <InputText
+                          readOnly
+                          id={field.name}
+                          value={field.value}
+                          placeholder="0"
+                        />
+                      )}
                     />
                   </span>
                 </div>
@@ -146,7 +149,10 @@ export default function ServiceCalculator() {
         })}
       </ul>
       <section>
-        <div>{/* <Calculator control={control} setValue={setValue} /> */}</div>
+        <div>
+          <span>Total Years: </span>
+          <TotalYears key="total-count" {...{ control }} />
+        </div>
         <button
           type="button"
           onClick={() => {
