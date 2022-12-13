@@ -1,0 +1,27 @@
+{
+  "exampleData2": [
+    {
+      "yearsofservice": 15,
+      "currentmilestone": 15,
+      "qualifyingyear": 2019,
+      "priormilestones": [10, 5],
+      "firstname": "Steve",
+      "lastname": "Jimmy",
+      "governmentemail": "test@test.com",
+      "employeenumber": "1234567",
+
+      "ministryorganization": "Ministry of Social Development"
+    },
+    {
+      "yearsofservice": 10,
+      "currentmilestone": 10,
+      "qualifyingyear": 2022,
+      "priormilestones": [5],
+      "firstname": "Jane",
+      "lastname": "Doe",
+      "governmentemail": "test@test.com",
+      "employeenumber": "7654321",
+      "ministryorganization": "Office of the Premier"
+    }
+  ]
+}

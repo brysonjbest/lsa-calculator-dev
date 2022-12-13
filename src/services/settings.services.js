@@ -144,6 +144,56 @@ const schemaData = {
     { value: "org-70", text: "Surface Rights Board of British Columbia" },
     { value: "org-71", text: "Workers' Compensation Appeal Tribunal" },
   ],
+  contactFormFields: [
+    { field: "firstname", header: "First Name" },
+    { field: "lastname", header: "Last Name" },
+    { field: "governmentemail", header: "Government Email" },
+    { field: "governmentphone", header: "Government Phone Number" },
+    { field: "employeenumber", header: "Employee Number" },
+    { field: "ministryorganization", header: "Ministry / Organization" },
+    { field: "branch", header: "Branch" },
+    { field: "personalphone", header: "Personal Phone Number" },
+    { field: "personalemail", header: "Alternate Email Address" },
+  ],
+  milestoneFormFields: [
+    { field: "yearsofservice", header: "Current Years of Service" },
+    { field: "currentmilestone", header: "Current Milestone" },
+    { field: "qualifyingyear", header: "Milestone Qualifying Year" },
+    { field: "priormilestones", header: "Prior Unclaimed Milestones" },
+  ],
+  addressFormFields: [
+    { field: "streetaddress", header: "Address Line 1" },
+    { field: "streetaddress2", header: "Address Line 2" },
+    { field: "citycommunity", header: "City / Community" },
+    { field: "provincestate", header: "Province / State" },
+    { field: "postalcode", header: "Postal Code" },
+    { field: "pobox", header: "P.O. Box" },
+  ],
+  lsaFormFields: [
+    { field: "retiringcurrentyear", header: "I Plan to Retire This Year" },
+    { field: "retirementdate", header: "Retirement Date" },
+    {
+      field: "attendingceremony",
+      header: "I Plan to Attend The Awards Ceremony",
+    },
+  ],
+  awardFormFields: [
+    { field: "awardname", header: "Award Name" },
+    { field: "awarddescription", header: "Description" },
+    { field: "awardoptions", header: "Options" },
+  ],
+  delegatedFormFields: [
+    { field: "employee", header: "Employee" },
+    { field: "firstname", header: "First Name" },
+    { field: "lastname", header: "Last Name" },
+    { field: "governmentemail", header: "Government Email" },
+    { field: "employeenumber", header: "Employee Number" },
+    { field: "ministryorganization", header: "Ministry / Organization" },
+    { field: "yearsofservice", header: "Current Years of Service" },
+    { field: "currentmilestone", header: "Current Milestone" },
+    { field: "qualifyingyear", header: "Milestone Qualifying Year" },
+    { field: "priormilestones", header: "Prior Unclaimed Milestones" },
+  ],
 };
 
 export default {
