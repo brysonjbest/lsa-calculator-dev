@@ -11,24 +11,28 @@ import "./ServiceCalculator.css";
  * @returns
  */
 
-export default function ServiceCalculator() {
+export default function ServiceCalculator(props) {
   const { control, handleSubmit, reset, setValue, getValues } = useForm({
     defaultValues: {
       serviceCalculator: [{ startYear: "", endYear: "", years: "" }],
     },
   });
-  const [formValues, setFormValues] = useState([
-    { field: "startYear", value: "" },
-    { field: "endYear", value: "" },
-    { field: "years", value: "" },
-  ]);
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "serviceCalculator",
   });
 
-  const onSubmit = (data) => console.log("data", data);
+  const onSubmit = (data) => {
+    const defaultYears = 0;
+    const mapYears = data["serviceCalculator"].map((each) => each["years"]);
+    const finalYears = mapYears.reduce(
+      (total, each) => total + each,
+      defaultYears
+    );
+
+    props.formSubmit ? props.formSubmit(finalYears) : null;
+  };
 
   const YearCalculator = (index) => {
     const start = getValues(`serviceCalculator.${index}.startYear`);
@@ -48,17 +52,19 @@ export default function ServiceCalculator() {
 
     const defaultYears = 0;
     const mapYears = value.map((each) => each["years"]);
-    const testYears = mapYears.reduce(
+    const finalYears = mapYears.reduce(
       (total, each) => total + each,
       defaultYears
     );
 
-    return <>{testYears}</>;
+    return <>{finalYears || 0}</>;
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <h1>Service Calculator</h1>
+    <div
+      onSubmit={handleSubmit(onSubmit)}
+      className="service-calculator-component"
+    >
       <ul>
         {fields.map((item, index) => {
           return (
@@ -165,7 +171,7 @@ export default function ServiceCalculator() {
         </button>
       </section>
 
-      <input type="submit" />
-    </form>
+      <input type="submit" onClick={handleSubmit(onSubmit)} />
+    </div>
   );
 }

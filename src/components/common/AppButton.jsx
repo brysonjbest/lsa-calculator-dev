@@ -10,7 +10,7 @@ import "./AppButton.css";
  * @param {boolean} props.danger the title that should be placed in the header of the panel
  * @param {string} props.iconPosition the position of an icon if selected
  * @param {string} props.icon the icon to use on the button
- * @param {() => void)} props.onClick callback to state function on click of button
+ * @param {() => void} props.onClick callback to state function on click of button
  * @param {boolean} props.disabled state variable boolean for controlling disabled button status
  * @param {string} props.children the label for the button. Leave blank if only icon desired
  * @returns

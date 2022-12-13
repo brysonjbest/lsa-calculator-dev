@@ -92,6 +92,9 @@ export default function ContactDetails(props) {
   };
 
   const organizations = formServices.get("organizations") || [];
+  const fullOrgList = organizations.concat(
+    formServices.get("currentPinsOnlyOrganizations") || []
+  );
 
   return (
     <div className={`contact-details-form-${panelGroupName}`}>
@@ -302,7 +305,7 @@ export default function ContactDetails(props) {
                           value={field.value}
                           onChange={(e) => field.onChange(e.value)}
                           aria-describedby={`${panelGroupName}-ministryorganization-help`}
-                          options={organizations}
+                          options={fullOrgList}
                           optionLabel="text"
                           className={classNames("form-field block", {
                             "p-invalid": fieldState.error,

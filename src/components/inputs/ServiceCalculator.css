@@ -1,10 +1,16 @@
 ul {
     list-style: none;
+    padding: 0;
+}
+
+.service-calculator-component {
+    text-align: left;
 }
 
 .service-calculator-fields {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .year-calculation-column {
