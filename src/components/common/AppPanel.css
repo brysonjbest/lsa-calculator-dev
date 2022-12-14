@@ -6,3 +6,7 @@
     text-align: left !important;
 
 }
+
+.p-panel-header-full {
+    padding: 0 !important;
+}

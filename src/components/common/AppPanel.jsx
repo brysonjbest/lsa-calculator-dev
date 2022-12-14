@@ -8,6 +8,7 @@ import "./AppPanel.css";
  * @param {object} props
  * @param {boolean} props.toggleable state variable boolean for controling toggleable functionality
  * @param {boolean} props.collapsed state variable boolean for controlling initial collapsed status
+ * @param {boolean} props.fullwidth state variable boolean for controlling styling of header to take up full space
  * @param {string} props.header the title that should be placed in the header of the panel
  * @param {string} props.children the content that should be placed in the body of the panel
  * @returns
@@ -19,7 +20,9 @@ export default function AppPanel(props) {
       ? "pi pi-chevron-down"
       : "pi pi-chevron-up";
     const className = `${options.className}`;
-    const panelClass = classNames("justify-content-start", className);
+    const panelClass = classNames("justify-content-start", className, {
+      "p-panel-header-full": props.fullwidth,
+    });
     const titleClassName = `${options.titleClassName} pl-1`;
 
     return (

@@ -8,6 +8,7 @@ import "./AppButton.css";
  * @param {boolean} props.secondary state variable boolean for controling toggleable functionality
  * @param {boolean} props.info state variable boolean for controlling initial collapsed status
  * @param {boolean} props.danger the title that should be placed in the header of the panel
+ * @param {string} props.passClass additional classes to pass to the button
  * @param {string} props.iconPosition the position of an icon if selected
  * @param {string} props.icon the icon to use on the button
  * @param {() => void} props.onClick callback to state function on click of button
@@ -19,6 +20,7 @@ import "./AppButton.css";
 export default function AppButton(props) {
   const buttonClass = classNames(
     "p-button-raised",
+    props.passClass,
     { "p-button-secondary": props.secondary },
     { "p-button-info": props.info },
     { "p-button-danger": props.danger }

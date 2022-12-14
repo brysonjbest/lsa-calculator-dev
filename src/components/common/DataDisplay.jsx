@@ -10,7 +10,7 @@ import "./DataDisplay.css";
  * Data Display common display component to display user data after input/submission
  * @param {object} props
  * @param {array} props.data array object of data to display in data table
- * @param {string} props.category determines the formfield options that should be selected (options: contact, address, milestone, award, lsa)
+ * @param {string} props.category determines the formfield options that should be selected (options: contact, address, milestone, award, lsa, delegated)
  * @param {boolean} props.stacked boolean that determines if data table will be forced into permanent stacked layout, or will be responsive
  * @param {() => void} props.formSubmit function to execute on form submission
  * @returns
