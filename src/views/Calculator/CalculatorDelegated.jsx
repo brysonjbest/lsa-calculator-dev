@@ -38,12 +38,7 @@ export default function CalculatorDelegated() {
   };
 
   const onChange = (id, ministry) => {
-    // let newEmployeeList = employees;
-
-    // console.log(ministry, id, "this is first", employees, newEmployeeList);
-    // newEmployeeList[id] = ministry;
     setEmployees({ ...employees, [id]: ministry });
-    // console.log(ministry, id, "this is AFTER", employees, newEmployeeList);
   };
 
   return (

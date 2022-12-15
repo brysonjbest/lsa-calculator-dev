@@ -94,13 +94,11 @@ export default function MilestoneSelector(props) {
   }, [props.ministry]);
 
   const onSubmit = (data) => {
-    console.log(formValues, "this is current form values in state");
-    console.log(data, "this is data");
     const newFormValues = formValues.map(
       (each) => (each.value = data[each.field])
     );
     setFormValues(newFormValues);
-    console.log(formValues, "this is updated form values");
+
     setFormData(data);
     setShowMessage(true);
 
@@ -133,7 +131,6 @@ export default function MilestoneSelector(props) {
   };
 
   const onMilestoneSelection = (e) => {
-    console.log(e.value, "this is testing event");
     e.value.length > 0 || e.value > 0
       ? setMilestoneSelected(true)
       : setMilestoneSelected(false);
