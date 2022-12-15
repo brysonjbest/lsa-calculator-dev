@@ -24,3 +24,9 @@ ul {
 .service-calculator-delete-column {
     align-self:center;
 }
+
+.total-years-counter {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+}

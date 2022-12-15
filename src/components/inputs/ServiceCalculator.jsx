@@ -4,6 +4,7 @@ import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
 import "./ServiceCalculator.css";
 import AppButton from "../common/AppButton";
+import InfoToolTip from "../common/InfoToolTip";
 
 /**
  * Service Calculator component calculates years of service from given year inputs.
@@ -75,7 +76,6 @@ export default function ServiceCalculator(props) {
     });
 
     const finalYears = [...new Set(yearSet)].length;
-    console.log([...new Set(yearSet)]);
 
     return <>{finalYears || 0}</>;
   };
@@ -178,9 +178,14 @@ export default function ServiceCalculator(props) {
         })}
       </ul>
       <section>
-        <div>
-          <span>Total Years: </span>
-          <TotalYears key="total-count" {...{ control }} />
+        <div className="total-years-counter">
+          <span>
+            Total Years: <TotalYears key="total-count" {...{ control }} />
+          </span>
+          <InfoToolTip
+            target="total-years-counter"
+            content="Total Year count may differ from years of service per row, as duplicated years are only counted once."
+          />
         </div>
         <button
           type="button"
