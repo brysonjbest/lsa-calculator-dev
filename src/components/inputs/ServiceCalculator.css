@@ -16,3 +16,11 @@ ul {
 .year-calculation-column {
     width: fit-content;
 }
+
+.service-calculator-component ul li:first-child .service-calculator-delete-column {
+    width: 118.083px; 
+}
+
+.service-calculator-delete-column {
+    align-self:center;
+}

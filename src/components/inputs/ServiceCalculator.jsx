@@ -3,6 +3,7 @@ import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
 import "./ServiceCalculator.css";
+import AppButton from "../common/AppButton";
 
 /**
  * Service Calculator component calculates years of service from given year inputs.
@@ -12,6 +13,7 @@ import "./ServiceCalculator.css";
  */
 
 export default function ServiceCalculator(props) {
+  const [yearsArray, setYearsArray] = useState([]);
   const { control, handleSubmit, reset, setValue, getValues } = useForm({
     defaultValues: {
       serviceCalculator: [{ startYear: "", endYear: "", years: "" }],
@@ -24,12 +26,20 @@ export default function ServiceCalculator(props) {
   });
 
   const onSubmit = (data) => {
-    const defaultYears = 0;
-    const mapYears = data["serviceCalculator"].map((each) => each["years"]);
-    const finalYears = mapYears.reduce(
-      (total, each) => total + each,
-      defaultYears
-    );
+    const yearSet = [];
+    data["serviceCalculator"].forEach((element) => {
+      const startYear = element["startYear"]
+        ? element["startYear"].getFullYear()
+        : 0;
+      const endYear = element["endYear"]
+        ? element["endYear"].getFullYear()
+        : startYear;
+      for (let i = startYear; i <= endYear; i++) {
+        yearSet.push(i);
+      }
+    });
+
+    const finalYears = [...new Set(yearSet)].length;
 
     props.formSubmit ? props.formSubmit(finalYears) : null;
   };
@@ -38,9 +48,11 @@ export default function ServiceCalculator(props) {
     const start = getValues(`serviceCalculator.${index}.startYear`);
     const end = getValues(`serviceCalculator.${index}.endYear`);
     const startYear = start ? start.getFullYear() : new Date().getFullYear();
-    const endYear = end ? end.getFullYear() : new Date().getFullYear();
+    const endYear = end
+      ? end.getFullYear()
+      : start.getFullYear() || new Date().getFullYear();
     let lineItemYearsTotal =
-      endYear - startYear <= -1 ? 0 : endYear - startYear;
+      endYear - startYear <= -1 ? 0 : endYear - startYear + 1;
     setValue(`serviceCalculator.${index}.years`, lineItemYearsTotal);
   };
 
@@ -49,13 +61,21 @@ export default function ServiceCalculator(props) {
       name: "serviceCalculator",
       control,
     });
+    const yearSet = [];
+    value.forEach((element) => {
+      const startYear = element["startYear"]
+        ? element["startYear"].getFullYear()
+        : 0;
+      const endYear = element["endYear"]
+        ? element["endYear"].getFullYear()
+        : startYear;
+      for (let i = startYear; i <= endYear; i++) {
+        i !== 0 ? yearSet.push(i) : null;
+      }
+    });
 
-    const defaultYears = 0;
-    const mapYears = value.map((each) => each["years"]);
-    const finalYears = mapYears.reduce(
-      (total, each) => total + each,
-      defaultYears
-    );
+    const finalYears = [...new Set(yearSet)].length;
+    console.log([...new Set(yearSet)]);
 
     return <>{finalYears || 0}</>;
   };
@@ -78,6 +98,9 @@ export default function ServiceCalculator(props) {
                       control={control}
                       render={({ field }) => (
                         <Calendar
+                          minDate={new Date(1930, 0, 0, 0, 0, 0, 0)}
+                          maxDate={new Date()}
+                          readOnlyInput
                           id={field.name}
                           value={field.value}
                           onChange={(e) => {
@@ -101,6 +124,9 @@ export default function ServiceCalculator(props) {
                       control={control}
                       render={({ field }) => (
                         <Calendar
+                          minDate={new Date(1930, 0, 0, 0, 0, 0, 0)}
+                          maxDate={new Date()}
+                          readOnlyInput
                           id={field.name}
                           value={field.value}
                           onChange={(e) => {
@@ -133,13 +159,19 @@ export default function ServiceCalculator(props) {
                     />
                   </span>
                 </div>
-                <button
-                  className="service-years-delete-row"
-                  type="button"
-                  onClick={() => remove(index)}
-                >
-                  Delete
-                </button>
+                <div className="service-calculator-delete-column">
+                  {index !== 0 ? (
+                    <AppButton
+                      className="service-years-delete-row-button"
+                      passClass="p-button-raised p-button-rounded"
+                      icon="pi pi-times-circle"
+                      danger
+                      onClick={() => remove(index)}
+                    >
+                      Delete
+                    </AppButton>
+                  ) : null}
+                </div>
               </div>
             </li>
           );

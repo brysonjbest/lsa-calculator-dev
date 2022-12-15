@@ -68,12 +68,30 @@ export default function CalculatorPersonal() {
         the end year.
       </AppPanel>
 
-      <AppPanel header="Years of Service">
+      <AppPanel
+        fullwidth
+        header={
+          <PageHeader
+            title="Years of Service"
+            singleLine
+            gradient3
+          ></PageHeader>
+        }
+      >
         <ServiceCalculator formSubmit={isEligible} />
       </AppPanel>
 
       {eligibility ? (
-        <AppPanel header="Congratulations">
+        <AppPanel
+          fullwidth
+          header={
+            <PageHeader
+              title="Congratulations"
+              singleLine
+              gradient3
+            ></PageHeader>
+          }
+        >
           Based on the input in the calculator above, you may be eligible for
           registration for recognition under the Service Pin program. You can
           continue registration by clicking on “Register” below.{" "}
