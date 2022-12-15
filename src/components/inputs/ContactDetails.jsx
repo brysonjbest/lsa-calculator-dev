@@ -11,6 +11,8 @@ import "./ContactDetails.css";
  * Address Input reusable component. Conditional PO Box requirement for address's identified for supervisors.
  * @param {object} props
  * @param {ref} props.submitReference reference for form submission to be handled by parent component
+ * @param {(index) => void} props.ministryRef function for minstry choice to be handled by parent component
+ * @param {integer} props.index index of item within form
  * @param {boolean} props.basic state variable boolean for controlling if basic fields are displayed
  * @param {boolean} props.extended state variable boolean for controlling if all fields are displayed
  * @param {boolean} props.delegated state variable boolean for controlling if all fields are displayed
@@ -80,6 +82,13 @@ export default function ContactDetails(props) {
     setShowMessage(true);
 
     // reset();
+  };
+
+  const onBlurMinistry = (event) => {
+    const currentFormValue =
+      formServices.lookup("organizations", event) ||
+      formServices.lookup("currentPinsOnlyOrganizations", event);
+    props.ministryRef(props.index, currentFormValue);
   };
 
   const getFormErrorMessage = (name, id) => {
@@ -303,7 +312,10 @@ export default function ContactDetails(props) {
                         <Dropdown
                           id={`${panelGroupName}-${field.name}`}
                           value={field.value}
-                          onChange={(e) => field.onChange(e.value)}
+                          onChange={(e) => {
+                            onBlurMinistry(e.value);
+                            field.onChange(e.value);
+                          }}
                           aria-describedby={`${panelGroupName}-ministryorganization-help`}
                           options={fullOrgList}
                           optionLabel="text"

@@ -46,6 +46,7 @@ export default function MilestoneSelector(props) {
 
   const [calculatorButton, setCalculatorButton] = useState(false);
   const [calculatorDropdown, setCalculatorDropdown] = useState(false);
+  const [ministry, setMinistry] = useState("");
 
   //state has to be in the main view being submitted. This has to be moved up to be managed on the individual views for form submission to function.
   const [formValues, setFormValues] = useState([
@@ -87,6 +88,10 @@ export default function MilestoneSelector(props) {
     }));
     setQualifyingYears(yearsList);
   }, []);
+
+  useEffect(() => {
+    setMinistry(props.ministry);
+  }, [props.ministry]);
 
   const onSubmit = (data) => {
     console.log(formValues, "this is current form values in state");
@@ -138,7 +143,7 @@ export default function MilestoneSelector(props) {
     formServices.get("currentPinsOnlyOrganizations") || [];
 
   const ministryEligible = currentPinsOnlyOrgs.some(
-    (org) => org["text"] === props.ministry
+    (org) => org["text"] === ministry
   )
     ? false
     : true;

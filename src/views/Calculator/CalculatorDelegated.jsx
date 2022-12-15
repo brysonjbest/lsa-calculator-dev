@@ -19,8 +19,13 @@ import "./CalculatorDelegated.css";
  */
 
 export default function CalculatorDelegated() {
-  const { control, handleSubmit, reset } = useForm({});
+  const { control, handleSubmit, reset } = useForm({
+    defaultValues: {
+      employeeAdd: [{}],
+    },
+  });
   const [formComplete, setFormComplete] = useState(false);
+  const [employees, setEmployees] = useState({});
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -30,6 +35,15 @@ export default function CalculatorDelegated() {
   const onFormCompletion = () => {
     //add step to update in state what is displayed
     setFormComplete(true);
+  };
+
+  const onChange = (id, ministry) => {
+    // let newEmployeeList = employees;
+
+    // console.log(ministry, id, "this is first", employees, newEmployeeList);
+    // newEmployeeList[id] = ministry;
+    setEmployees({ ...employees, [id]: ministry });
+    // console.log(ministry, id, "this is AFTER", employees, newEmployeeList);
   };
 
   return (
@@ -113,10 +127,6 @@ export default function CalculatorDelegated() {
           </span>
         }
       >
-        <AppPanel header="Employee 1">
-          <ContactDetails basic delegated panelName="Employee 1" />
-          <MilestoneSelector delegated panelName="Employee 1" />
-        </AppPanel>
         <div onSubmit={handleSubmit()} className="employee-add-panel">
           <ul>
             {fields.map((item, index) => {
@@ -126,28 +136,33 @@ export default function CalculatorDelegated() {
                     header={
                       <div className="employee-header-bar">
                         <span className="employee-header-text">
-                          Employee {index + 2}
+                          Employee {index + 1}
                         </span>
-                        <AppButton
-                          className="employee-add-delete-button"
-                          passClass="p-button-raised p-button-rounded"
-                          icon="pi pi-times-circle"
-                          danger
-                          onClick={() => {
-                            remove(index);
-                          }}
-                        ></AppButton>
+                        {index !== 0 ? (
+                          <AppButton
+                            className="employee-add-delete-button"
+                            passClass="p-button-raised p-button-rounded"
+                            icon="pi pi-times-circle"
+                            danger
+                            onClick={() => {
+                              remove(index);
+                            }}
+                          ></AppButton>
+                        ) : null}
                       </div>
                     }
                   >
                     <ContactDetails
                       basic
                       delegated
-                      panelName={`Employee ${index + 2}`}
+                      ministryRef={onChange}
+                      index={item.id}
+                      panelName={`Employee ${index + 1}`}
                     />
                     <MilestoneSelector
                       delegated
-                      panelName={`Employee ${index + 2}`}
+                      ministry={employees[item.id]}
+                      panelName={`Employee ${index + 1}`}
                     />
                   </AppPanel>
                 </li>
