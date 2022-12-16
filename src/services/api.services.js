@@ -1,15 +1,19 @@
-import * as testdata from "./testdata/userdata.json";
+/*!
+ * API services (React)
+ * File: api.services.js
+ * Copyright(c) 2022 BC Gov
+ * MIT Licensed
+ */
 
-export class UserService {
-  async getUserData() {
-    const res = await fetch("/testdata/userdata.json");
-    const d = await res.json();
+import axios from "axios";
 
-    return d.data;
-  }
-  async getTestUserData() {
-    const d = testdata;
-    // console.log(d.exampleData);
-    return d.exampleData2;
-  }
-}
+const api = axios.create({
+  baseURL: import.meta.env.LSA_REGISTRATION_API_URL,
+  headers: {
+    "Content-Type": "application/json",
+    dataType: "json",
+  },
+  withCredentials: true,
+});
+
+export default api;
