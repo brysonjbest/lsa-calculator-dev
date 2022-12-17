@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useFormContext, Controller } from "react-hook-form";
 import AddressAutoComplete from "../../services/AddressAutoComplete";
+import getFormErrorMessage from "../../services/helpers/ErrorMessage";
 import { InputText } from "primereact/inputtext";
+import classNames from "classnames";
 import "./AddressInput.css";
 
 /**
@@ -18,35 +20,50 @@ import "./AddressInput.css";
 
 export default function AddressInput(props) {
   const address = useRef();
+  const methods = useFormContext();
   const [poBoxField, setPoBoxField] = useState();
   let autoCompleteBody = "";
   const addressAutoComplete = AddressAutoComplete();
   const addressGroupName = props.addressIdentifier
-    ? props.addressIdentifier
+    ? props.addressIdentifier.charAt(0).toUpperCase() +
+      props.addressIdentifier.slice(1).toLowerCase()
     : "default";
 
-  const {
-    handleSubmit,
-    register,
-    setFocus,
-    setValue,
-    getValues,
-    formState: { errors },
-  } = useForm({});
+  const { handleSubmit, register, setFocus, setValue, getValues, control } =
+    methods;
+
+  const errors = props.errors;
 
   const handleAddressSelect = async () => {
     let fullAddressObject = await addressAutoComplete.getAddressDetails(
       autoCompleteBody
     );
     address.current.value = fullAddressObject.streetAddress;
-    setValue("streetaddress", fullAddressObject.streetAddress);
-    setValue("citycommunity", fullAddressObject.cityCommunity);
+    setValue(
+      `${props.addressIdentifier}streetaddress`,
+      fullAddressObject.streetAddress
+    );
+    setValue(
+      `${props.addressIdentifier}citycommunity`,
+      fullAddressObject.cityCommunity
+    );
     props.province &&
-      setValue("provincestate", fullAddressObject.provinceStateLong);
-    setPoBoxField(getValues("citycommunity").match(/Victoria/i));
-    setValue("country", fullAddressObject.countryLong);
-    setValue("postalcode", fullAddressObject.postalCode);
-    setFocus("streetaddress2");
+      setValue(
+        `${props.addressIdentifier}provincestate`,
+        fullAddressObject.provinceStateLong
+      );
+    setPoBoxField(
+      getValues(`${props.addressIdentifier}citycommunity`).match(/Victoria/i)
+    );
+    setValue(
+      `${props.addressIdentifier}country`,
+      fullAddressObject.countryLong
+    );
+    setValue(
+      `${props.addressIdentifier}postalcode`,
+      fullAddressObject.postalCode
+    );
+    setFocus(`${props.addressIdentifier}streetaddress2`);
   };
 
   const onSubmit = () => {
@@ -71,163 +88,199 @@ export default function AddressInput(props) {
 
   return (
     <div className="container">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="address-container">
-          <div className="address-form-field-container">
-            <label
-              htmlFor={`streetaddress-${addressGroupName}`}
-              className="block"
-            >
-              {`${addressGroupName} Street Address 1`}
-            </label>
-            <InputText
-              id={`streetaddress-${addressGroupName}`}
-              type="text"
-              aria-describedby={`streetaddress-${addressGroupName}-help`}
-              className="form-field block"
-              placeholder="123 W Street Rd"
-              {...register("streetaddress", { required: true })}
-              ref={address}
-            />
-            {errors.streetaddress && (
-              <small
-                id={`streetaddress-${addressGroupName}-help`}
-                className="validation-error p-error block"
-              >
-                Error: Street address is required.
-              </small>
-            )}
-          </div>
-          <div className="address-form-field-container">
-            <label
-              htmlFor={`streetaddress2-${addressGroupName}`}
-              className="block"
-            >
-              {`${addressGroupName} Street Address 2`}
-            </label>
-            <InputText
-              id={`streetaddress2-${addressGroupName}`}
-              type="text"
-              className="form-field"
-              placeholder="Suite 123"
-              {...register("streetaddress2")}
-            />
-          </div>
-          <div className="address-form-field-container">
-            <label
-              htmlFor={`city-community-${addressGroupName}`}
-              className="block"
-            >
-              {`${addressGroupName} City/Community`}
-            </label>
-            <InputText
-              id={`city-community-${addressGroupName}`}
-              aria-describedby={`city-community-${addressGroupName}-help`}
-              type="text"
-              className="form-field"
-              placeholder="Victoria"
-              {...register("citycommunity", {
-                required: true,
-                onChange: () => {
-                  setPoBoxField(getValues("citycommunity").match(/Victoria/i));
-                },
-              })}
-            />
-            {errors.citycommunity && (
-              <small
-                id={`city-community-${addressGroupName}-help`}
-                className="validation-error p-error block"
-              >
-                Error: City or Community is required.
-              </small>
-            )}
-          </div>
-          {props.province ? (
-            <div className="address-form-field-container">
-              <label
-                htmlFor={`province-state-${addressGroupName}`}
-                className="block"
-              >
-                {`${addressGroupName} Province/State`}
-              </label>
+      <div className="address-container">
+        <div className="address-form-field-container">
+          <label
+            htmlFor={`${props.addressIdentifier}streetaddress`}
+            className="block"
+          >
+            {`${addressGroupName} Street Address 1`}
+          </label>
+          <Controller
+            name={`${props.addressIdentifier}streetaddress`}
+            control={control}
+            rules={{ required: "Error: Street address is required." }}
+            render={({ field: { ref, ...field }, fieldState }) => (
               <InputText
-                id={`province-state-${addressGroupName}`}
-                type="text"
-                aria-describedby={`province-state-${addressGroupName}-help`}
-                className="form-field"
-                placeholder="BC"
-                {...register("provincestate", { required: props.province })}
+                id={`${field.name}`}
+                ref={address}
+                aria-describedby={`${props.addressIdentifier}-streetaddress-help`}
+                {...field}
+                className={classNames("form-field block", {
+                  "p-invalid": fieldState.error,
+                })}
+                placeholder="123 W Street Rd"
               />
-              {errors.provincestate && (
-                <small
-                  id={`province-state-${addressGroupName}-help`}
-                  className="validation-error p-error block"
-                >
-                  Error: Province or State is required.
-                </small>
-              )}
-            </div>
-          ) : null}
-          <div className="address-form-field-container">
-            <label htmlFor={`postalcode-${addressGroupName}`} className="block">
-              {`${addressGroupName} Postal Code`}
-            </label>
-            <InputText
-              id={`postalcode-${addressGroupName}`}
-              type="text"
-              aria-describedby={`postalcode-${addressGroupName}-help`}
-              className="short-form-field"
-              placeholder="A0A 0A0"
-              {...register("postalcode", { required: true })}
-            />
-            {errors.postalcode && (
-              <small
-                id={`postalcode-${addressGroupName}-help`}
-                className="validation-error p-error block"
-              >
-                Error: Postal code is required.
-              </small>
             )}
-          </div>
+          />
+          {getFormErrorMessage(
+            `${props.addressIdentifier}streetaddress`,
+            `${props.addressIdentifier}-streetaddress-help`,
+            errors
+          )}
         </div>
-
-        {props.pobox && props.addressIdentifier.match(/Supervisor/i) ? (
+        <div className="address-form-field-container">
+          <label
+            htmlFor={`${addressGroupName}streetaddress2`}
+            className="block"
+          >
+            {`${addressGroupName} Street Address 2`}
+          </label>
+          <Controller
+            name={`${props.addressIdentifier}streetaddress2`}
+            control={control}
+            render={({ field, fieldState }) => (
+              <InputText
+                id={`${field.name}`}
+                aria-describedby={`${props.addressIdentifier}-streetaddress2-help`}
+                {...field}
+                className={classNames("form-field block", {
+                  "p-invalid": fieldState.error,
+                })}
+                placeholder="Suite 123"
+              />
+            )}
+          />
+          {getFormErrorMessage(
+            `${props.addressIdentifier}streetaddress2`,
+            `${props.addressIdentifier}-streetaddress2-help`,
+            errors
+          )}
+        </div>
+        <div className="address-form-field-container">
+          <label htmlFor={`${addressGroupName}citycommunity`} className="block">
+            {`${addressGroupName} City/Community`}
+          </label>
+          <Controller
+            name={`${props.addressIdentifier}citycommunity`}
+            control={control}
+            rules={{ required: "Error: City/Community is required." }}
+            render={({ field, fieldState }) => (
+              <InputText
+                id={`${field.name}`}
+                aria-describedby={`${props.addressIdentifier}-citycommunity-help`}
+                onBlurCapture={() => {
+                  setPoBoxField(
+                    getValues(`${props.addressIdentifier}citycommunity`).match(
+                      /Victoria/i
+                    )
+                  );
+                }}
+                {...field}
+                className={classNames("form-field block", {
+                  "p-invalid": fieldState.error,
+                })}
+                placeholder="Victoria"
+              />
+            )}
+          />
+          {getFormErrorMessage(
+            `${props.addressIdentifier}citycommunity`,
+            `${props.addressIdentifier}-citycommunity-help`,
+            errors
+          )}
+        </div>
+        {props.province ? (
           <div className="address-form-field-container">
-            <label htmlFor={`pobox-${addressGroupName}`} className="block">
-              {`${addressGroupName} P.O. Box`}
+            <label
+              htmlFor={`${addressGroupName}provincestate`}
+              className="block"
+            >
+              {`${addressGroupName} Province/State`}
             </label>
-            <InputText
-              id={`pobox-${addressGroupName}`}
-              type="text"
-              aria-describedby={`pobox-${addressGroupName}-help`}
-              className="form-field block"
-              placeholder={`${addressGroupName} P.O. Box number`}
-              {...register("pobox", {
-                required: poBoxField,
-              })}
+            <Controller
+              name={`${props.addressIdentifier}provincestate`}
+              control={control}
+              rules={{ required: "Error: Province/State is required." }}
+              render={({ field, fieldState }) => (
+                <InputText
+                  id={`${field.name}`}
+                  aria-describedby={`${props.addressIdentifier}-provincestate-help`}
+                  {...field}
+                  className={classNames("form-field block", {
+                    "p-invalid": fieldState.error,
+                  })}
+                  placeholder="BC"
+                />
+              )}
             />
-            {errors.pobox && (
-              <small
-                id={`pobox-${addressGroupName}-help`}
-                className="validation-error p-error block"
-              >
-                Error: P.O. Box is required for Victoria addresses. Please use
-                the BC Government{" "}
-                <a target="_blank" href="https://govposearch.pss.gov.bc.ca/">
-                  P.O. Box Lookup tool
-                </a>{" "}
-                to find the appropriate P.O. Box number:
-              </small>
+            {getFormErrorMessage(
+              `${props.addressIdentifier}provincestate`,
+              `${props.addressIdentifier}-provincestate-help`,
+              errors
             )}
           </div>
         ) : null}
+        <div className="address-form-field-container">
+          <label htmlFor={`${addressGroupName}postalcode`} className="block">
+            {`${addressGroupName} Postal Code`}
+          </label>
+          <Controller
+            name={`${props.addressIdentifier}postalcode`}
+            control={control}
+            rules={{ required: "Error: Postal Code is required." }}
+            render={({ field, fieldState }) => (
+              <InputText
+                id={`${field.name}`}
+                aria-describedby={`${props.addressIdentifier}-postalcode-help`}
+                {...field}
+                className={classNames("form-field block", "short-form-field", {
+                  "p-invalid": fieldState.error,
+                })}
+                placeholder="A0A 0A0"
+              />
+            )}
+          />
+          {getFormErrorMessage(
+            `${props.addressIdentifier}postalcode`,
+            `${props.addressIdentifier}-postalcode-help`,
+            errors
+          )}
+        </div>
+      </div>
 
-        <button
-          ref={props.submitReference}
-          type="submit"
-          style={{ display: "none" }}
-        />
-      </form>
+      {props.pobox && props.addressIdentifier.match(/supervisor/i) ? (
+        <div className="address-form-field-container">
+          <label htmlFor={`${addressGroupName}pobox`} className="block">
+            {`${addressGroupName} P.O. Box`}
+          </label>
+          <Controller
+            name={`${props.addressIdentifier}pobox`}
+            control={control}
+            rules={{
+              required: poBoxField,
+            }}
+            render={({ field, fieldState }) => (
+              <InputText
+                id={`${field.name}`}
+                aria-describedby={`${props.addressIdentifier}-pobox-help`}
+                {...field}
+                className={classNames("form-field block", {
+                  "p-invalid": fieldState.error,
+                })}
+                placeholder={`${addressGroupName} P.O. Box number`}
+              />
+            )}
+          />
+          {getFormErrorMessage(
+            `${props.addressIdentifier}pobox`,
+            `${props.addressIdentifier}-pobox-help`,
+            errors
+          ) ? (
+            <small
+              id={`pobox-${addressGroupName}-help`}
+              className="validation-error p-error block"
+            >
+              Error: P.O. Box is required for Victoria addresses. Please use the
+              BC Government{" "}
+              <a target="_blank" href="https://govposearch.pss.gov.bc.ca/">
+                P.O. Box Lookup tool
+              </a>{" "}
+              to find the appropriate P.O. Box number.
+            </small>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

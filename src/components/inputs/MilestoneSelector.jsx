@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import AppButton from "../common/AppButton";
 import ServiceCalculator from "./ServiceCalculator";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useFormContext } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { MultiSelect } from "primereact/multiselect";
@@ -55,6 +55,8 @@ export default function MilestoneSelector(props) {
     { field: "qualifyingyear", value: null },
     { field: "priormilestones", value: [] },
   ]);
+
+  const methods = useFormContext();
 
   const defaultValues = {
     yearsofservice: null,
@@ -161,74 +163,161 @@ export default function MilestoneSelector(props) {
   return (
     <div className={`milestone-form-${panelGroupName}`}>
       <div className="container">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div
-            className={`milestoneselector-${panelGroupName} milestone-form-details`}
-          >
-            <div className="milestone-form-field-container yearsofservice-block">
-              <div className="milestone-form-yearsofservice-block">
-                <label
-                  htmlFor={`${panelGroupName}-yearsofservice`}
-                  className={classNames("block", {
-                    "p-error": errors.yearsofservice,
-                  })}
-                >
-                  {`${panelCapitalized} Years of Service`}
-                </label>
-                <Controller
-                  name="yearsofservice"
-                  control={control}
-                  rules={{ required: "Error: Years of Service is required." }}
-                  render={({ field, fieldState }) => (
-                    <InputNumber
-                      inputId="withoutgrouping"
-                      min={0}
-                      max={99}
-                      id={`${panelGroupName}-${field.name}`}
-                      value={field.value}
-                      onChange={(e) => {
-                        field.onChange(e.value);
-                        onYearsOfServiceChange();
-                      }}
-                      aria-describedby={`${panelGroupName}-yearsofservice-help`}
-                      className={classNames("form-field block", {
-                        "p-invalid": fieldState.error,
-                      })}
-                      placeholder={`Enter ${panelPlaceholder} years of service`}
-                    />
-                  )}
-                />
-                {getFormErrorMessage(
-                  "yearsofservice",
-                  `${panelGroupName}-yearsofservice-help`
-                )}
-              </div>
-              <div className="calculator-button-toggle">
-                <AppButton
-                  danger={calculatorButton}
-                  secondary={!calculatorButton}
-                  onClick={toggleCalculator}
-                >
-                  {calculatorButton ? "Hide Calculator" : "Show Calculator"}
-                </AppButton>
-              </div>
-            </div>
-            {calculatorDropdown ? (
-              <ServiceCalculator
-                formSubmit={calculateTotal}
-              ></ServiceCalculator>
-            ) : null}
-            <div className="milestone-form-field-container">
+        {/* <form onSubmit={handleSubmit(onSubmit)}> */}
+        <div
+          className={`milestoneselector-${panelGroupName} milestone-form-details`}
+        >
+          <div className="milestone-form-field-container yearsofservice-block">
+            <div className="milestone-form-yearsofservice-block">
               <label
-                htmlFor={`${panelGroupName}-currentmilestone`}
+                htmlFor={`${panelGroupName}-yearsofservice`}
                 className={classNames("block", {
-                  "p-error": errors.currentmilestone,
+                  "p-error": errors.yearsofservice,
                 })}
               >
-                {`${panelCapitalized} Current Milestone`}
+                {`${panelCapitalized} Years of Service`}
               </label>
               <Controller
-                name="currentmilestone"
+                {...methods}
+                name="yearsofservice"
+                control={control}
+                rules={{ required: "Error: Years of Service is required." }}
+                render={({ field, fieldState }) => (
+                  <InputNumber
+                    inputId="withoutgrouping"
+                    min={0}
+                    max={99}
+                    id={`${panelGroupName}-${field.name}`}
+                    value={field.value}
+                    onChange={(e) => {
+                      field.onChange(e.value);
+                      onYearsOfServiceChange();
+                    }}
+                    aria-describedby={`${panelGroupName}-yearsofservice-help`}
+                    className={classNames("form-field block", {
+                      "p-invalid": fieldState.error,
+                    })}
+                    placeholder={`Enter ${panelPlaceholder} years of service`}
+                  />
+                )}
+              />
+              {getFormErrorMessage(
+                "yearsofservice",
+                `${panelGroupName}-yearsofservice-help`
+              )}
+            </div>
+            <div className="calculator-button-toggle">
+              <AppButton
+                danger={calculatorButton}
+                secondary={!calculatorButton}
+                onClick={toggleCalculator}
+              >
+                {calculatorButton ? "Hide Calculator" : "Show Calculator"}
+              </AppButton>
+            </div>
+          </div>
+          {calculatorDropdown ? (
+            <ServiceCalculator formSubmit={calculateTotal}></ServiceCalculator>
+          ) : null}
+          <div className="milestone-form-field-container">
+            <label
+              htmlFor={`${panelGroupName}-currentmilestone`}
+              className={classNames("block", {
+                "p-error": errors.currentmilestone,
+              })}
+            >
+              {`${panelCapitalized} Current Milestone`}
+            </label>
+            <Controller
+              {...methods}
+              name="currentmilestone"
+              control={control}
+              rules={{
+                required: {
+                  value: !milestoneSelected,
+                  message: "Error: Milestone selection is required.",
+                },
+              }}
+              render={({ field, fieldState }) => (
+                <Dropdown
+                  disabled={!getValues("yearsofservice")}
+                  id={`${panelGroupName}-${field.name}`}
+                  value={field.value}
+                  onChange={(e) => {
+                    field.onChange(e.value);
+                    onMilestoneSelection(e);
+                  }}
+                  aria-describedby={`${panelGroupName}-currentmilestone-help`}
+                  options={availableMilestones}
+                  optionLabel="text"
+                  className={classNames("form-field block", {
+                    "p-invalid": fieldState.error,
+                  })}
+                  placeholder={`Select ${panelPlaceholder} current milestone.`}
+                />
+              )}
+            />
+            {getFormErrorMessage(
+              "currentmilestone",
+              `${panelGroupName}-currentmilestone-help`
+            )}
+          </div>
+          {getValues("currentmilestone") && props.selfregister ? (
+            <div className="milestone-form-field-container">
+              <label
+                htmlFor={`${panelGroupName}-qualifyingyear`}
+                className={classNames("block", {
+                  "p-error": errors.qualifyingyear,
+                })}
+              >
+                {`${panelCapitalized} Qualifying Year`}
+              </label>
+              <Controller
+                {...methods}
+                name="qualifyingyear"
+                control={control}
+                rules={{
+                  required: {
+                    value: getValues("currentmilestone"),
+                    message: "Error: Qualifying Year is required.",
+                  },
+                }}
+                render={({ field, fieldState }) => (
+                  <Dropdown
+                    disabled={!getValues("yearsofservice")}
+                    id={`${panelGroupName}-${field.name}`}
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.value)}
+                    aria-describedby={`${panelGroupName}-qualifyingyear-help`}
+                    options={qualifyingYears}
+                    optionLabel="text"
+                    className={classNames("form-field block", {
+                      "p-invalid": fieldState.error,
+                    })}
+                    placeholder={`During which year was this milestone reached.`}
+                  />
+                )}
+              />
+              {getFormErrorMessage(
+                "qualifyingyear",
+                `${panelGroupName}-qualifyingyear-help`
+              )}
+            </div>
+          ) : null}
+
+          {ministryEligible ? (
+            <div className="milestone-form-field-container">
+              <label
+                htmlFor={`${panelGroupName}-priormilestones`}
+                className={classNames("block", {
+                  "p-error": errors.priormilestones,
+                })}
+              >
+                {`${panelCapitalized} Prior Unclaimed Milestone(s) Selected`}
+              </label>
+              <Controller
+                {...methods}
+                name="priormilestones"
                 control={control}
                 rules={{
                   required: {
@@ -237,123 +326,38 @@ export default function MilestoneSelector(props) {
                   },
                 }}
                 render={({ field, fieldState }) => (
-                  <Dropdown
+                  <MultiSelect
                     disabled={!getValues("yearsofservice")}
                     id={`${panelGroupName}-${field.name}`}
+                    display="chip"
                     value={field.value}
                     onChange={(e) => {
                       field.onChange(e.value);
                       onMilestoneSelection(e);
                     }}
-                    aria-describedby={`${panelGroupName}-currentmilestone-help`}
-                    options={availableMilestones}
+                    aria-describedby={`${panelGroupName}-priormilestones-help`}
+                    options={priorMilestonesAvailable}
                     optionLabel="text"
                     className={classNames("form-field block", {
                       "p-invalid": fieldState.error,
                     })}
-                    placeholder={`Select ${panelPlaceholder} current milestone.`}
+                    placeholder={`Select ${panelPlaceholder} prior milestones.`}
                   />
                 )}
               />
               {getFormErrorMessage(
-                "currentmilestone",
-                `${panelGroupName}-currentmilestone-help`
+                "priormilestones",
+                `${panelGroupName}-priormilestones-help`
               )}
             </div>
-            {getValues("currentmilestone") && props.selfregister ? (
-              <div className="milestone-form-field-container">
-                <label
-                  htmlFor={`${panelGroupName}-qualifyingyear`}
-                  className={classNames("block", {
-                    "p-error": errors.qualifyingyear,
-                  })}
-                >
-                  {`${panelCapitalized} Qualifying Year`}
-                </label>
-                <Controller
-                  name="qualifyingyear"
-                  control={control}
-                  rules={{
-                    required: {
-                      value: getValues("currentmilestone"),
-                      message: "Error: Qualifying Year is required.",
-                    },
-                  }}
-                  render={({ field, fieldState }) => (
-                    <Dropdown
-                      disabled={!getValues("yearsofservice")}
-                      id={`${panelGroupName}-${field.name}`}
-                      value={field.value}
-                      onChange={(e) => field.onChange(e.value)}
-                      aria-describedby={`${panelGroupName}-qualifyingyear-help`}
-                      options={qualifyingYears}
-                      optionLabel="text"
-                      className={classNames("form-field block", {
-                        "p-invalid": fieldState.error,
-                      })}
-                      placeholder={`During which year was this milestone reached.`}
-                    />
-                  )}
-                />
-                {getFormErrorMessage(
-                  "qualifyingyear",
-                  `${panelGroupName}-qualifyingyear-help`
-                )}
-              </div>
-            ) : null}
-
-            {ministryEligible ? (
-              <div className="milestone-form-field-container">
-                <label
-                  htmlFor={`${panelGroupName}-priormilestones`}
-                  className={classNames("block", {
-                    "p-error": errors.priormilestones,
-                  })}
-                >
-                  {`${panelCapitalized} Prior Unclaimed Milestone(s) Selected`}
-                </label>
-                <Controller
-                  name="priormilestones"
-                  control={control}
-                  rules={{
-                    required: {
-                      value: !milestoneSelected,
-                      message: "Error: Milestone selection is required.",
-                    },
-                  }}
-                  render={({ field, fieldState }) => (
-                    <MultiSelect
-                      disabled={!getValues("yearsofservice")}
-                      id={`${panelGroupName}-${field.name}`}
-                      display="chip"
-                      value={field.value}
-                      onChange={(e) => {
-                        field.onChange(e.value);
-                        onMilestoneSelection(e);
-                      }}
-                      aria-describedby={`${panelGroupName}-priormilestones-help`}
-                      options={priorMilestonesAvailable}
-                      optionLabel="text"
-                      className={classNames("form-field block", {
-                        "p-invalid": fieldState.error,
-                      })}
-                      placeholder={`Select ${panelPlaceholder} prior milestones.`}
-                    />
-                  )}
-                />
-                {getFormErrorMessage(
-                  "priormilestones",
-                  `${panelGroupName}-priormilestones-help`
-                )}
-              </div>
-            ) : null}
-          </div>
-          <button
-            ref={props.submitReference}
-            type="submit"
-            style={{ display: "none" }}
-          />
-        </form>
+          ) : null}
+        </div>
+        <button
+          ref={props.submitReference}
+          type="submit"
+          style={{ display: "none" }}
+        />
+        {/* </form> */}
       </div>
     </div>
   );

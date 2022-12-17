@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
+import {
+  useForm,
+  Controller,
+  useFieldArray,
+  useWatch,
+  FormProvider,
+} from "react-hook-form";
 
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
@@ -9,6 +15,7 @@ import AddressInput from "../../components/inputs/AddressInput";
 import MilestoneSelector from "../../components/inputs/MilestoneSelector";
 import InfoToolTip from "../../components/common/InfoToolTip";
 import DataDisplay from "../../components/common/DataDisplay";
+import EmployeeList from "../../components/composites/EmployeeList";
 import "./CalculatorDelegated.css";
 
 /**
@@ -19,27 +26,78 @@ import "./CalculatorDelegated.css";
  */
 
 export default function CalculatorDelegated() {
-  const { control, handleSubmit, reset } = useForm({
-    defaultValues: {
-      employeeAdd: [{}],
-    },
-  });
-  const [formComplete, setFormComplete] = useState(false);
-  const [employees, setEmployees] = useState({});
+  const defaultValues = {
+    "supervisor-firstname": "",
+    "supervisor-lastname": "",
+    "supervisor-governmentemail": "",
+    supervisorstreetaddress: "",
+    supervisorstreetaddress2: "",
+    supervisorcitycommunity: "",
+    supervisorpostalcode: "",
+    supervisorpobox: "",
+    employee: [
+      {
+        firstname: "",
+        lastname: "",
+        governmentemail: "",
+      },
+    ],
+  };
 
-  const { fields, append, remove } = useFieldArray({
+  const methods = useForm({ defaultValues });
+  // {
+  //   defaultValues: {
+  //     employee: [{}],
+  //     supervisorfirstname: "",
+  //   },
+  // });
+
+  const {
+    register,
     control,
-    name: "employeeAdd",
-  });
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = methods;
+
+  // const { control, handleSubmit, reset } = useForm({
+  //   defaultValues: {
+  //     employee: [{}],
+  //   },
+  // });
+  const [formComplete, setFormComplete] = useState(false);
+  // const [employees, setEmployees] = useState({});
+
+  // const { fields, append, remove } = useFieldArray({
+  //   control,
+  //   name: "employee",
+  // });
 
   const onFormCompletion = () => {
     //add step to update in state what is displayed
     setFormComplete(true);
   };
 
-  const onChange = (id, ministry) => {
-    setEmployees({ ...employees, [id]: ministry });
+  const onSubmit = (data) => {
+    // console.log(formValues, "this is current form values in state");
+    console.log(data, "this is data");
+    // const newFormValues = formValues.map(
+    //   (each) => (each.value = data[each.field])
+    // );
+    // setFormValues(newFormValues);
+    // console.log(formValues, "this is updated form values");
+    // setFormData(data);
+    // setShowMessage(true);
+
+    // reset();
   };
+
+  // const onChange = (id, ministry) => {
+  //   setEmployees({ ...employees, [id]: ministry });
+  // };
+
+  // console.log(fields, "this is fields");
+  console.log(errors);
 
   return (
     <div className="calculator-splash">
@@ -104,86 +162,95 @@ export default function CalculatorDelegated() {
         to consent to receive a recognition award.
       </AppPanel>
 
-      <AppPanel header="Supervisor Details">
-        <ContactDetails basic panelName="supervisor" />
-      </AppPanel>
-      <AppPanel header="Supervisor Address">
-        <AddressInput pobox addressIdentifier="Supervisor" />
-      </AppPanel>
-
-      <AppPanel
-        header={
-          <span>
-            Add Employees
-            <InfoToolTip
-              target="p-panel-title"
-              content="This section allows you to add employees that you wish to calculate and submit registration requests for. Please include all information and complete fields in full. "
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <AppPanel header="Supervisor Details">
+            <ContactDetails basic panelName="supervisor" errors={errors} />
+          </AppPanel>
+          <AppPanel header="Supervisor Address">
+            <AddressInput
+              pobox
+              addressIdentifier="supervisor"
+              errors={errors}
             />
-          </span>
-        }
-      >
-        <div onSubmit={handleSubmit()} className="employee-add-panel">
-          <ul>
-            {fields.map((item, index) => {
-              return (
-                <li key={item.id}>
-                  <AppPanel
-                    header={
-                      <div className="employee-header-bar">
-                        <span className="employee-header-text">
-                          Employee {index + 1}
-                        </span>
-                        {index !== 0 ? (
-                          <AppButton
-                            className="employee-add-delete-button"
-                            passClass="p-button-raised p-button-rounded"
-                            icon="pi pi-times-circle"
-                            danger
-                            onClick={() => {
-                              remove(index);
-                            }}
-                          ></AppButton>
-                        ) : null}
-                      </div>
-                    }
-                  >
-                    <ContactDetails
-                      basic
-                      delegated
-                      ministryRef={onChange}
-                      index={item.id}
-                      panelName={`Employee ${index + 1}`}
-                    />
-                    <MilestoneSelector
-                      delegated
-                      ministry={employees[item.id]}
-                      panelName={`Employee ${index + 1}`}
-                    />
-                  </AppPanel>
-                </li>
-              );
-            })}
-          </ul>
-          <section>
-            {/* <button
-              type="button"
-              onClick={() =>
-                reset({
-                  employeeAdd: [{}],
-                })
-              }
-            >
-              Reset Employees
-            </button> */}
-          </section>
+          </AppPanel>
 
-          <input
-            style={{ display: "none" }}
-            type="submit"
-            onClick={handleSubmit()}
-          />
-        </div>
-        {/* <button
+          <AppPanel
+            header={
+              <span>
+                Add Employees
+                <InfoToolTip
+                  target="p-panel-title"
+                  content="This section allows you to add employees that you wish to calculate and submit registration requests for. Please include all information and complete fields in full. "
+                />
+              </span>
+            }
+          >
+            <div className="employee-add-panel">
+              <EmployeeList errors={errors} />
+              {/* <ul>
+                {fields.map((item, index) => {
+                  return (
+                    <li key={item.id}>
+                      <AppPanel
+                        header={
+                          <div className="employee-header-bar">
+                            <span className="employee-header-text">
+                              Employee {index + 1}
+                            </span>
+                            {index !== 0 ? (
+                              <AppButton
+                                className="employee-add-delete-button"
+                                passClass="p-button-raised p-button-rounded"
+                                icon="pi pi-times-circle"
+                                danger
+                                onClick={() => {
+                                  remove(index);
+                                }}
+                              ></AppButton>
+                            ) : null}
+                          </div>
+                        }
+                      >
+                        <ContactDetails
+                          basic
+                          delegated
+                          ministryRef={onChange}
+                          index={item.id}
+                          panelName={`Employee ${index + 1}`}
+                          errors={errors}
+                        />
+                        <MilestoneSelector
+                          delegated
+                          ministry={employees[item.id]}
+                          panelName={`Employee ${index + 1}`}
+                          errors={errors}
+                        />
+                      </AppPanel>
+                    </li>
+                  );
+                })}
+              </ul> */}
+              <section>
+                <button
+                  type="button"
+                  onClick={() =>
+                    reset({
+                      employee: [{}],
+                    })
+                  }
+                >
+                  Reset Employees
+                </button>
+              </section>
+
+              <input
+                style={{ display: "none" }}
+                type="submit"
+                onClick={handleSubmit()}
+              />
+            </div>
+            {/* <button
               type="button"
               onClick={() => {
                 append({});
@@ -191,20 +258,22 @@ export default function CalculatorDelegated() {
             >
               Add Row
             </button> */}
-        <div className="employee-add-buttons">
-          <AppButton
-            info
-            onClick={() => {
-              append({});
-            }}
-          >
-            Add Another Employee
-          </AppButton>
-          <AppButton onClick={() => onFormCompletion()}>
-            {!formComplete ? "Finished? Check Submission" : "Update Submission"}
-          </AppButton>
-        </div>
-      </AppPanel>
+            <div className="employee-add-buttons">
+              <AppButton
+                onClick={() => {
+                  onFormCompletion();
+                  onSubmit();
+                }}
+              >
+                {!formComplete
+                  ? "Finished? Check Submission"
+                  : "Update Submission"}
+              </AppButton>
+            </div>
+          </AppPanel>
+          <input type="submit" />
+        </form>
+      </FormProvider>
       <AppPanel
         header={
           <PageHeader
