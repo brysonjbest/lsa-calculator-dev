@@ -25,8 +25,7 @@ import "./ContactDetails.css";
  */
 
 export default function ContactDetails(props) {
-  console.log(props.itemNumber);
-  //fix this formatting
+  //fix this formatting in milestones and contactdetails
   let panelGroupName = props.panelName
     ? `${props.panelName.replace(/\s/g, "")}`
     : "default";
@@ -45,28 +44,7 @@ export default function ContactDetails(props) {
       : props.panelName.charAt(0).toUpperCase() +
           props.panelName.slice(1).toLowerCase() || "";
 
-  const [showMessage, setShowMessage] = useState(false);
-  const [formData, setFormData] = useState({});
-
-  //state has to be in the main view being submitted. This has to be moved up to be managed on the individual views for form submission to function.
-  const [formValues, setFormValues] = useState([
-    { field: "firstname", value: "" },
-    { field: "lastname", value: "" },
-    { field: "governmentemail", value: "" },
-    { field: "governmentphone", value: "" },
-    { field: "employeenumber", value: "" },
-    { field: "ministryorganization", value: null },
-    { field: "branch", value: "" },
-    { field: "personalphone", value: "" },
-    { field: "personalemail", value: "" },
-  ]);
-
-  const {
-    control,
-    // formState: { errors },
-    handleSubmit,
-    reset,
-  } = useFormContext();
+  const { control } = useFormContext();
 
   const errors = props.errors;
 
@@ -83,10 +61,10 @@ export default function ContactDetails(props) {
   );
 
   // console.log(panelGroupName);
-  console.log(
-    `${props.panelName}[${props.itemNumber - 1}]['firstname']`,
-    "this is test"
-  );
+  // console.log(
+  //   `${props.panelName}[${props.itemNumber - 1}]['firstname']`,
+  //   "this is test"
+  // );
 
   return (
     <div className={`contact-details-form-${panelGroupName}`}>
@@ -115,10 +93,7 @@ export default function ContactDetails(props) {
                   rules={{ required: "Error: First name is required." }}
                   render={({ field, fieldState }) => (
                     <InputText
-                      // id={`${field.name}`}
-                      id={`${props.panelName}[${
-                        props.itemNumber - 1
-                      }]['firstname']`}
+                      id={`${field.name}`}
                       aria-describedby={`${panelGroupName}-firstname-help`}
                       {...field}
                       className={classNames("form-field block", {
@@ -130,7 +105,6 @@ export default function ContactDetails(props) {
                 />
                 {getFormErrorMessage(
                   `${panelGroupName}-firstname`,
-                  // `${props.panelName}[${props.itemNumber - 1}]['firstname']`,
                   `${panelGroupName}-firstname-help`,
                   errors,
                   [props.panelName, props.itemNumber - 1, "firstname"]
@@ -146,7 +120,6 @@ export default function ContactDetails(props) {
                   {`${panelCapitalized} Last Name`}
                 </label>
                 <Controller
-                  // name={`${panelGroupName}-lastname`}
                   name={
                     props.itemNumber
                       ? `${props.panelName}.${props.itemNumber - 1}.lastname`
@@ -156,12 +129,12 @@ export default function ContactDetails(props) {
                   rules={{ required: "Error: Last name is required." }}
                   render={({ field, fieldState }) => (
                     <InputText
-                      id={`${panelGroupName}-${field.name}`}
+                      id={`${field.name}`}
+                      aria-describedby={`${panelGroupName}-lastname-help`}
                       {...field}
                       className={classNames("form-field block", {
                         "p-invalid": fieldState.error,
                       })}
-                      aria-describedby={`${panelGroupName}-lastname-help`}
                       placeholder={`${panelPlaceholder} last name`}
                     />
                   )}
@@ -183,7 +156,6 @@ export default function ContactDetails(props) {
                   {`${panelCapitalized} Government Email`}
                 </label>
                 <Controller
-                  // name={`${panelGroupName}-governmentemail`}
                   name={
                     props.itemNumber
                       ? `${props.panelName}.${
@@ -201,7 +173,7 @@ export default function ContactDetails(props) {
                   }}
                   render={({ field, fieldState }) => (
                     <InputText
-                      id={`${panelGroupName}-governmentemail`}
+                      id={`${field.name}`}
                       type="text"
                       aria-describedby={`${panelGroupName}-government-email-help`}
                       placeholder={`${panelPlaceholder} government email`}
@@ -234,7 +206,13 @@ export default function ContactDetails(props) {
                     {`${panelCapitalized} Government Phone Number`}
                   </label>
                   <Controller
-                    name={`${panelGroupName}-governmentphone`}
+                    name={
+                      props.itemNumber
+                        ? `${props.panelName}.${
+                            props.itemNumber - 1
+                          }.governmentphone`
+                        : `${panelGroupName}-governmentphone`
+                    }
                     control={control}
                     rules={{
                       required: "Error: Government phone number is required.",
@@ -246,7 +224,7 @@ export default function ContactDetails(props) {
                     }}
                     render={({ field, fieldState }) => (
                       <InputMask
-                        id={`${panelGroupName}-governmentphone`}
+                        id={`${field.name}`}
                         mask="(999) 999-9999? x99999"
                         autoClear={false}
                         {...field}
@@ -261,7 +239,8 @@ export default function ContactDetails(props) {
                   {getFormErrorMessage(
                     `${panelGroupName}-governmentphone`,
                     `${panelGroupName}-government-phone-help`,
-                    errors
+                    errors,
+                    [props.panelName, props.itemNumber - 1, "governmentphone"]
                   )}
                 </div>
               ) : null}
@@ -276,7 +255,13 @@ export default function ContactDetails(props) {
                     {`${panelCapitalized} Employee Number`}
                   </label>
                   <Controller
-                    name={`${panelGroupName}-employeenumber`}
+                    name={
+                      props.itemNumber
+                        ? `${props.panelName}.${
+                            props.itemNumber - 1
+                          }.employeenumber`
+                        : `${panelGroupName}-employeenumber`
+                    }
                     control={control}
                     rules={{
                       required: "Error: Employee number is required.",
@@ -296,7 +281,8 @@ export default function ContactDetails(props) {
                   {getFormErrorMessage(
                     `${panelGroupName}-employeenumber`,
                     `${panelGroupName}-employeenumber-help`,
-                    errors
+                    errors,
+                    [props.panelName, props.itemNumber - 1, "employeenumber"]
                   )}
                 </div>
               ) : null}
@@ -311,7 +297,13 @@ export default function ContactDetails(props) {
                     {`${panelCapitalized} Ministry/Organization`}
                   </label>
                   <Controller
-                    name={`${panelGroupName}-ministryorganization`}
+                    name={
+                      props.itemNumber
+                        ? `${props.panelName}.${
+                            props.itemNumber - 1
+                          }.ministryorganization`
+                        : `${panelGroupName}-ministryorganization`
+                    }
                     control={control}
                     rules={{
                       required: "Error: Ministry or Organization is required.",
@@ -337,7 +329,12 @@ export default function ContactDetails(props) {
                   {getFormErrorMessage(
                     `${panelGroupName}-ministryorganization`,
                     `${panelGroupName}-ministryorganization-help`,
-                    errors
+                    errors,
+                    [
+                      props.panelName,
+                      props.itemNumber - 1,
+                      "ministryorganization",
+                    ]
                   )}
                 </div>
               ) : null}
@@ -352,12 +349,16 @@ export default function ContactDetails(props) {
                     {`${panelCapitalized} Branch`}
                   </label>
                   <Controller
-                    name={`${panelGroupName}-branch`}
+                    name={
+                      props.itemNumber
+                        ? `${props.panelName}.${props.itemNumber - 1}.branch`
+                        : `${panelGroupName}-branch`
+                    }
                     control={control}
                     rules={{ required: "Error: Branch is required." }}
                     render={({ field, fieldState }) => (
                       <InputText
-                        id={`${panelGroupName}-branch`}
+                        id={`${field.name}`}
                         aria-describedby={`${panelGroupName}-branch-help`}
                         {...field}
                         className={classNames("form-field block", {
@@ -370,7 +371,8 @@ export default function ContactDetails(props) {
                   {getFormErrorMessage(
                     `${panelGroupName}-branch`,
                     `${panelGroupName}-branch-help`,
-                    errors
+                    errors,
+                    [props.panelName, props.itemNumber - 1, "branch"]
                   )}
                 </div>
               ) : null}
@@ -388,7 +390,13 @@ export default function ContactDetails(props) {
                   {`${panelCapitalized} Personal Phone Number`}
                 </label>
                 <Controller
-                  name={`${panelGroupName}-personalphone`}
+                  name={
+                    props.itemNumber
+                      ? `${props.panelName}.${
+                          props.itemNumber - 1
+                        }.personalphone`
+                      : `${panelGroupName}-personalphone`
+                  }
                   control={control}
                   rules={{
                     required: "Error: Personal phone number is required.",
@@ -400,7 +408,7 @@ export default function ContactDetails(props) {
                   }}
                   render={({ field, fieldState }) => (
                     <InputMask
-                      id={`${panelGroupName}-personalphone`}
+                      id={`${field.name}`}
                       mask="(999) 999-9999? x99999"
                       autoClear={false}
                       {...field}
@@ -415,7 +423,8 @@ export default function ContactDetails(props) {
                 {getFormErrorMessage(
                   `${panelGroupName}-personalphone`,
                   `${panelGroupName}-personalphone-help`,
-                  errors
+                  errors,
+                  [props.panelName, props.itemNumber - 1, "personalphone"]
                 )}
               </div>
               <div className="contact-form-field-container">
@@ -428,7 +437,13 @@ export default function ContactDetails(props) {
                   {`${panelCapitalized} Personal Email Address`}
                 </label>
                 <Controller
-                  name={`${panelGroupName}-personalemail`}
+                  name={
+                    props.itemNumber
+                      ? `${props.panelName}.${
+                          props.itemNumber - 1
+                        }.personalemail`
+                      : `${panelGroupName}-personalemail`
+                  }
                   control={control}
                   rules={{
                     required: "Error: Personal email address is required.",
@@ -439,7 +454,7 @@ export default function ContactDetails(props) {
                   }}
                   render={({ field, fieldState }) => (
                     <InputText
-                      id={`${panelGroupName}-personalemail`}
+                      id={`${field.name}`}
                       type="text"
                       aria-describedby={`${panelGroupName}-personalemail-help`}
                       placeholder={`${panelPlaceholder} personal email address`}
@@ -453,7 +468,8 @@ export default function ContactDetails(props) {
                 {getFormErrorMessage(
                   `${panelGroupName}-personalemail`,
                   `${panelGroupName}-personalemail-help`,
-                  errors
+                  errors,
+                  [props.panelName, props.itemNumber - 1, "personalemail"]
                 )}
               </div>
             </div>

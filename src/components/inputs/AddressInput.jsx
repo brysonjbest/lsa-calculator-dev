@@ -271,8 +271,8 @@ export default function AddressInput(props) {
               id={`pobox-${addressGroupName}-help`}
               className="validation-error p-error block"
             >
-              Error: P.O. Box is required for Victoria addresses. Please use the
-              BC Government{" "}
+              P.O. Box is required for Victoria addresses. Please use the BC
+              Government{" "}
               <a target="_blank" href="https://govposearch.pss.gov.bc.ca/">
                 P.O. Box Lookup tool
               </a>{" "}

@@ -1,21 +1,16 @@
-import React, { useState } from "react";
-import {
-  useForm,
-  Controller,
-  useFieldArray,
-  useWatch,
-  FormProvider,
-} from "react-hook-form";
+import React, { useState, useEffect } from "react";
+import { useForm, FormProvider } from "react-hook-form";
 
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
 import PageHeader from "../../components/common/PageHeader";
-import ContactDetails from "../../components/inputs/ContactDetails";
-import AddressInput from "../../components/inputs/AddressInput";
-import MilestoneSelector from "../../components/inputs/MilestoneSelector";
 import InfoToolTip from "../../components/common/InfoToolTip";
 import DataDisplay from "../../components/common/DataDisplay";
 import EmployeeList from "../../components/composites/EmployeeList";
+import ContactDetails from "../../components/inputs/ContactDetails";
+import AddressInput from "../../components/inputs/AddressInput";
+import formServices from "../../services/settings.services";
+
 import "./CalculatorDelegated.css";
 
 /**
@@ -40,64 +35,45 @@ export default function CalculatorDelegated() {
         firstname: "",
         lastname: "",
         governmentemail: "",
+        employeenumber: "",
+        ministryorganization: null,
+        yearsofservice: "",
+        currentmilestone: "",
+        qualifyingyear: "",
+        priormilestones: "",
       },
     ],
   };
 
   const methods = useForm({ defaultValues });
-  // {
-  //   defaultValues: {
-  //     employee: [{}],
-  //     supervisorfirstname: "",
-  //   },
-  // });
+  const [employeeData, setEmployeeData] = useState([]);
+  const [submissionData, setSubmissionData] = useState({});
+  const [formComplete, setFormComplete] = useState(false);
+  const [formChanged, setFormChanged] = useState(true);
 
   const {
-    register,
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors },
+    formState: { errors, isValid },
+    watch,
   } = methods;
 
-  // const { control, handleSubmit, reset } = useForm({
-  //   defaultValues: {
-  //     employee: [{}],
-  //   },
-  // });
-  const [formComplete, setFormComplete] = useState(false);
-  // const [employees, setEmployees] = useState({});
-
-  // const { fields, append, remove } = useFieldArray({
-  //   control,
-  //   name: "employee",
-  // });
-
-  const onFormCompletion = () => {
-    //add step to update in state what is displayed
-    setFormComplete(true);
-  };
+  watch(() => setFormChanged(true));
 
   const onSubmit = (data) => {
-    // console.log(formValues, "this is current form values in state");
-    console.log(data, "this is data");
-    // const newFormValues = formValues.map(
-    //   (each) => (each.value = data[each.field])
-    // );
-    // setFormValues(newFormValues);
-    // console.log(formValues, "this is updated form values");
-    // setFormData(data);
-    // setShowMessage(true);
+    const finalData = Object.assign({}, data);
+    setSubmissionData(finalData);
 
-    // reset();
+    const employeeData = [...data.employee];
+    employeeData.map((each, index) => {
+      each["employee"] = each["firstname"] ? `${index + 1}` : "";
+    });
+    setEmployeeData(employeeData);
   };
 
-  // const onChange = (id, ministry) => {
-  //   setEmployees({ ...employees, [id]: ministry });
-  // };
+  //Final step in creating submission - will be api call to backend to update
 
-  // console.log(fields, "this is fields");
-  console.log(errors);
+  const submitDelegated = () => {
+    console.log(submissionData, "this is final submission data");
+  };
 
   return (
     <div className="calculator-splash">
@@ -188,114 +164,57 @@ export default function CalculatorDelegated() {
           >
             <div className="employee-add-panel">
               <EmployeeList errors={errors} />
-              {/* <ul>
-                {fields.map((item, index) => {
-                  return (
-                    <li key={item.id}>
-                      <AppPanel
-                        header={
-                          <div className="employee-header-bar">
-                            <span className="employee-header-text">
-                              Employee {index + 1}
-                            </span>
-                            {index !== 0 ? (
-                              <AppButton
-                                className="employee-add-delete-button"
-                                passClass="p-button-raised p-button-rounded"
-                                icon="pi pi-times-circle"
-                                danger
-                                onClick={() => {
-                                  remove(index);
-                                }}
-                              ></AppButton>
-                            ) : null}
-                          </div>
-                        }
-                      >
-                        <ContactDetails
-                          basic
-                          delegated
-                          ministryRef={onChange}
-                          index={item.id}
-                          panelName={`Employee ${index + 1}`}
-                          errors={errors}
-                        />
-                        <MilestoneSelector
-                          delegated
-                          ministry={employees[item.id]}
-                          panelName={`Employee ${index + 1}`}
-                          errors={errors}
-                        />
-                      </AppPanel>
-                    </li>
-                  );
-                })}
-              </ul> */}
-              <section>
-                <button
-                  type="button"
-                  onClick={() =>
-                    reset({
-                      employee: [{}],
-                    })
-                  }
-                >
-                  Reset Employees
-                </button>
-              </section>
-
-              <input
-                style={{ display: "none" }}
-                type="submit"
-                onClick={handleSubmit()}
-              />
             </div>
-            {/* <button
-              type="button"
-              onClick={() => {
-                append({});
-              }}
-            >
-              Add Row
-            </button> */}
             <div className="employee-add-buttons">
               <AppButton
+                type="submit"
+                disabled={!isValid}
                 onClick={() => {
-                  onFormCompletion();
-                  onSubmit();
+                  setFormComplete(true);
+                  setFormChanged(false);
                 }}
               >
                 {!formComplete
-                  ? "Finished? Check Submission"
-                  : "Update Submission"}
+                  ? "Finished? Check Submission."
+                  : "Recheck data if updated."}
               </AppButton>
             </div>
           </AppPanel>
-          <input type="submit" />
         </form>
       </FormProvider>
-      <AppPanel
-        header={
-          <PageHeader
-            title="Submit Registration"
-            singleLine
-            gradient3
-          ></PageHeader>
-        }
-        fullwidth
-      >
-        <div>
-          Based on the input in the calculator above, the following employees
-          will receive registration confirmation emails for the CURRENT YEAR
-          recognition period. If employees are eligible for previous years that
-          they have not claimed, they will have the opportunity to update their
-          registrations prior to submission. Please confirm that the information
-          you have entered is correct prior to submission, and then proceed by
-          clicking on “Submit”.
-        </div>
-        <DataDisplay category="delegated" />
-        <AppButton>Submit</AppButton>
-      </AppPanel>
+      {employeeData.length > 0 ? (
+        <AppPanel
+          header={
+            <PageHeader
+              title="Submit Registration"
+              singleLine
+              gradient3
+            ></PageHeader>
+          }
+          fullwidth
+        >
+          <div>
+            Based on the input in the calculator above, the following employees
+            will receive registration confirmation emails for the CURRENT YEAR
+            recognition period. If employees are eligible for previous years
+            that they have not claimed, they will have the opportunity to update
+            their registrations prior to submission. Please confirm that the
+            information you have entered is correct prior to submission, and
+            then proceed by clicking on “Submit”.
+          </div>
+
+          <DataDisplay
+            category="delegated"
+            data={submissionData}
+            identifier="employee"
+          />
+          <AppButton disabled={formChanged} onClick={() => submitDelegated()}>
+            {!formChanged
+              ? "Submit"
+              : "Data has been updated, please resubmit above to check input."}
+          </AppButton>
+        </AppPanel>
+      ) : null}
     </div>
   );
 }

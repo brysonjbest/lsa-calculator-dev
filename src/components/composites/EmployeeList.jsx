@@ -1,12 +1,5 @@
-import React, { useState } from "react";
-import {
-  useForm,
-  Controller,
-  useFieldArray,
-  useWatch,
-  FormProvider,
-  useFormContext,
-} from "react-hook-form";
+import React, { useState, useEffect } from "react";
+import { useFieldArray, useFormContext } from "react-hook-form";
 
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
@@ -14,20 +7,37 @@ import ContactDetails from "../../components/inputs/ContactDetails";
 import MilestoneSelector from "../../components/inputs/MilestoneSelector";
 
 const EmployeeList = ({ errors }) => {
-  const { control } = useFormContext();
+  const { control, reset } = useFormContext();
 
-  const { fields, append, remove, update } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "employee",
   });
 
   const [employees, setEmployees] = useState({});
+  const [resetList, setResetList] = useState(false);
+
+  useEffect(() => {
+    reset({
+      employee: [
+        {
+          firstname: "",
+          lastname: "",
+          governmentemail: "",
+          employeenumber: "",
+          ministryorganization: null,
+          yearsofservice: "",
+          currentmilestone: "",
+          qualifyingyear: "",
+          priormilestones: "",
+        },
+      ],
+    });
+  }, [resetList]);
 
   const onChange = (id, ministry) => {
     setEmployees({ ...employees, [id]: ministry });
   };
-
-  console.log(errors, "this is in employee list");
 
   return (
     <>
@@ -57,33 +67,50 @@ const EmployeeList = ({ errors }) => {
               >
                 <ContactDetails
                   basic
-                  // delegated
+                  delegated
                   ministryRef={onChange}
                   index={item.id}
-                  //   panelName={`employee ${index + 1}`}
                   panelName={`employee`}
                   itemNumber={index + 1}
                   errors={errors}
                 />
-                {/* <MilestoneSelector
-                delegated
-                ministry={employees[item.id]}
-                panelName={`employee ${index + 1}`}
-                errors={errors}
-              /> */}
+                <MilestoneSelector
+                  delegated
+                  selfregister
+                  ministry={employees[item.id]}
+                  index={item.id}
+                  panelName={`employee`}
+                  itemNumber={index + 1}
+                  errors={errors}
+                />
               </AppPanel>
             </li>
           );
         })}
       </ul>
-      <AppButton
-        info
-        onClick={() => {
-          append({ firstname: "", lastname: "", governmentemail: "" });
-        }}
-      >
-        Add Another Employee
-      </AppButton>
+      <div className="employee-list-options">
+        <AppButton
+          info
+          onClick={() => {
+            append({
+              firstname: "",
+              lastname: "",
+              governmentemail: "",
+              employeenumber: "",
+              ministryorganization: null,
+              yearsofservice: "",
+              currentmilestone: "",
+              qualifyingyear: "",
+              priormilestones: "",
+            });
+          }}
+        >
+          Add Another Employee
+        </AppButton>
+        <AppButton danger onClick={() => setResetList(!resetList)}>
+          Reset Employees
+        </AppButton>
+      </div>
     </>
   );
 };

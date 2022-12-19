@@ -8,6 +8,7 @@ import { MultiSelect } from "primereact/multiselect";
 import { InputMask } from "primereact/inputmask";
 import { InputNumber } from "primereact/inputnumber";
 import formServices from "../../services/settings.services";
+import getFormErrorMessage from "../../services/helpers/ErrorMessage";
 
 import classNames from "classnames";
 import "./MilestoneSelector.css";
@@ -20,12 +21,20 @@ import "./MilestoneSelector.css";
  * @param {boolean} props.delegated state variable boolean for controlling if all fields are displayed
  * @param {string} props.ministry state describing what ministry has been selected for the user
  * @param {string} props.panelName string describing what panel these contact details belong to ex: Supervisor, Personal
+ * @param {integer} props.index index of item within form
  * @param {() => void} props.formSubmit function to execute on form submission
  * @returns
  */
 
 export default function MilestoneSelector(props) {
-  const panelGroupName = props.panelName ? props.panelName : "default";
+  //fix this formatting in milestones and contactdetails
+  let panelGroupName = props.panelName
+    ? `${props.panelName.replace(/\s/g, "")}`
+    : "default";
+  panelGroupName =
+    props.panelName && props.itemNumber
+      ? `${props.panelName.replace(/\s/g, "")} ${props.itemNumber}`
+      : panelGroupName;
   const panelCapitalized =
     props.panelName === "personal"
       ? ""
@@ -33,30 +42,37 @@ export default function MilestoneSelector(props) {
           props.panelName.slice(1).toLowerCase() || "defaultCapitalized";
   const panelPlaceholder =
     props.panelName === "personal"
-      ? "your"
+      ? "Your"
       : props.panelName.charAt(0).toUpperCase() +
           props.panelName.slice(1).toLowerCase() || "";
 
-  const [showMessage, setShowMessage] = useState(false);
-  const [formData, setFormData] = useState({});
-  const [availableMilestones, setAvailableMilestones] = useState({});
-  const [priorMilestonesAvailable, setPriorMilestonesAvailable] = useState({});
-  const [qualifyingYears, setQualifyingYears] = useState([]);
+  const itemName = props.itemNumber
+    ? `${props.panelName}.${props.itemNumber - 1}`
+    : `${panelGroupName}-`;
+
+  const milestones = formServices.get("milestones") || [];
+  const date = new Date().getFullYear();
+  const yearsDateRange = [];
+  for (let i = 0; i < 4; i++) {
+    yearsDateRange.push(date - i);
+  }
+  const yearsList = yearsDateRange.map((each) => ({
+    value: each,
+    text: each,
+  }));
+
+  const [availableMilestones, setAvailableMilestones] = useState(milestones);
+  const [priorMilestonesAvailable, setPriorMilestonesAvailable] =
+    useState(milestones);
+  const [qualifyingYears, setQualifyingYears] = useState(yearsList);
   const [milestoneSelected, setMilestoneSelected] = useState(false);
 
   const [calculatorButton, setCalculatorButton] = useState(false);
   const [calculatorDropdown, setCalculatorDropdown] = useState(false);
   const [ministry, setMinistry] = useState("");
 
-  //state has to be in the main view being submitted. This has to be moved up to be managed on the individual views for form submission to function.
-  const [formValues, setFormValues] = useState([
-    { field: "yearsofservice", value: null },
-    { field: "currentmilestone", value: "" },
-    { field: "qualifyingyear", value: null },
-    { field: "priormilestones", value: [] },
-  ]);
-
   const methods = useFormContext();
+  const errors = props.errors;
 
   const defaultValues = {
     yearsofservice: null,
@@ -65,68 +81,25 @@ export default function MilestoneSelector(props) {
     priormilestones: [],
   };
 
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-    reset,
-    setValue,
-    clearErrors,
-    resetField,
-    getValues,
-  } = useForm({ defaultValues });
-
-  useEffect(() => {
-    setAvailableMilestones(formServices.get("milestones") || []);
-    setPriorMilestonesAvailable(formServices.get("milestones") || []);
-    const date = new Date().getFullYear();
-    const yearsDateRange = [];
-    for (let i = 0; i < 4; i++) {
-      yearsDateRange.push(date - i);
-    }
-    const yearsList = yearsDateRange.map((each) => ({
-      value: each,
-      text: each,
-    }));
-    setQualifyingYears(yearsList);
-  }, []);
+  const { control, setValue, clearErrors, resetField, getValues } = methods;
 
   useEffect(() => {
     setMinistry(props.ministry);
   }, [props.ministry]);
 
-  const onSubmit = (data) => {
-    const newFormValues = formValues.map(
-      (each) => (each.value = data[each.field])
-    );
-    setFormValues(newFormValues);
-
-    setFormData(data);
-    setShowMessage(true);
-
-    // reset();
-  };
-
-  const getFormErrorMessage = (name, id) => {
-    const helpid = id ? id : "";
-    return (
-      errors[name] && (
-        <small className={`p-error ${helpid}`}>{errors[name].message}</small>
-      )
-    );
-  };
-
   const onYearsOfServiceChange = () => {
-    resetField("currentmilestone");
-    resetField("priormilestones");
-    resetField("qualifyingyear");
+    resetField(`${itemName}.currentmilestone`);
+    resetField(`${itemName}.priormilestones`);
+    resetField(`${itemName}.qualifyingyear`);
 
     const milestones = formServices.get("milestones") || [];
     const filteredMilestones = milestones.filter(
-      (milestone) => milestone["value"] <= getValues("yearsofservice")
+      (milestone) =>
+        milestone["value"] <= getValues(`${itemName}.yearsofservice`)
     );
     const filteredPriorMilestones = milestones.filter(
-      (milestone) => milestone["value"] < getValues("yearsofservice")
+      (milestone) =>
+        milestone["value"] < getValues(`${itemName}.yearsofservice`)
     );
     setAvailableMilestones(filteredMilestones);
     setPriorMilestonesAvailable(filteredPriorMilestones);
@@ -154,8 +127,8 @@ export default function MilestoneSelector(props) {
 
   const calculateTotal = (newValue) => {
     if (newValue !== 0) {
-      setValue("yearsofservice", newValue);
-      clearErrors("yearsofservice");
+      setValue(`${itemName}.yearsofservice`, newValue);
+      clearErrors(`${itemName}.yearsofservice`);
       onYearsOfServiceChange();
     }
   };
@@ -163,7 +136,6 @@ export default function MilestoneSelector(props) {
   return (
     <div className={`milestone-form-${panelGroupName}`}>
       <div className="container">
-        {/* <form onSubmit={handleSubmit(onSubmit)}> */}
         <div
           className={`milestoneselector-${panelGroupName} milestone-form-details`}
         >
@@ -178,8 +150,13 @@ export default function MilestoneSelector(props) {
                 {`${panelCapitalized} Years of Service`}
               </label>
               <Controller
-                {...methods}
-                name="yearsofservice"
+                name={
+                  props.itemNumber
+                    ? `${props.panelName}.${
+                        props.itemNumber - 1
+                      }.yearsofservice`
+                    : `${panelGroupName}-yearsofservice`
+                }
                 control={control}
                 rules={{ required: "Error: Years of Service is required." }}
                 render={({ field, fieldState }) => (
@@ -187,7 +164,7 @@ export default function MilestoneSelector(props) {
                     inputId="withoutgrouping"
                     min={0}
                     max={99}
-                    id={`${panelGroupName}-${field.name}`}
+                    id={`${field.name}`}
                     value={field.value}
                     onChange={(e) => {
                       field.onChange(e.value);
@@ -202,8 +179,10 @@ export default function MilestoneSelector(props) {
                 )}
               />
               {getFormErrorMessage(
-                "yearsofservice",
-                `${panelGroupName}-yearsofservice-help`
+                `${panelGroupName}-yearsofservice`,
+                `${panelGroupName}-yearsofservice-help`,
+                errors,
+                [props.panelName, props.itemNumber - 1, "yearsofservice"]
               )}
             </div>
             <div className="calculator-button-toggle">
@@ -229,8 +208,13 @@ export default function MilestoneSelector(props) {
               {`${panelCapitalized} Current Milestone`}
             </label>
             <Controller
-              {...methods}
-              name="currentmilestone"
+              name={
+                props.itemNumber
+                  ? `${props.panelName}.${
+                      props.itemNumber - 1
+                    }.currentmilestone`
+                  : `${panelGroupName}-currentmilestone`
+              }
               control={control}
               rules={{
                 required: {
@@ -240,8 +224,8 @@ export default function MilestoneSelector(props) {
               }}
               render={({ field, fieldState }) => (
                 <Dropdown
-                  disabled={!getValues("yearsofservice")}
-                  id={`${panelGroupName}-${field.name}`}
+                  disabled={!getValues(`${itemName}.yearsofservice`)}
+                  id={`${field.name}`}
                   value={field.value}
                   onChange={(e) => {
                     field.onChange(e.value);
@@ -258,11 +242,13 @@ export default function MilestoneSelector(props) {
               )}
             />
             {getFormErrorMessage(
-              "currentmilestone",
-              `${panelGroupName}-currentmilestone-help`
+              `${panelGroupName}-currentmilestone`,
+              `${panelGroupName}-currentmilestone-help`,
+              errors,
+              [props.panelName, props.itemNumber - 1, "currentmilestone"]
             )}
           </div>
-          {getValues("currentmilestone") && props.selfregister ? (
+          {getValues(`${itemName}.currentmilestone`) && props.selfregister ? (
             <div className="milestone-form-field-container">
               <label
                 htmlFor={`${panelGroupName}-qualifyingyear`}
@@ -273,8 +259,13 @@ export default function MilestoneSelector(props) {
                 {`${panelCapitalized} Qualifying Year`}
               </label>
               <Controller
-                {...methods}
-                name="qualifyingyear"
+                name={
+                  props.itemNumber
+                    ? `${props.panelName}.${
+                        props.itemNumber - 1
+                      }.qualifyingyear`
+                    : `${panelGroupName}-qualifyingyear`
+                }
                 control={control}
                 rules={{
                   required: {
@@ -284,8 +275,8 @@ export default function MilestoneSelector(props) {
                 }}
                 render={({ field, fieldState }) => (
                   <Dropdown
-                    disabled={!getValues("yearsofservice")}
-                    id={`${panelGroupName}-${field.name}`}
+                    disabled={!getValues(`${itemName}.yearsofservice`)}
+                    id={`${field.name}`}
                     value={field.value}
                     onChange={(e) => field.onChange(e.value)}
                     aria-describedby={`${panelGroupName}-qualifyingyear-help`}
@@ -299,8 +290,10 @@ export default function MilestoneSelector(props) {
                 )}
               />
               {getFormErrorMessage(
-                "qualifyingyear",
-                `${panelGroupName}-qualifyingyear-help`
+                `${panelGroupName}-qualifyingyear`,
+                `${panelGroupName}-qualifyingyear-help`,
+                errors,
+                [props.panelName, props.itemNumber - 1, "qualifyingyear"]
               )}
             </div>
           ) : null}
@@ -316,8 +309,13 @@ export default function MilestoneSelector(props) {
                 {`${panelCapitalized} Prior Unclaimed Milestone(s) Selected`}
               </label>
               <Controller
-                {...methods}
-                name="priormilestones"
+                name={
+                  props.itemNumber
+                    ? `${props.panelName}.${
+                        props.itemNumber - 1
+                      }.priormilestones`
+                    : `${panelGroupName}-priormilestones`
+                }
                 control={control}
                 rules={{
                   required: {
@@ -327,8 +325,8 @@ export default function MilestoneSelector(props) {
                 }}
                 render={({ field, fieldState }) => (
                   <MultiSelect
-                    disabled={!getValues("yearsofservice")}
-                    id={`${panelGroupName}-${field.name}`}
+                    disabled={!getValues(`${itemName}.yearsofservice`)}
+                    id={`${field.name}`}
                     display="chip"
                     value={field.value}
                     onChange={(e) => {
@@ -346,8 +344,10 @@ export default function MilestoneSelector(props) {
                 )}
               />
               {getFormErrorMessage(
-                "priormilestones",
-                `${panelGroupName}-priormilestones-help`
+                `${panelGroupName}-priormilestones`,
+                `${panelGroupName}-priormilestones-help`,
+                errors,
+                [props.panelName, props.itemNumber - 1, "priormilestones"]
               )}
             </div>
           ) : null}
@@ -357,7 +357,6 @@ export default function MilestoneSelector(props) {
           type="submit"
           style={{ display: "none" }}
         />
-        {/* </form> */}
       </div>
     </div>
   );

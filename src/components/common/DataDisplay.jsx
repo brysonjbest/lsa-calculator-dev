@@ -9,9 +9,11 @@ import "./DataDisplay.css";
 /**
  * Data Display common display component to display user data after input/submission
  * @param {object} props
- * @param {array} props.data array object of data to display in data table
+ * @param {object} props.data object of data to display in data table
+ * @param {string} props.identifier if object contains nested array, the string name identifier for that array
  * @param {string} props.category determines the formfield options that should be selected (options: contact, address, milestone, award, lsa, delegated)
  * @param {boolean} props.stacked boolean that determines if data table will be forced into permanent stacked layout, or will be responsive
+ * @param {() => void} props.callback function to execute on data prior to display
  * @param {() => void} props.formSubmit function to execute on form submission
  * @returns
  */
@@ -20,23 +22,49 @@ export default function DataDisplay(props) {
   const formField = `${props.category}FormFields`;
   const columns = props.category ? formServices.get(formField) : [];
 
+  const ministryOrgLookup = (rowData) => {
+    return rowData.ministryorganization
+      ? formServices.lookup("organizations", rowData.ministryorganization) ||
+          formServices.lookup(
+            "currentPinsOnlyOrganizations",
+            rowData.ministryorganization
+          )
+      : null;
+  };
+
   const dynamicColumns = columns.map((col, i) => {
-    return <Column key={col.field} field={col.field} header={col.header} />;
+    if (col.field === "ministryorganization") {
+      return (
+        <Column
+          key={col.field}
+          field={col.field}
+          header={col.header}
+          body={ministryOrgLookup}
+        />
+      );
+    } else if (col.body) {
+      return (
+        <Column
+          key={col.field}
+          field={col.field}
+          header={col.header}
+          body={col.body}
+        />
+      );
+    } else {
+      return <Column key={col.field} field={col.field} header={col.header} />;
+    }
   });
 
-  //Temporary code for use in managing userdata; userdata should be passed by props.data
   const [userData, setUserData] = useState([]);
-  const userService = new UserService();
 
   useEffect(() => {
-    const testData = userService.getTestUserData();
-    userService.getTestUserData().then((data) => {
-      setUserData(data);
-    });
-
-    setUserData(testData);
-    // userService.getUserData().then((data) => setUserData(data));
-  }, []);
+    const userData = props.identifier
+      ? [...props.data[props.identifier]]
+      : [...props.data];
+    // props.callback ? props.callback(userData) : null;
+    setUserData(userData);
+  }, [props.data]);
 
   return (
     <div>

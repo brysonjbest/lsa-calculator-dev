@@ -150,7 +150,13 @@ const schemaData = {
     { field: "governmentemail", header: "Government Email" },
     { field: "governmentphone", header: "Government Phone Number" },
     { field: "employeenumber", header: "Employee Number" },
-    { field: "ministryorganization", header: "Ministry / Organization" },
+    {
+      field: "ministryorganization",
+      header: "Ministry / Organization",
+      body: function (data) {
+        lookup("organizations", data);
+      },
+    },
     { field: "branch", header: "Branch" },
     { field: "personalphone", header: "Personal Phone Number" },
     { field: "personalemail", header: "Alternate Email Address" },
@@ -159,7 +165,13 @@ const schemaData = {
     { field: "yearsofservice", header: "Current Years of Service" },
     { field: "currentmilestone", header: "Current Milestone" },
     { field: "qualifyingyear", header: "Milestone Qualifying Year" },
-    { field: "priormilestones", header: "Prior Unclaimed Milestones" },
+    {
+      field: "priormilestones",
+      header: "Prior Unclaimed Milestones",
+      body: function (data) {
+        return data.map((each) => `${each} years `);
+      },
+    },
   ],
   addressFormFields: [
     { field: "streetaddress", header: "Address Line 1" },
@@ -188,11 +200,22 @@ const schemaData = {
     { field: "lastname", header: "Last Name" },
     { field: "governmentemail", header: "Government Email" },
     { field: "employeenumber", header: "Employee Number" },
-    { field: "ministryorganization", header: "Ministry / Organization" },
+    {
+      field: "ministryorganization",
+      header: "Ministry / Organization",
+    },
     { field: "yearsofservice", header: "Current Years of Service" },
     { field: "currentmilestone", header: "Current Milestone" },
     { field: "qualifyingyear", header: "Milestone Qualifying Year" },
-    { field: "priormilestones", header: "Prior Unclaimed Milestones" },
+    {
+      field: "priormilestones",
+      header: "Prior Unclaimed Milestones",
+      body: (rowData) => {
+        return rowData.priormilestones
+          ? rowData.priormilestones.map((each) => `${each} years `)
+          : null;
+      },
+    },
   ],
 };
 
