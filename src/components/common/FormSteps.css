@@ -15,7 +15,7 @@
 } */
 
 @media screen and (min-width: 950px) {
-    ul {
+    .steps ul {
         display: flex;
         flex-direction: row;
     }

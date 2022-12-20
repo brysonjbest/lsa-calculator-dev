@@ -1,10 +1,14 @@
 import { useRef, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./Navbar";
+import ErrorPage from "./views/Error/error-page";
+
 import CalculatorLanding from "./views/Calculator/CalculatorLanding";
 import CalculatorPersonal from "./views/Calculator/CalculatorPersonal";
 import CalculatorDelegated from "./views/Calculator/CalculatorDelegated";
+
 import BasicProfile from "./views/SelfRegistration/BasicProfile";
+import MilestoneSelection from "./views/SelfRegistration/MilestoneSelection";
 import "./App.css";
 
 export default function App() {
@@ -18,9 +22,13 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Navbar />}>
             <Route index element={<CalculatorLanding />} />
+            <Route path="*" element={<ErrorPage />} />
             <Route path="delegated" element={<CalculatorDelegated />} />
             <Route path="personal" element={<CalculatorPersonal />} />
-            <Route path="register" element={<BasicProfile />} />
+            <Route path="register">
+              <Route path="profile" element={<BasicProfile />} />
+              <Route path="milestone" element={<MilestoneSelection />} />
+            </Route>
           </Route>
         </Routes>
       </div>

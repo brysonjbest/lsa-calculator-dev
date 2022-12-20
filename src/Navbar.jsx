@@ -35,8 +35,18 @@ const Navbar = () => {
           label: "Registration Start",
           template: () => {
             return (
-              <Link to="/register" className="p-menuitem-link">
-                Self Registration
+              <Link to="/register/profile" className="p-menuitem-link">
+                Registration Start
+              </Link>
+            );
+          },
+        },
+        {
+          label: "Milestones",
+          template: () => {
+            return (
+              <Link to="/register/milestone" className="p-menuitem-link">
+                Milestone Selection
               </Link>
             );
           },

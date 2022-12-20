@@ -91,15 +91,22 @@ export default function MilestoneSelector(props) {
     resetField(`${itemName}.currentmilestone`);
     resetField(`${itemName}.priormilestones`);
     resetField(`${itemName}.qualifyingyear`);
+    resetField(`${panelGroupName}-currentmilestone`);
+    resetField(`${panelGroupName}-priormilestones`);
+    resetField(`${panelGroupName}-qualifyingyear`);
+
+    const fieldCalculation = getValues(`${itemName}.yearsofservice`)
+      ? `${itemName}.`
+      : `${panelGroupName}-`;
 
     const milestones = formServices.get("milestones") || [];
     const filteredMilestones = milestones.filter(
       (milestone) =>
-        milestone["value"] <= getValues(`${itemName}.yearsofservice`)
+        milestone["value"] <= getValues(`${fieldCalculation}yearsofservice`)
     );
     const filteredPriorMilestones = milestones.filter(
       (milestone) =>
-        milestone["value"] < getValues(`${itemName}.yearsofservice`)
+        milestone["value"] < getValues(`${fieldCalculation}yearsofservice`)
     );
     setAvailableMilestones(filteredMilestones);
     setPriorMilestonesAvailable(filteredPriorMilestones);
@@ -127,7 +134,9 @@ export default function MilestoneSelector(props) {
 
   const calculateTotal = (newValue) => {
     if (newValue !== 0) {
+      setValue(`${panelGroupName}-yearsofservice`, newValue);
       setValue(`${itemName}.yearsofservice`, newValue);
+      clearErrors(`${panelGroupName}-yearsofservice`);
       clearErrors(`${itemName}.yearsofservice`);
       onYearsOfServiceChange();
     }
@@ -224,7 +233,12 @@ export default function MilestoneSelector(props) {
               }}
               render={({ field, fieldState }) => (
                 <Dropdown
-                  disabled={!getValues(`${itemName}.yearsofservice`)}
+                  disabled={
+                    !(
+                      getValues(`${itemName}.yearsofservice`) ||
+                      getValues(`${panelGroupName}-yearsofservice`)
+                    )
+                  }
                   id={`${field.name}`}
                   value={field.value}
                   onChange={(e) => {
@@ -248,7 +262,9 @@ export default function MilestoneSelector(props) {
               [props.panelName, props.itemNumber - 1, "currentmilestone"]
             )}
           </div>
-          {getValues(`${itemName}.currentmilestone`) && props.selfregister ? (
+          {(getValues(`${itemName}.currentmilestone`) ||
+            getValues(`${panelGroupName}-currentmilestone`)) &&
+          props.selfregister ? (
             <div className="milestone-form-field-container">
               <label
                 htmlFor={`${panelGroupName}-qualifyingyear`}
@@ -269,13 +285,20 @@ export default function MilestoneSelector(props) {
                 control={control}
                 rules={{
                   required: {
-                    value: getValues("currentmilestone"),
+                    value:
+                      getValues(`${itemName}.currentmilestone`) ||
+                      getValues(`${panelGroupName}-currentmilestone`),
                     message: "Error: Qualifying Year is required.",
                   },
                 }}
                 render={({ field, fieldState }) => (
                   <Dropdown
-                    disabled={!getValues(`${itemName}.yearsofservice`)}
+                    disabled={
+                      !(
+                        getValues(`${itemName}.yearsofservice`) ||
+                        getValues(`${panelGroupName}-yearsofservice`)
+                      )
+                    }
                     id={`${field.name}`}
                     value={field.value}
                     onChange={(e) => field.onChange(e.value)}
@@ -325,7 +348,12 @@ export default function MilestoneSelector(props) {
                 }}
                 render={({ field, fieldState }) => (
                   <MultiSelect
-                    disabled={!getValues(`${itemName}.yearsofservice`)}
+                    disabled={
+                      !(
+                        getValues(`${itemName}.yearsofservice`) ||
+                        getValues(`${panelGroupName}-yearsofservice`)
+                      )
+                    }
                     id={`${field.name}`}
                     display="chip"
                     value={field.value}
