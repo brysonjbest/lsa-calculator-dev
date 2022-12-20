@@ -81,6 +81,16 @@ const Navbar = () => {
             );
           },
         },
+        {
+          label: "Registration Confirmation",
+          template: () => {
+            return (
+              <Link to="/register/confirmation" className="p-menuitem-link">
+                Registration Confirmation
+              </Link>
+            );
+          },
+        },
       ],
     },
   ];
@@ -120,8 +130,6 @@ const Navbar = () => {
           </div>
         </ul>
       </nav>
-
-      <Outlet />
     </>
   );
 };

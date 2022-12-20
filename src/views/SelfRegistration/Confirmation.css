@@ -1,0 +1,28 @@
+.registration-confirmation-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.confirmation-panel-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.p-button {
+    width: fit-content;
+    align-self: center;
+}
+
+.p-panel-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.confirmation-panel-details-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}

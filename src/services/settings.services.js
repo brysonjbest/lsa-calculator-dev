@@ -144,7 +144,7 @@ const schemaData = {
     { value: "org-70", text: "Surface Rights Board of British Columbia" },
     { value: "org-71", text: "Workers' Compensation Appeal Tribunal" },
   ],
-  contactFormFields: [
+  profileFormFields: [
     { field: "firstname", header: "First Name" },
     { field: "lastname", header: "Last Name" },
     { field: "governmentemail", header: "Government Email" },
@@ -153,13 +153,8 @@ const schemaData = {
     {
       field: "ministryorganization",
       header: "Ministry / Organization",
-      body: function (data) {
-        lookup("organizations", data);
-      },
     },
     { field: "branch", header: "Branch" },
-    { field: "personalphone", header: "Personal Phone Number" },
-    { field: "personalemail", header: "Alternate Email Address" },
   ],
   milestoneFormFields: [
     { field: "yearsofservice", header: "Current Years of Service" },
@@ -168,16 +163,35 @@ const schemaData = {
     {
       field: "priormilestones",
       header: "Prior Unclaimed Milestones",
-      body: function (data) {
-        return data.map((each) => `${each} years `);
+      body: (rowData) => {
+        return rowData.priormilestones
+          ? rowData.priormilestones.map((each) => `${each} years `)
+          : null;
       },
     },
   ],
-  addressFormFields: [
+  personalContactFormFields: [
+    { field: "personalphone", header: "Personal Phone Number" },
+    { field: "personalemail", header: "Alternate Email Address" },
     { field: "streetaddress", header: "Address Line 1" },
     { field: "streetaddress2", header: "Address Line 2" },
     { field: "citycommunity", header: "City / Community" },
     { field: "provincestate", header: "Province / State" },
+    { field: "postalcode", header: "Postal Code" },
+  ],
+  officeFormFields: [
+    { field: "streetaddress", header: "Address Line 1" },
+    { field: "streetaddress2", header: "Address Line 2" },
+    { field: "citycommunity", header: "City / Community" },
+    { field: "postalcode", header: "Postal Code" },
+  ],
+  supervisorFormFields: [
+    { field: "firstname", header: "First Name" },
+    { field: "lastname", header: "Last Name" },
+    { field: "governmentemail", header: "Government Email" },
+    { field: "streetaddress", header: "Address Line 1" },
+    { field: "streetaddress2", header: "Address Line 2" },
+    { field: "citycommunity", header: "City / Community" },
     { field: "postalcode", header: "Postal Code" },
     { field: "pobox", header: "P.O. Box" },
   ],
