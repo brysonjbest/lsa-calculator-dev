@@ -61,6 +61,26 @@ const Navbar = () => {
             );
           },
         },
+        {
+          label: "Award Selection",
+          template: () => {
+            return (
+              <Link to="/register/award" className="p-menuitem-link">
+                Award Selection
+              </Link>
+            );
+          },
+        },
+        {
+          label: "Supervisor Details",
+          template: () => {
+            return (
+              <Link to="/register/supervisor" className="p-menuitem-link">
+                Supervisor Details
+              </Link>
+            );
+          },
+        },
       ],
     },
   ];

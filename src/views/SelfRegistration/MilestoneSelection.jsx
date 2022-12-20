@@ -7,7 +7,6 @@ import ContactDetails from "../../components/inputs/ContactDetails";
 import MilestoneSelector from "../../components/inputs/MilestoneSelector";
 import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
-import "./MilestoneSelection.css";
 
 /**
  * Basic Registration.

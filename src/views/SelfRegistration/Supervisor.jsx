@@ -15,19 +15,16 @@ import AddressInput from "../../components/inputs/AddressInput";
  * @returns
  */
 
-export default function ProfileDetails() {
+export default function Supervisor() {
   const defaultValues = {
-    "personal-personalphone": "",
-    "personal-personalemail": "",
-    officecitycommunity: "",
-    officepostalcode: "",
-    officestreetaddress: "",
-    officestreetaddress2: "",
-    personalcitycommunity: "",
-    personalpostalcode: "",
-    personalprovincestate: "",
-    personalstreetaddress: "",
-    personalstreetaddress2: "",
+    "supervisor-firstname": "",
+    "supervisor-lastname": "",
+    "supervisor-governmentemail": "",
+    supervisorstreetaddress: "",
+    supervisorstreetaddress2: "",
+    supervisorcitycommunity: "",
+    supervisorpostalcode: "",
+    supervisorpobox: "",
   };
 
   const methods = useForm({ defaultValues });
@@ -67,33 +64,26 @@ export default function ProfileDetails() {
 
   return (
     <>
-      <div className="self-registration additional-profile">
+      <div className="self-registration supervisor-profile">
         <PageHeader
           title="Registration"
-          subtitle="Additional Profile Information"
+          subtitle="Your Supervisor Information"
         ></PageHeader>
-        <FormSteps data={steps} stepIndex={2} category="Registration" />
+        <FormSteps data={steps} stepIndex={4} category="Registration" />
         <FormProvider {...methods}>
           <form
-            className="additional-details-form"
+            className="supervisor-details-form"
             onSubmit={methods.handleSubmit(submitData)}
           >
-            <AppPanel header="Personal Contact Details">
-              <ContactDetails
-                personalContact
-                panelName="personal"
-                errors={errors}
-              />
+            <AppPanel header="Supervisor Details">
+              <ContactDetails basic panelName="supervisor" errors={errors} />
             </AppPanel>
-            <AppPanel header="Personal Address">
+            <AppPanel header="Supervisor Office Address">
               <AddressInput
-                province
-                addressIdentifier="personal"
+                pobox
+                addressIdentifier="supervisor"
                 errors={errors}
               />
-            </AppPanel>
-            <AppPanel header="Office Address">
-              <AddressInput addressIdentifier="office" errors={errors} />
             </AppPanel>
             <div className="submission-buttons">
               <AppButton secondary onClick={() => saveData()}>
