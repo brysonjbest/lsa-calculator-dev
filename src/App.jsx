@@ -9,6 +9,7 @@ import CalculatorDelegated from "./views/Calculator/CalculatorDelegated";
 
 import BasicProfile from "./views/SelfRegistration/BasicProfile";
 import MilestoneSelection from "./views/SelfRegistration/MilestoneSelection";
+import ProfileDetails from "./views/SelfRegistration/ProfileDetails";
 import "./App.css";
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
             <Route path="register">
               <Route path="profile" element={<BasicProfile />} />
               <Route path="milestone" element={<MilestoneSelection />} />
+              <Route path="details" element={<ProfileDetails />} />
             </Route>
           </Route>
         </Routes>

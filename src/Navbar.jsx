@@ -51,6 +51,16 @@ const Navbar = () => {
             );
           },
         },
+        {
+          label: "Profile Details",
+          template: () => {
+            return (
+              <Link to="/register/details" className="p-menuitem-link">
+                Personal Profile Details
+              </Link>
+            );
+          },
+        },
       ],
     },
   ];
