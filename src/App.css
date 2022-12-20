@@ -4,8 +4,19 @@
   text-align: center;
 }
 
-.App .main-content .calculator-splash {
+.App .main-content > div {
   padding: 0 2rem 0 2rem; 
+}
+
+.App .submission-buttons {
+  display: flex;
+  justify-content: center;
+  gap: .5rem;
+
+  & button {
+    flex: 1;
+  }
+
 }
 
 .logo {

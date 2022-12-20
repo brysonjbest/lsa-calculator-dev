@@ -28,6 +28,21 @@ const Navbar = () => {
         );
       },
     },
+    {
+      label: "Self-Registration",
+      items: [
+        {
+          label: "Registration Start",
+          template: () => {
+            return (
+              <Link to="/register" className="p-menuitem-link">
+                Self Registration
+              </Link>
+            );
+          },
+        },
+      ],
+    },
   ];
 
   return (

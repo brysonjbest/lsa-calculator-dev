@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import CalculatorLanding from "./views/Calculator/CalculatorLanding";
 import CalculatorPersonal from "./views/Calculator/CalculatorPersonal";
 import CalculatorDelegated from "./views/Calculator/CalculatorDelegated";
+import BasicProfile from "./views/SelfRegistration/BasicProfile";
 import "./App.css";
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
             <Route index element={<CalculatorLanding />} />
             <Route path="delegated" element={<CalculatorDelegated />} />
             <Route path="personal" element={<CalculatorPersonal />} />
+            <Route path="register" element={<BasicProfile />} />
           </Route>
         </Routes>
       </div>

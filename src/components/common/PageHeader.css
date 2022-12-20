@@ -13,7 +13,7 @@
 /* height: 7rem !important; */
 font-style: normal;
 font-weight: normal !important;
-font-size: 3.5rem !important;
+font-size: clamp(2rem, 3.5vw, 3.5rem)!important;
 line-height: 4rem !important;
 text-transform: uppercase;
 word-wrap:anywhere;
@@ -23,7 +23,7 @@ word-wrap:anywhere;
 .p-card-subtitle{
 text-transform: capitalize;
 /* height: 2rem !important; */
-font-size: 1.5rem !important;
+font-size: clamp(1rem, 1.5vw, 1.5rem) !important;
 }
 
 .page-header-single-line {

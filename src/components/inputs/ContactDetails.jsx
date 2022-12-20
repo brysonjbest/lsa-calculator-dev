@@ -52,7 +52,9 @@ export default function ContactDetails(props) {
     const currentFormValue =
       formServices.lookup("organizations", event) ||
       formServices.lookup("currentPinsOnlyOrganizations", event);
-    props.ministryRef(props.index, currentFormValue);
+      props.ministryRef
+        ? props.ministryRef(props.index, currentFormValue)
+        : null;
   };
 
   const organizations = formServices.get("organizations") || [];

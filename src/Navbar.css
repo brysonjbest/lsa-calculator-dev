@@ -26,7 +26,7 @@
     text-align: center;
     padding: .75rem 1.25rem;
     text-decoration: none;
-    font-size: x-large;
+    font-size: clamp(1rem, 2vw, 1.5rem);
   }
   
   & .navigation-item a {

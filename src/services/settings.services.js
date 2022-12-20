@@ -217,6 +217,26 @@ const schemaData = {
       },
     },
   ],
+  selfregistrationsteps: [
+    {
+      label: "Basic Profile",
+    },
+    {
+      label: "Milestone Selection",
+    },
+    {
+      label: "Personal Profile Details",
+    },
+    {
+      label: "Award Selection",
+    },
+    {
+      label: "Supervisor Details",
+    },
+    {
+      label: "Confirmation",
+    },
+  ],
 };
 
 export default {
