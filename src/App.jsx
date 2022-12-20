@@ -1,51 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import AppButton from "./components/common/AppButton";
-import AppPanel from "./components/common/AppPanel";
-import PageHeader from "./components/common/PageHeader";
+import { useRef, useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./Navbar";
+import CalculatorLanding from "./views/Calculator/CalculatorLanding";
+import CalculatorPersonal from "./views/Calculator/CalculatorPersonal";
+import CalculatorDelegated from "./views/Calculator/CalculatorDelegated";
 import "./App.css";
 
-function App() {
+export default function App() {
   const [count, setCount] = useState(0);
+  const testReference = useRef();
+  const secondtestReference = useRef();
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      <div>
-        <PageHeader title="Testing title" singleLine gradient1></PageHeader>
-        <AppButton
-          danger
-          icon="pi pi-check"
-          onClick={() => console.log("This is a test")}
-        >
-          Test Button
-        </AppButton>
-        <AppPanel toggleable collapsed header="Test2">
-          <p>Test content</p>
-          <p>test line 2</p>
-        </AppPanel>
+      <div className="main-content">
+        <Routes>
+          <Route path="/" element={<Navbar />}>
+            <Route index element={<CalculatorLanding />} />
+            <Route path="delegated" element={<CalculatorDelegated />} />
+            <Route path="personal" element={<CalculatorPersonal />} />
+          </Route>
+        </Routes>
       </div>
     </div>
   );
 }
-
-export default App
