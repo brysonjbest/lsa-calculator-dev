@@ -95,7 +95,7 @@ export default function MilestoneSelector(props) {
     resetField(`${panelGroupName}-priormilestones`);
     resetField(`${panelGroupName}-qualifyingyear`);
 
-    const fieldCalculation = getValues(`${itemName}.yearsofservice`)
+    const fieldCalculation = props.itemNumber
       ? `${itemName}.`
       : `${panelGroupName}-`;
 
