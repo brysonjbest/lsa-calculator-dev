@@ -21,3 +21,8 @@
     display: flex;
     flex-direction: column;
 }
+
+.calculator-button-toggle {
+    display: flex;
+    height: fit-content;
+}

@@ -18,6 +18,7 @@ import MilestoneSelection from "./views/SelfRegistration/MilestoneSelection";
 import ProfileDetails from "./views/SelfRegistration/ProfileDetails";
 import Supervisor from "./views/SelfRegistration/Supervisor";
 import Confirmation from "./views/SelfRegistration/Confirmation";
+import Award from "./views/SelfRegistration/Award";
 
 const router = createBrowserRouter([
   {
@@ -35,7 +36,7 @@ const router = createBrowserRouter([
           { path: "profile", element: <BasicProfile /> },
           { path: "milestone", element: <MilestoneSelection /> },
           { path: "details", element: <ProfileDetails /> },
-          { path: "award", element: <ProfileDetails /> },
+          { path: "award", element: <Award /> },
           { path: "supervisor", element: <Supervisor /> },
           { path: "confirmation", element: <Confirmation /> },
         ],
