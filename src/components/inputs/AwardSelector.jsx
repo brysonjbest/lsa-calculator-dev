@@ -22,6 +22,7 @@ import classNames from "classnames";
 import "./AwardSelector.css";
 import GalleryDisplay from "../common/GalleryDisplay";
 import PecsfForm from "./PecsfForm";
+import AwardForm from "./AwardForm";
 
 /**
  * Award Selection Component.
@@ -67,12 +68,42 @@ export default function AwardSelector(props) {
       options: [
         {
           id: "",
-          type: "null",
-          name: "Whale Tail painting Selection",
+          type: "text",
+          name: "inscription",
           required: true,
           value: "",
-          description: "This is a painting of a whale tail.",
+          description: "What would you like the inscription to say.",
+          customizable: true,
+        },
+        {
+          id: "",
+          type: "dropdown",
+          name: "paintingtype",
+          required: true,
+          value: "",
+          description: "Select type of painting.",
+          customizable: true,
+          options: ["oil", "watercolour"],
+        },
+        {
+          id: "",
+          type: "multiselect",
+          name: "paintingtools",
+          required: true,
+          value: "",
+          description: "Select tools used in painting.",
           customizable: false,
+          options: ["fork", "brush", "spoon"],
+        },
+        {
+          id: "",
+          type: "radio",
+          name: "whaletype",
+          required: true,
+          value: "",
+          description: "Please select type of whale",
+          customizable: false,
+          options: ["orca", "grey"],
         },
       ],
     },
@@ -125,29 +156,7 @@ export default function AwardSelector(props) {
           >
             {option.description}
           </label>
-
-          <Controller
-            name={`awardoptions.${0}.${option.name}`}
-            control={control}
-            defaultValue=""
-            rules={{
-              required: {
-                value: option.required,
-                message: `Option selection is required`,
-              },
-            }}
-            render={({ field, fieldState }) => (
-              <InputText
-                id={`${field.name}`}
-                aria-describedby={`${field.name}-help`}
-                {...field}
-                className={classNames("form-field block", {
-                  "p-invalid": fieldState.error,
-                })}
-                placeholder={`${option.description}`}
-              />
-            )}
-          />
+          <AwardForm errors={errors} option={option} />
           {getFormErrorMessage(
             `${option.name}`,
             `${option.name}-help`,
@@ -204,11 +213,14 @@ export default function AwardSelector(props) {
   const awardHide = () => {
     setAwardDialog(false);
     setAwardOptions([]);
+    //currently fully resets - will have to be selective
+    setValue("awardoptions", []);
 
     // console.log("this is deselected");
   };
 
   const optionDisplay = renderAwardOptions(awardOptions);
+  console.log(errors, "this should be errors", isValid, "valid status");
 
   return (
     <div className={`award-selection-form`}>
