@@ -7,6 +7,7 @@ import "./GalleryDisplay.css";
 /**
  * Gallery Display common display component to display items in list with details
  * @param {object} props
+ * @param {Array} props.itemSet Array of objects to display in gallery view
  * @returns
  */
 
@@ -14,47 +15,18 @@ export default function GalleryDisplay(props) {
   // const [items, setItems] = useState([]);
   const [layout, setLayout] = useState("grid");
   //testing data
-  const [items, setItems] = useState([
-    {
-      id: "1000",
-      code: "f230fh0g3",
-      name: "Bamboo Watch",
-      description: "Product Description",
-      image: "bamboo-watch.jpg",
-    },
-    {
-      id: "1001",
-      code: "nvklal433",
-      name: "Black Watch",
-      description: "Product Description",
-      image: "black-watch.jpg",
-    },
-    {
-      id: "1002",
-      code: "zz21cz3c1",
-      name: "Blue Band",
-      description: "Product Description",
-      image: "blue-band.jpg",
-    },
-    {
-      id: "1003",
-      code: "244wgerg2",
-      name: "Blue T-Shirt",
-      description: "Product Description",
-      image: "blue-t-shirt.jpg",
-    },
-  ]);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
-    //fill items array
-  }, []);
+    setItems(props.itemSet);
+  }, [props.itemSet]);
 
   const renderListItem = (data) => {
     return (
       <div>
         <div className="item-list-item">
           <img
-            src={`images/item/${data.image}`}
+            src={`images/item/${data.image_url}`}
             onError={(e) =>
               (e.target.src =
                 "https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png")
@@ -63,10 +35,19 @@ export default function GalleryDisplay(props) {
           />
           <div className="item-list-detail">
             <div className="item-name">{data.name}</div>
-            <div className="item-description">{data.description}</div>
+            {/* <div className="item-description">{data.description}</div> */}
           </div>
           <div className="item-list-action">
-            <AppButton secondary>{"View"}</AppButton>
+            <AppButton
+              secondary
+              info={data.id === props.chosenAward}
+              onClick={(e) => {
+                e.preventDefault();
+                props.onClick(data.id);
+              }}
+            >
+              {data.id === props.chosenAward ? "Selected" : "View"}
+            </AppButton>
           </div>
         </div>
       </div>
@@ -79,7 +60,8 @@ export default function GalleryDisplay(props) {
         <div className="item-grid-item card">
           <div className="item-grid-item-content">
             <img
-              src={`images/items/${data.image}`}
+              // src={`images/items/${data.image_url}`}
+              src={`${data.image_url}`}
               onError={(e) =>
                 (e.target.src =
                   "https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png")
@@ -87,10 +69,19 @@ export default function GalleryDisplay(props) {
               alt={data.name}
             />
             <div className="item-name">{data.name}</div>
-            <div className="item-description">{data.description}</div>
+            {/* <div className="item-description">{data.description}</div> */}
           </div>
           <div className="item-grid-item-bottom">
-            <AppButton secondary>{"View"}</AppButton>
+            <AppButton
+              secondary
+              info={data.id === props.chosenAward}
+              onClick={(e) => {
+                e.preventDefault();
+                props.onClick(data.id);
+              }}
+            >
+              {data.id === props.chosenAward ? "Selected" : "View"}
+            </AppButton>
           </div>
         </div>
       </div>

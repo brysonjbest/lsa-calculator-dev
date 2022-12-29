@@ -8,6 +8,7 @@ import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
 import GalleryDisplay from "../../components/common/GalleryDisplay";
 import "./Award.css";
+import AwardSelector from "../../components/inputs/AwardSelector";
 
 /**
  * Basic Registration.
@@ -18,6 +19,7 @@ import "./Award.css";
 
 export default function Award() {
   const defaultValues = {
+    awardID: "",
     awardname: "",
     awarddescription: "",
     awardoptions: [],
@@ -26,18 +28,30 @@ export default function Award() {
   const methods = useForm({ defaultValues });
   const [steps, setSteps] = useState([]);
   const [submissionData, setSubmissionData] = useState({});
-  const [awardSelect, setAwardSelect] = useState(false);
+  const [awardSelected, setAwardSelected] = useState(false);
+  const [chosenAward, setChosenAward] = useState("");
+  const [formChanged, setFormChanged] = useState(false);
 
   const {
     formState: { errors, isValid, isDirty },
     watch,
     getValues,
+    handleSubmit,
   } = methods;
 
   //extend isDirty status to monitor for change and warn about leaving without saving
   watch(() => setFormChanged(true));
 
   const saveData = () => {
+    const finalData = { ...getValues() };
+    console.log("final Data before set submission", finalData);
+    setSubmissionData(finalData);
+    console.log(submissionData, "this is saved data");
+  };
+
+  const submitSelection = (selectedID) => {
+    setAwardSelected(true);
+    setChosenAward(selectedID);
     const finalData = { ...getValues() };
     console.log("final Data before set submission", finalData);
     setSubmissionData(finalData);
@@ -66,20 +80,23 @@ export default function Award() {
         ></PageHeader>
         <FormSteps data={steps} stepIndex={3} category="Registration" />
         <FormProvider {...methods}>
-          <form
-            className="award-details-form"
-            onSubmit={methods.handleSubmit(submitData)}
-          >
-            <GalleryDisplay header="Award Options" />
+          <form className="award-details-form">
+            <AwardSelector
+              errors={errors}
+              award={chosenAward}
+              submitAward={handleSubmit(submitSelection)}
+            />
+            {/* <GalleryDisplay header="Award Options" /> */}
             {/* Filler - this will be award display */}
 
             <div className="submission-buttons">
-              <AppButton secondary onClick={() => saveData()}>
+              <AppButton secondary onClick={handleSubmit(saveData)}>
                 Save
               </AppButton>
               <AppButton
+                onClick={handleSubmit(submitData)}
                 type="submit"
-                // disabled={!isValid}
+                disabled={!awardSelected}
               >
                 Confirm/Submit
               </AppButton>

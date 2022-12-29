@@ -8,13 +8,32 @@
     }
 
     & .p-dataview-content .p-grid > div {
-        flex: 1 1 32%;
+        flex: 1 0 22vw;
 
     }
 
     & .p-dataview-content .p-grid::after {
         content: '';
         flex-grow: 1000000000;
+    }
+
+    & .item-grid-item-content {
+        padding-bottom: 1rem;
+
+    }
+
+    & .item-grid-item {
+        /* height: 95%; */
+
+    }
+
+    & .item-grid-item-bottom {
+        display: flex;
+        justify-content: center;
+
+        & button {
+            width: 90%;
+        }
     }
 
 }

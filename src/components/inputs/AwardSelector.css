@@ -1,0 +1,4 @@
+.award-option-block {
+    display: flex;
+    flex-direction: column;
+}
