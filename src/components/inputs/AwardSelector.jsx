@@ -126,6 +126,8 @@ export default function AwardSelector(props) {
 
   const [awardOptions, setAwardOptions] = useState({});
   const [awardDialog, setAwardDialog] = useState(false);
+  const [awardChosen, setAwardChosen] = useState("");
+  const [formChanged, setFormChanged] = useState(false);
 
   const methods = useFormContext();
   const errors = props.errors;
@@ -135,13 +137,15 @@ export default function AwardSelector(props) {
     clearErrors,
     resetField,
     getValues,
+    watch,
     formState: { isDirty, isValid },
   } = methods;
+
+  watch(() => setFormChanged(true));
 
   const renderAwardOptions = (data) => {
     // console.log(data, "this is data selected");
     const options = data.options || [];
-    console.log("this is data.name", data.name);
     const pecsfOptions = data.name
       ? data.name.toLowerCase().includes("pecsf")
       : false;
@@ -175,12 +179,14 @@ export default function AwardSelector(props) {
           </ul>
           <div className="options-list-action">
             <AppButton
-              disabled={!isValid}
+              disabled={pecsfOptions ? !isValid : !formChanged}
               onClick={(e) => {
                 e.preventDefault();
-                console.log(errors);
                 props.submitAward ? props.submitAward(data.id) : null;
-                setAwardDialog(false);
+                if (isValid) {
+                  setAwardDialog(false);
+                  setAwardChosen(data.name);
+                }
               }}
             >
               Select Award
@@ -220,7 +226,6 @@ export default function AwardSelector(props) {
   };
 
   const optionDisplay = renderAwardOptions(awardOptions);
-  console.log(errors, "this should be errors", isValid, "valid status");
 
   return (
     <div className={`award-selection-form`}>
