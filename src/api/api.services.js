@@ -9,6 +9,7 @@ export async function getUserData() {
 export async function getRegistrationData(userData) {
   console.log(userData);
   return {
-    submitted: true,
+    submitted: false,
   };
+
 }

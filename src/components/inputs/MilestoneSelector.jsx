@@ -81,7 +81,14 @@ export default function MilestoneSelector(props) {
     priormilestones: [],
   };
 
-  const { control, setValue, clearErrors, resetField, getValues } = methods;
+  const { control, setValue, clearErrors, resetField, getValues, watch } =
+    methods;
+
+  const watchYearsOfService = watch(
+    props.itemNumber
+      ? `${props.panelName}.${props.itemNumber - 1}.yearsofservice`
+      : `${panelGroupName}-yearsofservice`
+  );
 
   useEffect(() => {
     setMinistry(props.ministry);
@@ -112,6 +119,10 @@ export default function MilestoneSelector(props) {
     setPriorMilestonesAvailable(filteredPriorMilestones);
   };
 
+  useEffect(() => {
+    onYearsOfServiceChange();
+  }, [watchYearsOfService]);
+
   const onMilestoneSelection = (e) => {
     e.value.length > 0 || e.value > 0
       ? setMilestoneSelected(true)
@@ -127,7 +138,8 @@ export default function MilestoneSelector(props) {
     ? false
     : true;
 
-  const toggleCalculator = () => {
+  const toggleCalculator = (e) => {
+    e.preventDefault();
     setCalculatorButton(!calculatorButton);
     setCalculatorDropdown(!calculatorDropdown);
   };
@@ -138,7 +150,6 @@ export default function MilestoneSelector(props) {
       setValue(`${itemName}.yearsofservice`, newValue);
       clearErrors(`${panelGroupName}-yearsofservice`);
       clearErrors(`${itemName}.yearsofservice`);
-      onYearsOfServiceChange();
     }
   };
 
@@ -177,7 +188,7 @@ export default function MilestoneSelector(props) {
                     value={field.value}
                     onChange={(e) => {
                       field.onChange(e.value);
-                      onYearsOfServiceChange();
+                      // onYearsOfServiceChange();
                     }}
                     aria-describedby={`${panelGroupName}-yearsofservice-help`}
                     className={classNames("form-field block", {

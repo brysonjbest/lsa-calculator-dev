@@ -10,6 +10,16 @@ const Navbar = () => {
   const { user } = useContext(UserContext);
   const pages = [
     {
+      label: "Calculator Landing",
+      template: () => {
+        return (
+          <Link to="/calculator" className="p-menuitem-link">
+            Calculator Landing
+          </Link>
+        );
+      },
+    },
+    {
       label: "Calculator Delegated",
       template: () => {
         return (

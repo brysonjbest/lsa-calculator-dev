@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
+import { useNavigate } from "react-router";
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
 import PageHeader from "../../components/common/PageHeader";
@@ -16,6 +17,7 @@ import AddressInput from "../../components/inputs/AddressInput";
  */
 
 export default function ProfileDetails() {
+  const navigate = useNavigate();
   const defaultValues = {
     "personal-personalphone": "",
     "personal-personalemail": "",
@@ -76,7 +78,7 @@ export default function ProfileDetails() {
         <FormProvider {...methods}>
           <form
             className="additional-details-form"
-            onSubmit={methods.handleSubmit(submitData)}
+            // onSubmit={methods.handleSubmit(submitData)}
           >
             <AppPanel header="Personal Contact Details">
               <ContactDetails
@@ -96,11 +98,12 @@ export default function ProfileDetails() {
               <AddressInput addressIdentifier="office" errors={errors} />
             </AppPanel>
             <div className="submission-buttons">
-              <AppButton secondary onClick={() => saveData()}>
+              <AppButton secondary onClick={handleSubmit(saveData)}>
                 Save
               </AppButton>
               <AppButton
                 type="submit"
+                onClick={handleSubmit(submitData)}
                 // disabled={!isValid}
               >
                 Confirm/Submit

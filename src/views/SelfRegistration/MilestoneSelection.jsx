@@ -7,6 +7,7 @@ import ContactDetails from "../../components/inputs/ContactDetails";
 import MilestoneSelector from "../../components/inputs/MilestoneSelector";
 import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
+import { useNavigate, useLocation } from "react-router";
 
 /**
  * Basic Registration.
@@ -16,6 +17,12 @@ import formServices from "../../services/settings.services";
  */
 
 export default function MilestoneSelection() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location.state);
+  const stateData = location.state ? location.state["qualifyingYears"] : "";
+  console.log(stateData);
+
   const defaultValues = {
     "personal-yearsofservice": "",
     "personal-currentmilestone": null,
@@ -34,12 +41,15 @@ export default function MilestoneSelection() {
     formState: { errors, isValid, isDirty },
     watch,
     getValues,
+    setValue,
+    handleSubmit,
   } = methods;
 
   //extend isDirty status to monitor for change and warn about leaving without saving
   watch(() => setFormChanged(true));
 
-  const saveData = () => {
+  const saveData = (e) => {
+    e.preventDefault();
     const finalData = { ...getValues() };
     console.log("final Data before set submission", finalData);
     setSubmissionData(finalData);
@@ -64,6 +74,7 @@ export default function MilestoneSelection() {
       formServices.lookup("currentPinsOnlyOrganizations", minData) ||
       "";
     setMinistrySelected(ministry);
+    stateData ? setValue("personal-yearsofservice", stateData) : null;
   }, []);
 
   return (
@@ -75,10 +86,7 @@ export default function MilestoneSelection() {
         ></PageHeader>
         <FormSteps data={steps} stepIndex={1} category="Registration" />
         <FormProvider {...methods}>
-          <form
-            className="milestones-form"
-            onSubmit={methods.handleSubmit(submitData)}
-          >
+          <form className="milestones-form">
             <AppPanel header="Milestone Details">
               <MilestoneSelector
                 selfregister
@@ -88,11 +96,12 @@ export default function MilestoneSelection() {
               />
             </AppPanel>
             <div className="submission-buttons">
-              <AppButton secondary onClick={() => saveData()}>
+              <AppButton secondary onClick={(e) => saveData(e)}>
                 Save
               </AppButton>
               <AppButton
                 type="submit"
+                onClick={handleSubmit(submitData)}
                 // disabled={!isValid}
               >
                 Confirm/Submit

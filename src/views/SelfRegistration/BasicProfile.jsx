@@ -7,6 +7,7 @@ import ContactDetails from "../../components/inputs/ContactDetails";
 import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
 import "./BasicProfile.css";
+import { useLocation, useNavigate } from "react-router";
 
 /**
  * Basic Registration.
@@ -16,6 +17,10 @@ import "./BasicProfile.css";
  */
 
 export default function BasicProfile() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const stateData = location.state ? location.state : null;
+
   const defaultValues = {
     "personal-firstname": "",
     "personal-lastname": "",
@@ -36,12 +41,16 @@ export default function BasicProfile() {
     formState: { errors, isValid, isDirty },
     watch,
     getValues,
+    handleSubmit,
   } = methods;
 
   //extend isDirty status to monitor for change and warn about leaving without saving
   watch(() => setFormChanged(true));
 
-  const saveData = () => {
+  //to include try/catch api request block to save submitted data
+
+  const saveData = (e) => {
+    e.preventDefault();
     const finalData = { ...getValues() };
     console.log("final Data before set submission", finalData);
     setSubmissionData(finalData);
@@ -55,6 +64,12 @@ export default function BasicProfile() {
     const finalData = Object.assign({}, data);
     setSubmissionData(finalData);
     console.log(submissionData, "this is final submission data");
+    try {
+      //submit to api
+      //then statement
+      //navigate to next page on success
+      navigate("/register/milestone", { state: stateData });
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -72,7 +87,7 @@ export default function BasicProfile() {
         <FormProvider {...methods}>
           <form
             className="basic-details-form"
-            onSubmit={methods.handleSubmit(submitData)}
+            // onSubmit={methods.handleSubmit(submitData)}
           >
             <AppPanel header="Profile Details">
               <ContactDetails
@@ -83,11 +98,12 @@ export default function BasicProfile() {
               />
             </AppPanel>
             <div className="submission-buttons">
-              <AppButton secondary onClick={() => saveData()}>
+              <AppButton secondary onClick={(e) => saveData(e)}>
                 Save
               </AppButton>
               <AppButton
                 type="submit"
+                onClick={handleSubmit(submitData)}
                 // disabled={!isValid}
               >
                 Confirm/Submit

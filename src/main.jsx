@@ -19,6 +19,8 @@ import ProfileDetails from "./views/SelfRegistration/ProfileDetails";
 import Supervisor from "./views/SelfRegistration/Supervisor";
 import Confirmation from "./views/SelfRegistration/Confirmation";
 import Award from "./views/SelfRegistration/Award";
+import Splash from "./views/Splash";
+import RegistrationHandler from "./views/SelfRegistration/RegistrationHandler";
 
 const router = createBrowserRouter([
   {
@@ -26,13 +28,14 @@ const router = createBrowserRouter([
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <CalculatorLanding /> },
+      { index: true, element: <Splash /> },
+      { path: "calculator", element: <CalculatorLanding /> },
       { path: "delegated", element: <CalculatorDelegated /> },
-      { path: "personal", element: <CalculatorPersonal /> },
       { path: "personal", element: <CalculatorPersonal /> },
       {
         path: "register",
         children: [
+          { path: "self", element: <RegistrationHandler /> },
           { path: "profile", element: <BasicProfile /> },
           { path: "milestone", element: <MilestoneSelection /> },
           { path: "details", element: <ProfileDetails /> },

@@ -2,6 +2,7 @@ import React from "react";
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
 import PageHeader from "../../components/common/PageHeader";
+import { useNavigate } from "react-router";
 import "./CalculatorLanding.css";
 
 /**
@@ -12,6 +13,7 @@ import "./CalculatorLanding.css";
  */
 
 export default function CalculatorLanding() {
+  const navigate = useNavigate();
   return (
     <>
       <div className="calculator-splash">
@@ -57,10 +59,12 @@ export default function CalculatorLanding() {
           confirm the information entered and consent to receipt of recognition
           awards.
         </AppPanel>
-        <AppButton info>
+        <AppButton info onClick={() => navigate("/delegated")}>
           Calculate Eligiblity And Register for Someone Else
         </AppButton>
-        <AppButton>Calculate My Eligibility</AppButton>
+        <AppButton onClick={() => navigate("/personal")}>
+          Calculate My Eligibility
+        </AppButton>
       </div>
     </>
   );

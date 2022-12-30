@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
 import PageHeader from "../../components/common/PageHeader";
@@ -14,10 +15,17 @@ import "./CalculatorPersonal.css";
 
 export default function CalculatorPersonal() {
   const [eligibility, setEligibility] = useState(false);
+  const [years, setYears] = useState("");
+
+  const navigate = useNavigate();
+  const startRegistration = () => {
+    navigate("/register/self", { state: { years } });
+  };
 
   const isEligible = (totalYears) => {
     if (totalYears >= 5) {
       setEligibility(true);
+      setYears(totalYears);
     } else {
       setEligibility(false);
     }
@@ -97,7 +105,7 @@ export default function CalculatorPersonal() {
             Based on the input in the calculator above, you may be eligible for
             registration for recognition under the Service Pin program. You can
             continue registration by clicking on “Register” below.{" "}
-            <AppButton>Register</AppButton>
+            <AppButton onClick={startRegistration}>Register</AppButton>
           </AppPanel>
         ) : null}
       </div>
