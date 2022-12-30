@@ -1,12 +1,13 @@
-import { Outlet, Link } from "react-router-dom";
-import { Menubar } from "primereact/menubar";
+import { Link } from "react-router-dom";
 import { Menu } from "primereact/menu";
-import { useRef } from "react";
+import { useRef, useContext } from "react";
 import "./Navbar.css";
 import AppButton from "./components/common/AppButton";
+import { UserContext } from "./UserContext";
 
 const Navbar = () => {
   const dropdown = useRef(null);
+  const { user } = useContext(UserContext);
   const pages = [
     {
       label: "Calculator Delegated",
@@ -124,7 +125,7 @@ const Navbar = () => {
                 aria-controls="navbar-dropdown"
                 aria-haspopup
               >
-                IDIR
+                {user ? user.idir : "IDIR"}
               </AppButton>
             </li>
           </div>

@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 //temporary use of apiservices to pull in example data for formatting prior to api being ready - to reformat when doing api proper
-import { UserService } from "../../services/api.services";
 import formServices from "../../services/settings.services";
 import "./DataDisplay.css";
 
