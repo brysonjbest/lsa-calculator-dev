@@ -74,13 +74,13 @@ export default function GalleryDisplay(props) {
           <div className="item-grid-item-bottom">
             <AppButton
               secondary
-              info={data.id === props.chosenAward}
+              info={data.name === props.chosenAward}
               onClick={(e) => {
                 e.preventDefault();
                 props.onClick(data.id);
               }}
             >
-              {data.id === props.chosenAward ? "Selected" : "View"}
+              {data.name === props.chosenAward ? "Selected" : "View"}
             </AppButton>
           </div>
         </div>

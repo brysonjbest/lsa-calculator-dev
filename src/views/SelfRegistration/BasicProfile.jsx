@@ -68,7 +68,10 @@ export default function BasicProfile() {
       //submit to api
       //then statement
       //navigate to next page on success
-      navigate("/register/milestone", { state: stateData });
+      const ministryData = getValues("personal-ministryorganization");
+      const newState = { ...stateData, ministryData };
+      console.log(newState, "this is newstate");
+      navigate("/register/milestone", { state: newState });
     } catch (error) {}
   };
 

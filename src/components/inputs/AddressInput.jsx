@@ -78,11 +78,18 @@ export default function AddressInput(props) {
           handleAddressSelect
         );
       }
-      document
-        .getElementById("google-map-script")
-        .addEventListener("load", () => {
-          googlePlacesAutocomplete();
-        });
+      // document
+      //   .getElementById("google-map-script")
+      //   .addEventListener("load", () => {
+      //     console.log("firing address details");
+      //     googlePlacesAutocomplete();
+      //   });
+      // document
+      // .getElementById("google-map-script")
+      // .addEventListener("load", () => {
+      //   console.log("firing address details");
+      // });
+      googlePlacesAutocomplete();
     }
   }, []);
 

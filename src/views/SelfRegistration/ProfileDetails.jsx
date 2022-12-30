@@ -42,12 +42,14 @@ export default function ProfileDetails() {
     formState: { errors, isValid, isDirty },
     watch,
     getValues,
+    handleSubmit,
   } = methods;
 
   //extend isDirty status to monitor for change and warn about leaving without saving
   watch(() => setFormChanged(true));
 
-  const saveData = () => {
+  const saveData = (e) => {
+    e.preventDefault();
     const finalData = { ...getValues() };
     console.log("final Data before set submission", finalData);
     setSubmissionData(finalData);
@@ -61,6 +63,12 @@ export default function ProfileDetails() {
     const finalData = Object.assign({}, data);
     setSubmissionData(finalData);
     console.log(submissionData, "this is final submission data");
+    try {
+      //submit to api
+      //then statement
+      //navigate to next page on success
+      navigate("/register/award");
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -98,7 +106,7 @@ export default function ProfileDetails() {
               <AddressInput addressIdentifier="office" errors={errors} />
             </AppPanel>
             <div className="submission-buttons">
-              <AppButton secondary onClick={handleSubmit(saveData)}>
+              <AppButton secondary onClick={(e) => saveData(e)}>
                 Save
               </AppButton>
               <AppButton

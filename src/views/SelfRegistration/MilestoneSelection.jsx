@@ -19,9 +19,12 @@ import { useNavigate, useLocation } from "react-router";
 export default function MilestoneSelection() {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location.state);
-  const stateData = location.state ? location.state["qualifyingYears"] : "";
-  console.log(stateData);
+  // console.log(location.state);
+  const yearsData = location.state ? location.state["qualifyingYears"] : "";
+  const ministryInherited = location.state
+    ? location.state["ministryData"]
+    : null;
+  // console.log(ministryInherited);
 
   const defaultValues = {
     "personal-yearsofservice": "",
@@ -62,19 +65,31 @@ export default function MilestoneSelection() {
     console.log(data);
     const finalData = Object.assign({}, data);
     setSubmissionData(finalData);
-    console.log(submissionData, "this is final submission data");
+    // console.log(submissionData, "this is final submission data");
+    try {
+      //submit to api
+      //then statement
+      //navigate to next page on success
+      navigate("/register/details");
+    } catch (error) {}
   };
 
   useEffect(() => {
     setSteps(formServices.get("selfregistrationsteps") || []);
     //to update with api call to get ministry selection from prior profile page
-    const minData = "org-4";
-    const ministry =
-      formServices.lookup("organizations", minData) ||
-      formServices.lookup("currentPinsOnlyOrganizations", minData) ||
-      "";
-    setMinistrySelected(ministry);
-    stateData ? setValue("personal-yearsofservice", stateData) : null;
+    let minData = "org-1";
+    const getMinistry = async () => {
+      //update with api call for prior data
+      minData = ministryInherited ? ministryInherited : "org-30";
+      console.log(minData, "this is minData");
+      const ministry =
+        (await formServices.lookup("organizations", minData)) ||
+        (await formServices.lookup("currentPinsOnlyOrganizations", minData)) ||
+        "";
+      setMinistrySelected(ministry);
+      yearsData ? setValue("personal-yearsofservice", yearsData) : null;
+    };
+    getMinistry();
   }, []);
 
   return (

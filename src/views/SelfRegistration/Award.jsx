@@ -9,6 +9,7 @@ import formServices from "../../services/settings.services";
 import GalleryDisplay from "../../components/common/GalleryDisplay";
 import "./Award.css";
 import AwardSelector from "../../components/inputs/AwardSelector";
+import { useNavigate } from "react-router";
 
 /**
  * Basic Registration.
@@ -18,6 +19,7 @@ import AwardSelector from "../../components/inputs/AwardSelector";
  */
 
 export default function Award() {
+  const navigate = useNavigate();
   const defaultValues = {
     awardID: "",
     awardname: "",
@@ -42,20 +44,22 @@ export default function Award() {
   //extend isDirty status to monitor for change and warn about leaving without saving
   watch(() => setFormChanged(true));
 
-  const saveData = () => {
+  const saveData = (e) => {
+    e.preventDefault();
     const finalData = { ...getValues() };
-    console.log("final Data before set submission", finalData);
+    // console.log("final Data before set submission", finalData);
     setSubmissionData(finalData);
     console.log(submissionData, "this is saved data");
   };
 
-  const submitSelection = (selectedID) => {
+  const submitSelection = (e, selectedID) => {
+    e.preventDefault();
     setAwardSelected(true);
     setChosenAward(selectedID);
     const finalData = { ...getValues() };
-    console.log("final Data before set submission", finalData);
+    // console.log("final Data before set submission", finalData);
     setSubmissionData(finalData);
-    console.log(submissionData, "this is saved data");
+    console.log(submissionData, "this is submission data");
   };
 
   //Final step in creating submission - will be api call to backend to update
@@ -65,6 +69,12 @@ export default function Award() {
     const finalData = Object.assign({}, data);
     setSubmissionData(finalData);
     console.log(submissionData, "this is final submission data");
+    try {
+      //submit to api
+      //then statement
+      //navigate to next page on success
+      navigate("/register/supervisor");
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -84,13 +94,13 @@ export default function Award() {
             <AwardSelector
               errors={errors}
               award={chosenAward}
-              submitAward={handleSubmit(submitSelection)}
+              submitAward={submitSelection}
             />
             {/* <GalleryDisplay header="Award Options" /> */}
             {/* Filler - this will be award display */}
 
             <div className="submission-buttons">
-              <AppButton secondary onClick={handleSubmit(saveData)}>
+              <AppButton secondary onClick={(e) => saveData(e)}>
                 Save
               </AppButton>
               <AppButton

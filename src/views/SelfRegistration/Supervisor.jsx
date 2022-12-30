@@ -7,6 +7,7 @@ import ContactDetails from "../../components/inputs/ContactDetails";
 import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
 import AddressInput from "../../components/inputs/AddressInput";
+import { useNavigate } from "react-router";
 
 /**
  * Basic Registration.
@@ -16,6 +17,7 @@ import AddressInput from "../../components/inputs/AddressInput";
  */
 
 export default function Supervisor() {
+  const navigate = useNavigate();
   const defaultValues = {
     "supervisor-firstname": "",
     "supervisor-lastname": "",
@@ -37,12 +39,14 @@ export default function Supervisor() {
     formState: { errors, isValid, isDirty },
     watch,
     getValues,
+    handleSubmit,
   } = methods;
 
   //extend isDirty status to monitor for change and warn about leaving without saving
   watch(() => setFormChanged(true));
 
-  const saveData = () => {
+  const saveData = (e) => {
+    e.preventDefault();
     const finalData = { ...getValues() };
     console.log("final Data before set submission", finalData);
     setSubmissionData(finalData);
@@ -56,6 +60,12 @@ export default function Supervisor() {
     const finalData = Object.assign({}, data);
     setSubmissionData(finalData);
     console.log(submissionData, "this is final submission data");
+    try {
+      //submit to api
+      //then statement
+      //navigate to next page on success
+      navigate("/register/confirmation");
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -71,10 +81,7 @@ export default function Supervisor() {
         ></PageHeader>
         <FormSteps data={steps} stepIndex={4} category="Registration" />
         <FormProvider {...methods}>
-          <form
-            className="supervisor-details-form"
-            onSubmit={methods.handleSubmit(submitData)}
-          >
+          <form className="supervisor-details-form">
             <AppPanel header="Supervisor Details">
               <ContactDetails basic panelName="supervisor" errors={errors} />
             </AppPanel>
@@ -86,11 +93,12 @@ export default function Supervisor() {
               />
             </AppPanel>
             <div className="submission-buttons">
-              <AppButton secondary onClick={() => saveData()}>
+              <AppButton secondary onClick={(e) => saveData(e)}>
                 Save
               </AppButton>
               <AppButton
                 type="submit"
+                onClick={handleSubmit(submitData)}
                 // disabled={!isValid}
               >
                 Confirm/Submit

@@ -179,11 +179,14 @@ export default function AwardSelector(props) {
           </ul>
           <div className="options-list-action">
             <AppButton
-              disabled={pecsfOptions ? !isValid : !formChanged}
+              disabled={!isValid}
               onClick={(e) => {
                 e.preventDefault();
-                props.submitAward ? props.submitAward(data.id) : null;
+                props.submitAward ? props.submitAward(e, data.id) : null;
                 if (isValid) {
+                  setValue("awardID", data.id);
+                  setValue("awardname", data.name);
+                  setValue("awarddescription", data.description);
                   setAwardDialog(false);
                   setAwardChosen(data.name);
                 }
@@ -233,7 +236,8 @@ export default function AwardSelector(props) {
         onClick={awardSelect}
         header="Award Options"
         itemSet={availableAwards}
-        chosenAward={props.award}
+        // chosenAward={props.award}
+        chosenAward={awardChosen}
       />
       <Dialog
         visible={awardDialog}
