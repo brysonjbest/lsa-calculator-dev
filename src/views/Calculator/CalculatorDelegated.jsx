@@ -54,11 +54,14 @@ export default function CalculatorDelegated() {
   const {
     formState: { errors, isValid },
     watch,
+    handleSubmit,
   } = methods;
 
   watch(() => setFormChanged(true));
 
   const onSubmit = (data) => {
+    setFormComplete(true);
+    setFormChanged(false);
     const finalData = Object.assign({}, data);
     setSubmissionData(finalData);
 
@@ -71,7 +74,8 @@ export default function CalculatorDelegated() {
 
   //Final step in creating submission - will be api call to backend to update
 
-  const submitDelegated = () => {
+  const submitDelegated = (e) => {
+    e.preventDefault();
     console.log(submissionData, "this is final submission data");
   };
 
@@ -172,11 +176,8 @@ export default function CalculatorDelegated() {
               <div className="employee-add-buttons">
                 <AppButton
                   type="submit"
-                  disabled={!isValid}
-                  onClick={() => {
-                    setFormComplete(true);
-                    setFormChanged(false);
-                  }}
+                  // disabled={!isValid}
+                  onClick={handleSubmit(onSubmit)}
                 >
                   {!formComplete
                     ? "Finished? Check Submission."
@@ -212,7 +213,10 @@ export default function CalculatorDelegated() {
               data={submissionData}
               identifier="employee"
             />
-            <AppButton disabled={formChanged} onClick={() => submitDelegated()}>
+            <AppButton
+              disabled={formChanged}
+              onClick={(e) => submitDelegated(e)}
+            >
               {!formChanged
                 ? "Submit"
                 : "Data has been updated, please resubmit above to check input."}

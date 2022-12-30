@@ -57,7 +57,8 @@ const EmployeeList = ({ errors }) => {
                         passClass="p-button-raised p-button-rounded"
                         icon="pi pi-times-circle"
                         danger
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault();
                           remove(index);
                         }}
                       ></AppButton>
@@ -91,7 +92,8 @@ const EmployeeList = ({ errors }) => {
       <div className="employee-list-options">
         <AppButton
           info
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
             append({
               firstname: "",
               lastname: "",
