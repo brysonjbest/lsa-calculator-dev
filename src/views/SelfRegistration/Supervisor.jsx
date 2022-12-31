@@ -18,6 +18,7 @@ import { useNavigate } from "react-router";
 
 export default function Supervisor() {
   const navigate = useNavigate();
+  const pageIndex = 4;
   const defaultValues = {
     "supervisor-firstname": "",
     "supervisor-lastname": "",
@@ -69,7 +70,14 @@ export default function Supervisor() {
   };
 
   useEffect(() => {
-    setSteps(formServices.get("selfregistrationsteps") || []);
+    const stepsTemplate = formServices.get("selfregistrationsteps");
+    const finalSteps = stepsTemplate.map(({ label, route }, index) => ({
+      label: label,
+      command: () => navigate(route),
+      disabled: index >= pageIndex,
+    }));
+    //to update all steps setting with conditional LSA/not recipient
+    setSteps(finalSteps);
   }, []);
 
   return (
@@ -79,7 +87,7 @@ export default function Supervisor() {
           title="Registration"
           subtitle="Your Supervisor Information"
         ></PageHeader>
-        <FormSteps data={steps} stepIndex={4} category="Registration" />
+        <FormSteps data={steps} stepIndex={pageIndex} category="Registration" />
         <FormProvider {...methods}>
           <form className="supervisor-details-form">
             <AppPanel header="Supervisor Details">

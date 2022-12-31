@@ -234,21 +234,27 @@ const schemaData = {
   selfregistrationsteps: [
     {
       label: "Basic Profile",
+      route: "/register/profile",
     },
     {
       label: "Milestone Selection",
+      route: "/register/milestone",
     },
     {
       label: "Personal Profile Details",
+      route: "/register/details",
     },
     {
       label: "Award Selection",
+      route: "/register/award",
     },
     {
       label: "Supervisor Details",
+      route: "/register/supervisor",
     },
     {
       label: "Confirmation",
+      route: "/register/confirmation",
     },
   ],
 };

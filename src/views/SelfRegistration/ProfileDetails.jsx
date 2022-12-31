@@ -18,6 +18,7 @@ import AddressInput from "../../components/inputs/AddressInput";
 
 export default function ProfileDetails() {
   const navigate = useNavigate();
+  const pageIndex = 2;
   const defaultValues = {
     "personal-personalphone": "",
     "personal-personalemail": "",
@@ -66,13 +67,20 @@ export default function ProfileDetails() {
     try {
       //submit to api
       //then statement
-      //navigate to next page on success
+      //navigate to next page on success - page should be awards if they are LSA, otherwise, to supervisor details
       navigate("/register/award");
     } catch (error) {}
   };
 
   useEffect(() => {
-    setSteps(formServices.get("selfregistrationsteps") || []);
+    const stepsTemplate = formServices.get("selfregistrationsteps");
+    const finalSteps = stepsTemplate.map(({ label, route }, index) => ({
+      label: label,
+      command: () => navigate(route),
+      disabled: index >= pageIndex,
+    }));
+    //to update all steps setting with conditional LSA/not recipient
+    setSteps(finalSteps);
   }, []);
 
   return (
@@ -82,7 +90,7 @@ export default function ProfileDetails() {
           title="Registration"
           subtitle="Additional Profile Information"
         ></PageHeader>
-        <FormSteps data={steps} stepIndex={2} category="Registration" />
+        <FormSteps data={steps} stepIndex={pageIndex} category="Registration" />
         <FormProvider {...methods}>
           <form
             className="additional-details-form"

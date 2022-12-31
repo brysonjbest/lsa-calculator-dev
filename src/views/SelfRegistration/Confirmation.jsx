@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm, FormProvider, Controller } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Checkbox } from "primereact/checkbox";
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
@@ -23,6 +23,8 @@ export default function Confirmation() {
   const defaultValues = {
     consent: false,
   };
+  const navigate = useNavigate();
+  const pageIndex = 5;
   const methods = useForm({ defaultValues });
   const [steps, setSteps] = useState([]);
   const [formData, setFormData] = useState([{}]);
@@ -46,7 +48,6 @@ export default function Confirmation() {
   };
 
   useEffect(() => {
-    setSteps(formServices.get("selfregistrationsteps") || []);
     //edit for api usage on load
     const formDataTemp = [
       {
@@ -160,6 +161,17 @@ export default function Confirmation() {
     setHasLoaded(true);
   }, []);
 
+  useEffect(() => {
+    const stepsTemplate = formServices.get("selfregistrationsteps");
+    const finalSteps = stepsTemplate.map(({ label, route }, index) => ({
+      label: label,
+      command: () => navigate(route),
+      disabled: index >= pageIndex,
+    }));
+    //to update all steps setting with conditional LSA/not recipient
+    setSteps(finalSteps);
+  }, []);
+
   const header = (title, path) => {
     const titlePath = title.toLowerCase().replace(/\s/g, "");
     return (
@@ -189,7 +201,11 @@ export default function Confirmation() {
             title="Registration"
             subtitle="Confirm your registration details"
           ></PageHeader>
-          <FormSteps data={steps} stepIndex={5} category="Registration" />
+          <FormSteps
+            data={steps}
+            stepIndex={pageIndex}
+            category="Registration"
+          />
           <AppPanel header="Registration Information">
             The information you have submitted indicates that you are
             registering for the following recognition awards: Service Pins

@@ -20,6 +20,7 @@ import { useNavigate } from "react-router";
 
 export default function Award() {
   const navigate = useNavigate();
+  const pageIndex = 3;
   const defaultValues = {
     awardID: "",
     awardname: "",
@@ -78,7 +79,14 @@ export default function Award() {
   };
 
   useEffect(() => {
-    setSteps(formServices.get("selfregistrationsteps") || []);
+    const stepsTemplate = formServices.get("selfregistrationsteps");
+    const finalSteps = stepsTemplate.map(({ label, route }, index) => ({
+      label: label,
+      command: () => navigate(route),
+      disabled: index >= pageIndex,
+    }));
+    //to update all steps setting with conditoinal LSA/not recipient
+    setSteps(finalSteps);
   }, []);
 
   return (
@@ -88,7 +96,7 @@ export default function Award() {
           title="Registration"
           subtitle="Award Selection"
         ></PageHeader>
-        <FormSteps data={steps} stepIndex={3} category="Registration" />
+        <FormSteps data={steps} stepIndex={pageIndex} category="Registration" />
         <FormProvider {...methods}>
           <form className="award-details-form">
             <AwardSelector

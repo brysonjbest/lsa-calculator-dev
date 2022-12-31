@@ -51,8 +51,12 @@ export default function FormSteps(props) {
           <Steps
             model={interactiveItems}
             activeIndex={activeIndex}
-            onSelect={(e) => setActiveIndex(e.index)}
-            readOnly={true}
+            onSelect={(e) => {
+              props.onSelect ? props.onSelect() : null;
+              console.log("this is a test", e);
+              setActiveIndex(e.index);
+            }}
+            readOnly={false}
           />
         </AppPanel>
       </div>

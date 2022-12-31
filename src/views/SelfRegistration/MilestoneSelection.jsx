@@ -18,6 +18,7 @@ import { useNavigate, useLocation } from "react-router";
 
 export default function MilestoneSelection() {
   const navigate = useNavigate();
+  const pageIndex = 1;
   const location = useLocation();
   // console.log(location.state);
   const yearsData = location.state ? location.state["qualifyingYears"] : "";
@@ -75,7 +76,6 @@ export default function MilestoneSelection() {
   };
 
   useEffect(() => {
-    setSteps(formServices.get("selfregistrationsteps") || []);
     //to update with api call to get ministry selection from prior profile page
     let minData = "org-1";
     const getMinistry = async () => {
@@ -92,6 +92,17 @@ export default function MilestoneSelection() {
     getMinistry();
   }, []);
 
+  useEffect(() => {
+    const stepsTemplate = formServices.get("selfregistrationsteps");
+    const finalSteps = stepsTemplate.map(({ label, route }, index) => ({
+      label: label,
+      command: () => navigate(route),
+      disabled: index >= pageIndex,
+    }));
+    //to update all steps setting with conditional LSA/not recipient
+    setSteps(finalSteps);
+  }, []);
+
   return (
     <>
       <div className="self-registration basic-profile">
@@ -99,7 +110,7 @@ export default function MilestoneSelection() {
           title="Registration"
           subtitle="Identify your milestones"
         ></PageHeader>
-        <FormSteps data={steps} stepIndex={1} category="Registration" />
+        <FormSteps data={steps} stepIndex={pageIndex} category="Registration" />
         <FormProvider {...methods}>
           <form className="milestones-form">
             <AppPanel header="Milestone Details">

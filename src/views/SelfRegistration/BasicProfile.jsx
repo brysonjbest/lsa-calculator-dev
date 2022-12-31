@@ -20,6 +20,7 @@ export default function BasicProfile() {
   const navigate = useNavigate();
   const location = useLocation();
   const stateData = location.state ? location.state : null;
+  const pageIndex = 0;
 
   const defaultValues = {
     "personal-firstname": "",
@@ -76,7 +77,14 @@ export default function BasicProfile() {
   };
 
   useEffect(() => {
-    setSteps(formServices.get("selfregistrationsteps") || []);
+    const stepsTemplate = formServices.get("selfregistrationsteps");
+    const finalSteps = stepsTemplate.map(({ label, route }, index) => ({
+      label: label,
+      command: () => navigate(route),
+      disabled: index >= pageIndex,
+    }));
+    //to update all steps setting with conditoinal LSA/not recipient
+    setSteps(finalSteps);
   }, []);
 
   return (
@@ -86,7 +94,7 @@ export default function BasicProfile() {
           title="Registration"
           subtitle="Your Basic Profile Information"
         ></PageHeader>
-        <FormSteps data={steps} stepIndex={0} category="Registration" />
+        <FormSteps data={steps} stepIndex={pageIndex} category="Registration" />
         <FormProvider {...methods}>
           <form
             className="basic-details-form"
