@@ -81,10 +81,7 @@ export default function ServiceCalculator(props) {
   };
 
   return (
-    <div
-      onSubmit={handleSubmit(onSubmit)}
-      className="service-calculator-component"
-    >
+    <div className="service-calculator-component">
       <ul>
         {fields.map((item, index) => {
           return (
@@ -176,8 +173,33 @@ export default function ServiceCalculator(props) {
             </li>
           );
         })}
+        <li className="add-service-row-button">
+          <AppButton
+            secondary
+            icon="pi pi-plus-circle"
+            onClick={(e) => {
+              e.preventDefault();
+              append({ startYear: "", endYear: "", years: "" });
+            }}
+          >
+            Add Row
+          </AppButton>
+        </li>
+        <li className="service-calculator-reset">
+          <AppButton
+            danger
+            onClick={(e) => {
+              e.preventDefault();
+              reset({
+                serviceCalculator: [{ startYear: "", endYear: "", years: "" }],
+              });
+            }}
+          >
+            Reset Calculator
+          </AppButton>
+        </li>
       </ul>
-      <section>
+      <section className="years-of-service-calculator-final">
         <div className="total-years-counter">
           <span>
             Total Years: <TotalYears key="total-count" {...{ control }} />
@@ -187,28 +209,10 @@ export default function ServiceCalculator(props) {
             content="Total Year count may differ from years of service per row, as duplicated years are only counted once."
           />
         </div>
-        <button
-          type="button"
-          onClick={() => {
-            append({ startYear: "", endYear: "", years: "" });
-          }}
-        >
-          Add Row
-        </button>
-
-        <button
-          type="button"
-          onClick={() =>
-            reset({
-              serviceCalculator: [{ startYear: "", endYear: "" }],
-            })
-          }
-        >
-          Reset Calculator
-        </button>
+        <AppButton onClick={handleSubmit(onSubmit)}>
+          Submit Years of Service Calculation
+        </AppButton>
       </section>
-
-      <input type="submit" onClick={handleSubmit(onSubmit)} />
     </div>
   );
 }
