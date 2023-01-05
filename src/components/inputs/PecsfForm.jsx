@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { RadioButton } from "primereact/radiobutton";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 

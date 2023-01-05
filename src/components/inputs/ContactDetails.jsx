@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useForm, Controller, useFormContext } from "react-hook-form";
+import React from "react";
+import { Controller, useFormContext } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { InputMask } from "primereact/inputmask";
@@ -52,21 +52,13 @@ export default function ContactDetails(props) {
     const currentFormValue =
       formServices.lookup("organizations", event) ||
       formServices.lookup("currentPinsOnlyOrganizations", event);
-      props.ministryRef
-        ? props.ministryRef(props.index, currentFormValue)
-        : null;
+    props.ministryRef ? props.ministryRef(props.index, currentFormValue) : null;
   };
 
   const organizations = formServices.get("organizations") || [];
   const fullOrgList = organizations.concat(
     formServices.get("currentPinsOnlyOrganizations") || []
   );
-
-  // console.log(panelGroupName);
-  // console.log(
-  //   `${props.panelName}[${props.itemNumber - 1}]['firstname']`,
-  //   "this is test"
-  // );
 
   return (
     <div className={`contact-details-form-${panelGroupName}`}>

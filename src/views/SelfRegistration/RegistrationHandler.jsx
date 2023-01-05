@@ -11,13 +11,11 @@ export default function RegistrationHandler() {
 
   const stateData = location.state;
   const qualifyingYears = stateData && stateData.years ? stateData.years : null;
-  console.log(qualifyingYears, "this is qualifying years");
 
   const submittedRegistration =
     registration && registration.submitted ? registration.submitted : null;
   //update with check for truly active based on what api would return - probably null?
   const activeRegistration = JSON.stringify(registration) !== "{}";
-  console.log(activeRegistration, "is this active?");
 
   //to update routing when api routes are finalized - should take into account what has been submitted and send to page that requires completion
   //routing on pages will also need to verify that the data exists before allowing someone to visit the page
@@ -34,7 +32,6 @@ export default function RegistrationHandler() {
       if (progress > 10) route = "supervisor";
       if (progress > 11) route = "confirmation";
     }
-    console.log(registrationRoute, "this is route");
     return registrationRoute;
   };
 

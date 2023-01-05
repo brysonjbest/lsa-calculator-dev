@@ -53,7 +53,6 @@ export default function FormSteps(props) {
             activeIndex={activeIndex}
             onSelect={(e) => {
               props.onSelect ? props.onSelect() : null;
-              console.log("this is a test", e);
               setActiveIndex(e.index);
             }}
             readOnly={false}

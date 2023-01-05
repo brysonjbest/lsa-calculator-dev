@@ -1,21 +1,9 @@
-import React, { useEffect, useRef, useState, useMemo } from "react";
+import React, { useState } from "react";
 
 import { Dialog } from "primereact/dialog";
 
 import AppButton from "../common/AppButton";
-import ServiceCalculator from "./ServiceCalculator";
-import {
-  useForm,
-  Controller,
-  useFormContext,
-  useFieldArray,
-} from "react-hook-form";
-import { InputText } from "primereact/inputtext";
-import { Dropdown } from "primereact/dropdown";
-import { MultiSelect } from "primereact/multiselect";
-import { InputMask } from "primereact/inputmask";
-import { InputNumber } from "primereact/inputnumber";
-import formServices from "../../services/settings.services";
+import { useFormContext } from "react-hook-form";
 import getFormErrorMessage from "../../services/helpers/ErrorMessage";
 
 import classNames from "classnames";
