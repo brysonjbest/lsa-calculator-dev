@@ -174,6 +174,16 @@ export default function AwardSelector(props) {
       <div>
         <div className="award-selection-options">
           <div>{data.description}</div>
+          <div>
+            <img
+              src={`${data.image_url}`}
+              onError={(e) =>
+                (e.target.src =
+                  "https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png")
+              }
+              alt={data.name}
+            />
+          </div>
           <ul className="options-list">
             {pecsfOptions ? <PecsfForm errors={props.errors} /> : listOptions}
           </ul>
