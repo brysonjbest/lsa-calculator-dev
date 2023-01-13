@@ -41,3 +41,15 @@
     flex-direction: row;
     flex-wrap: wrap;
 }
+
+@media screen and (max-width: 565px) {
+    .p-panel .p-panel-content {
+        padding: .25rem;
+    }
+    .self-registration .confirmation-profile{
+        padding: 0 .25rem 0 .25rem;
+    }
+    .p-datatable-tbody td{
+        white-space:normal;
+    }
+  }

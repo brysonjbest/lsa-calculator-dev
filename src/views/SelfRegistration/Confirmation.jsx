@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useForm, FormProvider, Controller } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { Checkbox } from "primereact/checkbox";
@@ -11,6 +11,7 @@ import formServices from "../../services/settings.services";
 import AddressInput from "../../components/inputs/AddressInput";
 import DataDisplay from "../../components/common/DataDisplay";
 import "./Confirmation.css";
+import { RegistrationContext } from "../../UserContext";
 
 /**
  * Basic Registration.
@@ -20,12 +21,20 @@ import "./Confirmation.css";
  */
 
 export default function Confirmation() {
-  const defaultValues = {
+  const defaultFormValues = {
     consent: false,
   };
   const navigate = useNavigate();
   const pageIndex = 5;
-  const methods = useForm({ defaultValues });
+  const { registration, setRegistration } = useContext(RegistrationContext);
+
+  // const methods = useForm({ defaultValues });
+  const methods = useForm({
+    defaultValues: useMemo(() => {
+      const defaultSetting = { ...defaultFormValues, ...registration };
+      return defaultSetting;
+    }, [registration]),
+  });
   const [steps, setSteps] = useState([]);
   const [formData, setFormData] = useState([{}]);
   const [hasLoaded, setHasLoaded] = useState(false);
@@ -38,6 +47,7 @@ export default function Confirmation() {
     watch,
     getValues,
     control,
+    reset,
   } = methods;
 
   const submitData = (data) => {
@@ -48,54 +58,19 @@ export default function Confirmation() {
   };
 
   useEffect(() => {
-    //edit for api usage on load
-    const formDataTemp = [
-      {
-        "personal-firstname": "TestingFirstname",
-        "personal-lastname": "TestingLast",
-        "personal-governmentemail": "email@email.com",
-        "personal-governmentphone": "555-555-5555",
-        "personal-employeenumber": "12345679",
-        "personal-ministryorganization": "org-4",
-        "personal-branch": "Health",
-        "personal-yearsofservice": 25,
-        "personal-currentmilestone": 25,
-        "personal-qualifyingyear": 2022,
-        "personal-priormilestones": [20, 15],
-        "personal-personalphone": "555-555-5555",
-        "personal-personalemail": "test@test2.com",
-        officecitycommunity: "Victoria",
-        officepostalcode: "A0A0A0",
-        officestreetaddress: "123 Fake Street",
-        officestreetaddress2: "Apartment 1",
-        personalcitycommunity: "Vancouver",
-        personalpostalcode: "0A0A0A",
-        personalprovincestate: "BC",
-        personalstreetaddress: "456 Fake Drive",
-        personalstreetaddress2: "Apartment 2",
-        "supervisor-firstname": "SupervisorFirst",
-        "supervisor-lastname": "SupervisorLast",
-        "supervisor-governmentemail": "supervisor@email.com",
-        supervisorstreetaddress: "789 Fake Road",
-        supervisorstreetaddress2: "Suite 99",
-        supervisorcitycommunity: "Prince George",
-        supervisorpostalcode: "V1V2B2",
-        supervisorpobox: "123987",
-      },
-    ];
     const milestoneArray = [
       {
-        yearsofservice: 25,
-        currentmilestone: 25,
-        qualifyingyear: 2022,
-        priormilestones: [20, 15],
+        yearsofservice: registration["personal-yearsofservice"],
+        currentmilestone: registration["personal-currentmilestone"],
+        qualifyingyear: registration["personal-qualifyingyear"],
+        priormilestones: registration["personal-priormilestones"],
       },
     ];
     const awardArray = [
       {
-        awardname: "This is a test",
-        awarddescription: "these are the details of this award",
-        awardoptions: ["Test", "Test2"],
+        awardname: registration["awardname"],
+        awarddescription: registration["awarddescription"],
+        awardoptions: registration["awardoptions"],
       },
     ];
     const lsaArray = [
@@ -107,44 +82,44 @@ export default function Confirmation() {
     ];
     const personalArray = [
       {
-        firstname: "TestingFirstname",
-        lastname: "TestingLast",
-        governmentemail: "email@email.com",
-        governmentphone: "555-555-5555",
-        employeenumber: "12345679",
-        ministryorganization: "org-4",
-        branch: "Health",
+        firstname: registration["personal-firstname"],
+        lastname: registration["personal-lastname"],
+        governmentemail: registration["personal-governmentemail"],
+        governmentphone: registration["personal-governmentphone"],
+        employeenumber: registration["personal-employeenumber"],
+        ministryorganization: registration["personal-ministryorganization"],
+        branch: registration["personal-branch"],
       },
     ];
     const contactArray = [
       {
-        personalphone: "555-555-5555",
-        personalemail: "test@test2.com",
-        streetaddress: "456 Fake Drive",
-        streetaddress2: "Apartment 2",
-        citycommunity: "Vancouver",
-        postalcode: "0A0A0A",
-        provincestate: "BC",
+        personalphone: registration["personal-personalphone"],
+        personalemail: registration["personal-personalemail"],
+        streetaddress: registration["personalstreetaddress"],
+        streetaddress2: registration["personalstreetaddress2"],
+        citycommunity: registration["personalcitycommunity"],
+        postalcode: registration["personalpostalcode"],
+        provincestate: registration["personalprovincestate"],
       },
     ];
     const officeArray = [
       {
-        citycommunity: "Victoria",
-        postalcode: "A0A0A0",
-        streetaddress: "123 Fake Street",
-        streetaddress2: "Apartment 1",
+        citycommunity: registration["officecitycommunity"],
+        postalcode: registration["officepostalcode"],
+        streetaddress: registration["officestreetaddress"],
+        streetaddress2: registration["officestreetaddress2"],
       },
     ];
     const supervisorArray = [
       {
-        firstname: "SupervisorFirst",
-        lastname: "SupervisorLast",
-        governmentemail: "supervisor@email.com",
-        streetaddress: "789 Fake Road",
-        streetaddress2: "Suite 99",
-        citycommunity: "Prince George",
-        postalcode: "V1V2B2",
-        pobox: "123987",
+        firstname: registration["supervisor-firstname"],
+        lastname: registration["supervisor-lastname"],
+        governmentemail: registration["supervisor-governmentemail"],
+        streetaddress: registration["supervisorstreetaddress"],
+        streetaddress2: registration["supervisorstreetaddress2"],
+        citycommunity: registration["supervisorcitycommunity"],
+        postalcode: registration["supervisorpostalcode"],
+        pobox: registration["supervisorpobox"],
       },
     ];
     const finalData = {
@@ -156,7 +131,6 @@ export default function Confirmation() {
       lsaArray: lsaArray,
       awardArray: awardArray,
     };
-    // const finalData = [milestoneArray];
     setFormData(finalData);
     setHasLoaded(true);
   }, []);
@@ -171,6 +145,10 @@ export default function Confirmation() {
     //to update all steps setting with conditional LSA/not recipient
     setSteps(finalSteps);
   }, []);
+
+  useEffect(() => {
+    reset(registration);
+  }, [registration]);
 
   const header = (title, path) => {
     const titlePath = title.toLowerCase().replace(/\s/g, "");

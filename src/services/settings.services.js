@@ -206,7 +206,25 @@ const schemaData = {
   awardFormFields: [
     { field: "awardname", header: "Award Name" },
     { field: "awarddescription", header: "Description" },
-    { field: "awardoptions", header: "Options" },
+    {
+      field: "awardoptions",
+      header: "Options",
+      body: (rowData) => {
+        const optionsObject = rowData.awardoptions
+          ? rowData.awardoptions[0]
+          : {};
+        const optionsArray = [];
+        const format = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+        for (const [key, value] of Object.entries(optionsObject)) {
+          const keyFormat = format(key);
+          const values = Array.isArray(value)
+            ? value.map((each) => ` ${format(each)}`)
+            : format(value);
+          optionsArray.push(`${keyFormat}: ${values}`);
+        }
+        return optionsArray.map((each) => `${each}; \n`);
+      },
+    },
   ],
   delegatedFormFields: [
     { field: "employee", header: "Employee" },
@@ -226,7 +244,7 @@ const schemaData = {
       header: "Prior Unclaimed Milestones",
       body: (rowData) => {
         return rowData.priormilestones
-          ? rowData.priormilestones.map((each) => `${each} years `)
+          ? rowData.priormilestones.map((each) => `${each} years; `)
           : null;
       },
     },

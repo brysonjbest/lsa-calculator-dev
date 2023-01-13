@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
@@ -8,6 +8,7 @@ import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
 import AddressInput from "../../components/inputs/AddressInput";
 import { useNavigate } from "react-router";
+import { RegistrationContext } from "../../UserContext";
 
 /**
  * Basic Registration.
@@ -19,7 +20,9 @@ import { useNavigate } from "react-router";
 export default function Supervisor() {
   const navigate = useNavigate();
   const pageIndex = 4;
-  const defaultValues = {
+  const { registration, setRegistration } = useContext(RegistrationContext);
+
+  const defaultFormValues = {
     "supervisor-firstname": "",
     "supervisor-lastname": "",
     "supervisor-governmentemail": "",
@@ -30,7 +33,13 @@ export default function Supervisor() {
     supervisorpobox: "",
   };
 
-  const methods = useForm({ defaultValues });
+  // const methods = useForm({ defaultValues });
+  const methods = useForm({
+    defaultValues: useMemo(() => {
+      const defaultSetting = { ...defaultFormValues, ...registration };
+      return defaultSetting;
+    }, [registration]),
+  });
   const [steps, setSteps] = useState([]);
   const [submissionData, setSubmissionData] = useState({});
   const [formComplete, setFormComplete] = useState(false);
@@ -41,24 +50,40 @@ export default function Supervisor() {
     watch,
     getValues,
     handleSubmit,
+    reset,
   } = methods;
 
   //extend isDirty status to monitor for change and warn about leaving without saving
   watch(() => setFormChanged(true));
 
-  const saveData = (e) => {
-    e.preventDefault();
-    const finalData = { ...getValues() };
-    console.log("final Data before set submission", finalData);
+  const saveData = (data) => {
+    const registrationData = registration;
+    const finalData = Object.assign({}, data);
     setSubmissionData(finalData);
     console.log(submissionData, "this is saved data");
+
+    try {
+      //submit to api - submits current registration to api and updates current registration context with return from api
+      //then statement
+      //activates next page if valid
+      const registrationUpdate = { ...registrationData, ...finalData };
+      console.log(
+        registrationUpdate,
+        "this update is checking spread operator"
+      );
+      setRegistration(registrationUpdate);
+      console.log(newState, "this is newstate");
+      setFormComplete(true);
+      setFormChanged(false);
+    } catch (error) {}
   };
 
   //Final step in creating submission - will be api call to backend to update
 
-  const submitData = (data) => {
-    console.log(data);
-    const finalData = Object.assign({}, data);
+  const submitData = (e) => {
+    e.preventDefault();
+    const finalData = { ...getValues() };
+
     setSubmissionData(finalData);
     console.log(submissionData, "this is final submission data");
     try {
@@ -79,6 +104,10 @@ export default function Supervisor() {
     //to update all steps setting with conditional LSA/not recipient
     setSteps(finalSteps);
   }, []);
+
+  useEffect(() => {
+    reset(registration);
+  }, [registration]);
 
   return (
     <>
@@ -101,15 +130,14 @@ export default function Supervisor() {
               />
             </AppPanel>
             <div className="submission-buttons">
-              <AppButton secondary onClick={(e) => saveData(e)}>
+              <AppButton secondary onClick={handleSubmit(saveData)}>
                 Save
               </AppButton>
               <AppButton
-                type="submit"
-                onClick={handleSubmit(submitData)}
-                // disabled={!isValid}
+                onClick={(e) => submitData(e)}
+                disabled={!isValid || (isDirty && !formComplete)}
               >
-                Confirm/Submit
+                Continue
               </AppButton>
             </div>
           </form>

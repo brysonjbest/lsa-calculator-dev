@@ -21,7 +21,7 @@ import "./AddressInput.css";
 export default function AddressInput(props) {
   const address = useRef();
   const methods = useFormContext();
-  const [poBoxField, setPoBoxField] = useState();
+  const [poBoxField, setPoBoxField] = useState(false);
   let autoCompleteBody = "";
   const addressAutoComplete = AddressAutoComplete();
   const addressGroupName = props.addressIdentifier
@@ -92,6 +92,16 @@ export default function AddressInput(props) {
       googlePlacesAutocomplete();
     }
   }, []);
+
+  useEffect(() => {
+    getValues(`${props.addressIdentifier}citycommunity`)
+      ? setPoBoxField(
+          getValues(`${props.addressIdentifier}citycommunity`).match(
+            /Victoria/i
+          )
+        )
+      : null;
+  }, [props.addressIdentifier]);
 
   return (
     <div className="container">

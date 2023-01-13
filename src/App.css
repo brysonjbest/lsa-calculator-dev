@@ -37,3 +37,9 @@
 .read-the-docs {
   color: #888;
 }
+
+@media screen and (max-width: 565px) {
+  .App .main-content > div {
+    padding: 0 .25rem 0 .25rem; 
+  }
+}

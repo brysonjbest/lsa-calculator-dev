@@ -149,9 +149,6 @@ export default function Award() {
               submitAward={submitSelection}
               awards={availableAwards}
             />
-            {/* <GalleryDisplay header="Award Options" /> */}
-            {/* Filler - this will be award display */}
-
             <div className="submission-buttons">
               <AppButton secondary onClick={handleSubmit(saveData)}>
                 Save

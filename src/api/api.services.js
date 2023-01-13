@@ -26,7 +26,7 @@ export async function getRegistrationData(userData) {
     officestreetaddress: "855 Broadview Avenue",
     officestreetaddress2: "",
     "personal-personalemail": "personalEmail@test.com",
-    "personal-personalphone": "(403) 894-2696",
+    "personal-personalphone": "(778) 525-2525",
     personalcitycommunity: "Sunnyvale",
     personalcountry: "United States",
     personalpostalcode: "94086-2919",
@@ -34,7 +34,7 @@ export async function getRegistrationData(userData) {
     personalstreetaddress: "785 East El Camino Real",
     personalstreetaddress2: "",
     awardID: "1001",
-    awarddescription: "Whale Tail Painting",
+    awarddescription: "A magnificent painting of a Whale Tail",
     awardname: "Whale Tail Painting",
     awardoptions: [
       {
@@ -44,6 +44,14 @@ export async function getRegistrationData(userData) {
         paintingtools: ["fork", "brush", "spoon"],
       },
     ],
+    "supervisor-firstname": "testingSuperFirst",
+    "supervisor-lastname": "testingSuperLast",
+    "supervisor-governmentemail": "superemail@test.com",
+    supervisorstreetaddress: "123 Fake Street",
+    supervisorstreetaddress2: "Apartment 2",
+    supervisorcitycommunity: "Victoria",
+    supervisorpostalcode: "V8T0R2",
+    supervisorpobox: "98563",
   };
 }
 
