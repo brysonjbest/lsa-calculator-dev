@@ -196,11 +196,44 @@ const schemaData = {
     { field: "pobox", header: "P.O. Box" },
   ],
   lsaFormFields: [
-    { field: "retiringcurrentyear", header: "I Plan to Retire This Year" },
-    { field: "retirementdate", header: "Retirement Date" },
     {
-      field: "attendingceremony",
+      field: "retiringcurrentyear",
+      header: "I Plan to Retire This Year",
+      body: (rowData) => {
+        return rowData.retiringcurrentyear
+          ? "Yes, I plan to retire this year."
+          : "No, I do not plan to retire this year.";
+      },
+    },
+    {
+      field: "retirementdate",
+      header: "Retirement Date",
+      body: (rowData) => {
+        const retireDate = rowData.retirementdate
+          ? rowData.retirementdate.toDateString()
+          : null;
+        return rowData.retiringcurrentyear
+          ? retireDate
+          : "Not retiring this year.";
+      },
+    },
+    {
+      field: "bcgeumember",
+      header: "Are you a BCGEU Member?",
+      body: (rowData) => {
+        return rowData.bcgeumember
+          ? "Yes, I am a BCGEU Member."
+          : "No, I am not a BCGEU Member.";
+      },
+    },
+    {
+      field: "ceremonyoptout",
       header: "I Plan to Attend The Awards Ceremony",
+      body: (rowData) => {
+        return !rowData.ceremonyoptout
+          ? "Yes, I plan to attend the awards ceremony."
+          : "No, I do not plan to attend the awards ceremony.";
+      },
     },
   ],
   awardFormFields: [
@@ -263,8 +296,34 @@ const schemaData = {
       route: "/register/details",
     },
     {
+      label: "LSA Attendance",
+      route: "/register/attendance",
+    },
+    {
       label: "Award Selection",
       route: "/register/award",
+    },
+    {
+      label: "Supervisor Details",
+      route: "/register/supervisor",
+    },
+    {
+      label: "Confirmation",
+      route: "/register/confirmation",
+    },
+  ],
+  pinOnlyselfregistrationsteps: [
+    {
+      label: "Basic Profile",
+      route: "/register/profile",
+    },
+    {
+      label: "Milestone Selection",
+      route: "/register/milestone",
+    },
+    {
+      label: "Personal Profile Details",
+      route: "/register/details",
     },
     {
       label: "Supervisor Details",

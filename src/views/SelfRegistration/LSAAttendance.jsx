@@ -3,48 +3,38 @@ import { useForm, FormProvider } from "react-hook-form";
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
 import PageHeader from "../../components/common/PageHeader";
-import ContactDetails from "../../components/inputs/ContactDetails";
 import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
-import AddressInput from "../../components/inputs/AddressInput";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { RegistrationContext } from "../../UserContext";
+import LSADetails from "../../components/inputs/LSADetails";
 
 /**
- * Basic Registration.
- * @param {object} props
- * @param {() => void} props.formSubmit function to execute on form submission
+ * LSA Attendance Questions.
  * @returns
  */
 
-export default function Supervisor() {
+export default function LSAAttendance() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const stateData = location.state ? location.state : null;
   const { registration, setRegistration } = useContext(RegistrationContext);
   const isLSAEligible = registration["personal-yearsofservice"] >= 25;
-  const pageIndex = isLSAEligible ? 5 : 3;
+  const pageIndex = 3;
 
   const defaultFormValues = {
-    "supervisor-firstname": "",
-    "supervisor-lastname": "",
-    "supervisor-governmentemail": "",
-    supervisorstreetaddress: "",
-    supervisorstreetaddress2: "",
-    supervisorcitycommunity: "",
-    supervisorpostalcode: "",
-    supervisorpobox: "",
+    retiringcurrentyear: false,
+    retirementdate: null,
+    ceremonyoptout: false,
+    bcgeumember: false,
   };
 
-  // const methods = useForm({ defaultValues });
   const methods = useForm({
     defaultValues: useMemo(() => {
       const defaultSetting = { ...defaultFormValues, ...registration };
       return defaultSetting;
     }, [registration]),
   });
-  const [steps, setSteps] = useState([]);
-  const [submissionData, setSubmissionData] = useState({});
-  const [formComplete, setFormComplete] = useState(false);
-  const [formChanged, setFormChanged] = useState(true);
 
   const {
     formState: { errors, isValid, isDirty },
@@ -54,15 +44,22 @@ export default function Supervisor() {
     reset,
   } = methods;
 
+  const [steps, setSteps] = useState([]);
+  const [submissionData, setSubmissionData] = useState({});
+  const [formComplete, setFormComplete] = useState(false);
+  const [formChanged, setFormChanged] = useState(false);
+
   //extend isDirty status to monitor for change and warn about leaving without saving
   watch(() => setFormChanged(true));
+
+  //to include try/catch api request block to save submitted data
 
   const saveData = (data) => {
     const registrationData = registration;
     const finalData = Object.assign({}, data);
     setSubmissionData(finalData);
     console.log(submissionData, "this is saved data");
-
+    console.log(finalData, "this is final data that is being set");
     try {
       //submit to api - submits current registration to api and updates current registration context with return from api
       //then statement
@@ -73,25 +70,17 @@ export default function Supervisor() {
         "this update is checking spread operator"
       );
       setRegistration(registrationUpdate);
-      console.log(newState, "this is newstate");
       setFormComplete(true);
       setFormChanged(false);
     } catch (error) {}
   };
 
-  //Final step in creating submission - will be api call to backend to update
-
   const submitData = (e) => {
     e.preventDefault();
     const finalData = { ...getValues() };
-
     setSubmissionData(finalData);
-    console.log(submissionData, "this is final submission data");
     try {
-      //submit to api
-      //then statement
-      //navigate to next page on success
-      navigate("/register/confirmation");
+      navigate("/register/award");
     } catch (error) {}
   };
 
@@ -104,7 +93,6 @@ export default function Supervisor() {
       command: () => navigate(route),
       disabled: index >= pageIndex,
     }));
-    //to update all steps setting with conditional LSA/not recipient
     setSteps(finalSteps);
   }, []);
 
@@ -114,23 +102,16 @@ export default function Supervisor() {
 
   return (
     <>
-      <div className="self-registration supervisor-profile">
+      <div className="self-registration basic-profile">
         <PageHeader
           title="Registration"
-          subtitle="Your Supervisor Information"
+          subtitle="Your LSA Attendance Details"
         ></PageHeader>
         <FormSteps data={steps} stepIndex={pageIndex} category="Registration" />
         <FormProvider {...methods}>
-          <form className="supervisor-details-form">
-            <AppPanel header="Supervisor Details">
-              <ContactDetails basic panelName="supervisor" errors={errors} />
-            </AppPanel>
-            <AppPanel header="Supervisor Office Address">
-              <AddressInput
-                pobox
-                addressIdentifier="supervisor"
-                errors={errors}
-              />
+          <form className="basic-details-form">
+            <AppPanel header="LSA Attendance Details">
+              <LSADetails panelName="personal" errors={errors} />
             </AppPanel>
             <div className="submission-buttons">
               <AppButton secondary onClick={handleSubmit(saveData)}>

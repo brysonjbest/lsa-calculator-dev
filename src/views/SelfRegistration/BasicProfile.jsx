@@ -23,6 +23,7 @@ export default function BasicProfile() {
   const stateData = location.state ? location.state : null;
   const pageIndex = 0;
   const { registration, setRegistration } = useContext(RegistrationContext);
+  const isLSAEligible = registration["personal-yearsofservice"] >= 25;
 
   const defaultFormValues = {
     "personal-firstname": "",
@@ -109,7 +110,9 @@ export default function BasicProfile() {
   };
 
   useEffect(() => {
-    const stepsTemplate = formServices.get("selfregistrationsteps");
+    const stepsTemplate = isLSAEligible
+      ? formServices.get("selfregistrationsteps")
+      : formServices.get("pinOnlyselfregistrationsteps");
     const finalSteps = stepsTemplate.map(({ label, route }, index) => ({
       label: label,
       command: () => navigate(route),

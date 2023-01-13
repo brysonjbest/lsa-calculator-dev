@@ -19,8 +19,10 @@ import { getAvailableAwards } from "../../api/api.services";
 
 export default function Award() {
   const navigate = useNavigate();
-  const pageIndex = 3;
   const { registration, setRegistration } = useContext(RegistrationContext);
+  const isLSAEligible = registration["personal-yearsofservice"] >= 25;
+  const pageIndex = 4;
+
   const defaultFormValues = {
     awardID: "",
     awardname: "",
@@ -102,7 +104,9 @@ export default function Award() {
   };
 
   useEffect(() => {
-    const stepsTemplate = formServices.get("selfregistrationsteps");
+    const stepsTemplate = isLSAEligible
+      ? formServices.get("selfregistrationsteps")
+      : formServices.get("pinOnlyselfregistrationsteps");
     const finalSteps = stepsTemplate.map(({ label, route }, index) => ({
       label: label,
       command: () => navigate(route),

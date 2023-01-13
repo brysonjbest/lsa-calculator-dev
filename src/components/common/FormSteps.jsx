@@ -16,12 +16,12 @@ import "./FormSteps.css";
 export default function FormSteps(props) {
   const [activeIndex, setActiveIndex] = useState(props.stepIndex || 0);
   const [stepData, setStepdata] = useState([]);
-  const [screenSize, setScreenSize] = useState(window.innerWidth > 960);
+  const [screenSize, setScreenSize] = useState(window.innerWidth > 1100);
 
   const interactiveItems = stepData;
 
   const updateStepsWidth = () => {
-    setScreenSize(window.innerWidth > 960);
+    setScreenSize(window.innerWidth > 1100);
   };
 
   useEffect(() => {

@@ -21,6 +21,7 @@ export default function ProfileDetails() {
   const navigate = useNavigate();
   const pageIndex = 2;
   const { registration, setRegistration } = useContext(RegistrationContext);
+  const isLSAEligible = registration["personal-yearsofservice"] >= 25;
 
   const defaultFormValues = {
     "personal-personalphone": "",
@@ -106,12 +107,16 @@ export default function ProfileDetails() {
       //submit current registration to api and return state of registration and update registration
       //then statement
       //navigate to next page on success - page should be awards if they are LSA, otherwise, to supervisor details
-      navigate("/register/award");
+      isLSAEligible
+        ? navigate("/register/attendance")
+        : navigate("/register/supervisor");
     } catch (error) {}
   };
 
   useEffect(() => {
-    const stepsTemplate = formServices.get("selfregistrationsteps");
+    const stepsTemplate = isLSAEligible
+      ? formServices.get("selfregistrationsteps")
+      : formServices.get("pinOnlyselfregistrationsteps");
     const finalSteps = stepsTemplate.map(({ label, route }, index) => ({
       label: label,
       command: () => navigate(route),
@@ -178,7 +183,6 @@ export default function ProfileDetails() {
                 Save
               </AppButton>
               <AppButton
-                type="submit"
                 onClick={(e) => submitData(e)}
                 disabled={!isValid || (isDirty && !formComplete)}
               >

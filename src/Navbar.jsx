@@ -73,6 +73,16 @@ const Navbar = () => {
           },
         },
         {
+          label: "LSA Attendance",
+          template: () => {
+            return (
+              <Link to="/register/attendance" className="p-menuitem-link">
+                LSA Attendance Details
+              </Link>
+            );
+          },
+        },
+        {
           label: "Award Selection",
           template: () => {
             return (

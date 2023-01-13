@@ -25,8 +25,9 @@ export default function Confirmation() {
     consent: false,
   };
   const navigate = useNavigate();
-  const pageIndex = 5;
   const { registration, setRegistration } = useContext(RegistrationContext);
+  const isLSAEligible = registration["personal-yearsofservice"] >= 25;
+  const pageIndex = isLSAEligible ? 6 : 4;
 
   // const methods = useForm({ defaultValues });
   const methods = useForm({
@@ -75,9 +76,10 @@ export default function Confirmation() {
     ];
     const lsaArray = [
       {
-        retiringcurrentyear: true,
-        retirementdate: "2022-12-01",
-        attendingceremony: true,
+        retiringcurrentyear: registration["retiringcurrentyear"],
+        retirementdate: registration["retirementdate"],
+        ceremonyoptout: registration["ceremonyoptout"],
+        bcgeumember: registration["bcgeumember"],
       },
     ];
     const personalArray = [
@@ -122,7 +124,7 @@ export default function Confirmation() {
         pobox: registration["supervisorpobox"],
       },
     ];
-    const finalData = {
+    const lsaDataSet = {
       milestoneArray: milestoneArray,
       personalArray: personalArray,
       contactArray: contactArray,
@@ -131,12 +133,23 @@ export default function Confirmation() {
       lsaArray: lsaArray,
       awardArray: awardArray,
     };
+
+    const pinOnlyDataSet = {
+      milestoneArray: milestoneArray,
+      personalArray: personalArray,
+      officeArray: officeArray,
+      supervisorArray: supervisorArray,
+    };
+
+    const finalData = isLSAEligible ? lsaDataSet : pinOnlyDataSet;
     setFormData(finalData);
     setHasLoaded(true);
   }, []);
 
   useEffect(() => {
-    const stepsTemplate = formServices.get("selfregistrationsteps");
+    const stepsTemplate = isLSAEligible
+      ? formServices.get("selfregistrationsteps")
+      : formServices.get("pinOnlyselfregistrationsteps");
     const finalSteps = stepsTemplate.map(({ label, route }, index) => ({
       label: label,
       command: () => navigate(route),
@@ -186,11 +199,18 @@ export default function Confirmation() {
           />
           <AppPanel header="Registration Information">
             The information you have submitted indicates that you are
-            registering for the following recognition awards: Service Pins
-            (Years) Long Service Awards (Years) Please review the confirmation
-            details below and ensure that what you have entered is correct. Your
-            submission will not be complete until you have confirmed your
-            registration below.
+            registering for the following recognition awards: <br />
+            Service Pins
+            <br />
+            {isLSAEligible ? (
+              <span>
+                Long Service Awards
+                <br />
+              </span>
+            ) : null}
+            Please review the confirmation details below and ensure that what
+            you have entered is correct. Your submission will not be complete
+            until you have confirmed your registration below.
           </AppPanel>
 
           <AppPanel header="Registration Confirmation">
@@ -205,20 +225,27 @@ export default function Confirmation() {
                       stacked
                     />
                   </AppPanel>
-                  <AppPanel header={header("Award")}>
-                    <DataDisplay
-                      category="award"
-                      data={formData}
-                      identifier="awardArray"
-                    />
-                  </AppPanel>
-                  <AppPanel header={header("Long Service Awards", "milestone")}>
-                    <DataDisplay
-                      category="lsa"
-                      data={formData}
-                      identifier="lsaArray"
-                    />
-                  </AppPanel>
+                  {isLSAEligible ? (
+                    <>
+                      <AppPanel header={header("Award")}>
+                        <DataDisplay
+                          category="award"
+                          data={formData}
+                          identifier="awardArray"
+                        />
+                      </AppPanel>
+
+                      <AppPanel
+                        header={header("Long Service Awards", "milestone")}
+                      >
+                        <DataDisplay
+                          category="lsa"
+                          data={formData}
+                          identifier="lsaArray"
+                        />
+                      </AppPanel>
+                    </>
+                  ) : null}
                 </div>
               </AppPanel>
 
@@ -231,13 +258,15 @@ export default function Confirmation() {
                       identifier="personalArray"
                     />
                   </AppPanel>
-                  <AppPanel header={header("Personal Contact", "details")}>
-                    <DataDisplay
-                      category="personalContact"
-                      data={formData}
-                      identifier="contactArray"
-                    />
-                  </AppPanel>
+                  {isLSAEligible ? (
+                    <AppPanel header={header("Personal Contact", "details")}>
+                      <DataDisplay
+                        category="personalContact"
+                        data={formData}
+                        identifier="contactArray"
+                      />
+                    </AppPanel>
+                  ) : null}
                   <AppPanel
                     header={header("Personal Office Address", "details")}
                   >

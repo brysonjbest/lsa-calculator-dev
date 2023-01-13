@@ -22,6 +22,8 @@ export default function MilestoneSelection() {
   const pageIndex = 1;
   const location = useLocation();
   const { registration, setRegistration } = useContext(RegistrationContext);
+  const isLSAEligible = registration["personal-yearsofservice"] >= 25;
+
   // console.log(location.state);
   const yearsData = location.state ? location.state["qualifyingYears"] : "";
   const ministryInherited = location.state
@@ -140,7 +142,9 @@ export default function MilestoneSelection() {
   }, []);
 
   useEffect(() => {
-    const stepsTemplate = formServices.get("selfregistrationsteps");
+    const stepsTemplate = isLSAEligible
+      ? formServices.get("selfregistrationsteps")
+      : formServices.get("pinOnlyselfregistrationsteps");
     const finalSteps = stepsTemplate.map(({ label, route }, index) => ({
       label: label,
       command: () => navigate(route),
