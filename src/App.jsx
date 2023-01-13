@@ -5,11 +5,14 @@ import "./App.css";
 import { UserContext, RegistrationContext } from "./UserContext";
 import { getUserData, getRegistrationData } from "./api/api.services";
 
+import { ProgressSpinner } from "primereact/progressspinner";
+ 
+
 export default function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({ loading: true });
   const userProvider = useMemo(() => ({ user, setUser }), [user, setUser]);
 
-  const [registration, setRegistration] = useState(null);
+  const [registration, setRegistration] = useState({ loading: true });
   const registrationProvider = useMemo(
     () => ({ registration, setRegistration }),
     [registration, setRegistration]
@@ -28,8 +31,14 @@ export default function App() {
       .then(() => {
         fetchRegistration();
       })
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => {
+        setRegistration((state) => ({ ...state, loading: false }));
+        setUser((state) => ({ ...state, loading: false }));
+      });
   }, []);
+
+  if (registration["loading"] || user["loading"]) return <ProgressSpinner />;
 
   return (
     <UserContext.Provider value={userProvider}>

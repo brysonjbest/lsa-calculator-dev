@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useNavigate } from "react-router";
 import AppButton from "../../components/common/AppButton";
@@ -8,6 +8,7 @@ import ContactDetails from "../../components/inputs/ContactDetails";
 import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
 import AddressInput from "../../components/inputs/AddressInput";
+import { RegistrationContext } from "../../UserContext";
 
 /**
  * Basic Registration.
@@ -19,7 +20,9 @@ import AddressInput from "../../components/inputs/AddressInput";
 export default function ProfileDetails() {
   const navigate = useNavigate();
   const pageIndex = 2;
-  const defaultValues = {
+  const { registration, setRegistration } = useContext(RegistrationContext);
+
+  const defaultFormValues = {
     "personal-personalphone": "",
     "personal-personalemail": "",
     officecitycommunity: "",
@@ -33,39 +36,74 @@ export default function ProfileDetails() {
     personalstreetaddress2: "",
   };
 
-  const methods = useForm({ defaultValues });
+  // const methods = useForm({ defaultValues });
+  const methods = useForm({
+    defaultValues: useMemo(() => {
+      const defaultSetting = { ...defaultFormValues, ...registration };
+      return defaultSetting;
+    }, [registration]),
+  });
+
   const [steps, setSteps] = useState([]);
   const [submissionData, setSubmissionData] = useState({});
   const [formComplete, setFormComplete] = useState(false);
   const [formChanged, setFormChanged] = useState(true);
+  const [lsaEligible, setLsaEligible] = useState(false);
 
   const {
     formState: { errors, isValid, isDirty },
     watch,
     getValues,
     handleSubmit,
+    reset,
   } = methods;
 
   //extend isDirty status to monitor for change and warn about leaving without saving
   watch(() => setFormChanged(true));
 
-  const saveData = (e) => {
-    e.preventDefault();
-    const finalData = { ...getValues() };
-    console.log("final Data before set submission", finalData);
+  // const saveData = (data) => {
+  //   e.preventDefault();
+  //   const finalData = { ...getValues() };
+  //   console.log("final Data before set submission", finalData);
+  //   setSubmissionData(finalData);
+  //   console.log(submissionData, "this is saved data");
+  // };
+
+  const saveData = (data) => {
+    // e.preventDefault();
+    // const finalData = { ...getValues() };
+    // console.log("final Data before set submission", finalData);
+    // setSubmissionData(finalData);
+    const registrationData = registration;
+    const finalData = Object.assign({}, data);
     setSubmissionData(finalData);
     console.log(submissionData, "this is saved data");
+    try {
+      //submit to api - submits current registration to api and updates current registration context with return from api
+      //then statement
+      //activates next page if valid
+      const registrationUpdate = { ...registrationData, ...finalData };
+      console.log(
+        registrationUpdate,
+        "this update is checking spread operator"
+      );
+      setRegistration(registrationUpdate);
+      console.log(newState, "this is newstate");
+      setFormComplete(true);
+      setFormChanged(false);
+    } catch (error) {}
   };
 
   //Final step in creating submission - will be api call to backend to update
 
-  const submitData = (data) => {
-    console.log(data);
-    const finalData = Object.assign({}, data);
+  const submitData = (e) => {
+    e.preventDefault();
+    // console.log(data);
+    const finalData = { ...getValues() };
     setSubmissionData(finalData);
     console.log(submissionData, "this is final submission data");
     try {
-      //submit to api
+      //submit current registration to api and return state of registration and update registration
       //then statement
       //navigate to next page on success - page should be awards if they are LSA, otherwise, to supervisor details
       navigate("/register/award");
@@ -83,6 +121,26 @@ export default function ProfileDetails() {
     setSteps(finalSteps);
   }, []);
 
+  useEffect(() => {
+    const registrationWait = async () => {
+      await registration;
+      if (registration && registration["personal-yearsofservice"]) {
+        console.log(
+          registration["personal-yearsofservice"],
+          "this is years total"
+        );
+        registration["personal-yearsofservice"] >= 25
+          ? setLsaEligible(true)
+          : null;
+      }
+    };
+    registrationWait();
+  }, []);
+
+  useEffect(() => {
+    reset(registration);
+  }, [registration]);
+
   return (
     <>
       <div className="self-registration additional-profile">
@@ -92,37 +150,39 @@ export default function ProfileDetails() {
         ></PageHeader>
         <FormSteps data={steps} stepIndex={pageIndex} category="Registration" />
         <FormProvider {...methods}>
-          <form
-            className="additional-details-form"
-            // onSubmit={methods.handleSubmit(submitData)}
-          >
-            <AppPanel header="Personal Contact Details">
-              <ContactDetails
-                personalContact
-                panelName="personal"
-                errors={errors}
-              />
-            </AppPanel>
-            <AppPanel header="Personal Address">
-              <AddressInput
-                province
-                addressIdentifier="personal"
-                errors={errors}
-              />
-            </AppPanel>
+          <form className="additional-details-form">
+            {lsaEligible ? (
+              <>
+                <AppPanel header="Personal Contact Details">
+                  <ContactDetails
+                    personalContact
+                    panelName="personal"
+                    errors={errors}
+                  />
+                </AppPanel>
+
+                <AppPanel header="Personal Address">
+                  <AddressInput
+                    province
+                    addressIdentifier="personal"
+                    errors={errors}
+                  />
+                </AppPanel>
+              </>
+            ) : null}
             <AppPanel header="Office Address">
               <AddressInput addressIdentifier="office" errors={errors} />
             </AppPanel>
             <div className="submission-buttons">
-              <AppButton secondary onClick={(e) => saveData(e)}>
+              <AppButton secondary onClick={handleSubmit(saveData)}>
                 Save
               </AppButton>
               <AppButton
                 type="submit"
-                onClick={handleSubmit(submitData)}
-                // disabled={!isValid}
+                onClick={(e) => submitData(e)}
+                disabled={!isValid || (isDirty && !formComplete)}
               >
-                Confirm/Submit
+                Continue
               </AppButton>
             </div>
           </form>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
@@ -8,6 +8,7 @@ import MilestoneSelector from "../../components/inputs/MilestoneSelector";
 import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
 import { useNavigate, useLocation } from "react-router";
+import { RegistrationContext } from "../../UserContext";
 
 /**
  * Basic Registration.
@@ -20,21 +21,33 @@ export default function MilestoneSelection() {
   const navigate = useNavigate();
   const pageIndex = 1;
   const location = useLocation();
+  const { registration, setRegistration } = useContext(RegistrationContext);
   // console.log(location.state);
   const yearsData = location.state ? location.state["qualifyingYears"] : "";
   const ministryInherited = location.state
     ? location.state["ministryData"]
     : null;
-  // console.log(ministryInherited);
 
-  const defaultValues = {
+  const ministryRegistration =
+    registration && registration["personal-ministryorganization"]
+      ? registration["personal-ministryorganization"]
+      : null;
+
+  const defaultFormValues = {
     "personal-yearsofservice": "",
     "personal-currentmilestone": null,
     "personal-qualifyingyear": "",
     "personal-priormilestones": [],
   };
 
-  const methods = useForm({ defaultValues });
+  const methods = useForm({
+    defaultValues: useMemo(() => {
+      const defaultSetting = { ...defaultFormValues, ...registration };
+      console.log(defaultSetting, "this is default settings");
+      return defaultSetting;
+    }, [registration]),
+  });
+
   const [steps, setSteps] = useState([]);
   const [submissionData, setSubmissionData] = useState({});
   const [formComplete, setFormComplete] = useState(false);
@@ -47,24 +60,53 @@ export default function MilestoneSelection() {
     getValues,
     setValue,
     handleSubmit,
+    reset,
   } = methods;
 
   //extend isDirty status to monitor for change and warn about leaving without saving
   watch(() => setFormChanged(true));
 
-  const saveData = (e) => {
-    e.preventDefault();
-    const finalData = { ...getValues() };
-    console.log("final Data before set submission", finalData);
+  const saveData = (data) => {
+    // e.preventDefault();
+    // const finalData = { ...getValues() };
+    // console.log("final Data before set submission", finalData);
+    // setSubmissionData(finalData);
+    const registrationData = registration;
+    const finalData = Object.assign({}, data);
     setSubmissionData(finalData);
     console.log(submissionData, "this is saved data");
+    try {
+      //submit to api
+      //then statement
+      //activates next page if valid
+      const registrationUpdate = { ...registrationData, ...finalData };
+      console.log(
+        registrationUpdate,
+        "this update is checking spread operator"
+      );
+      setRegistration(registrationUpdate);
+      console.log(newState, "this is newstate");
+      setFormComplete(true);
+      setFormChanged(false);
+    } catch (error) {}
   };
+
+  // const saveData = (e) => {
+  //   e.preventDefault();
+  //   const finalData = { ...getValues() };
+  //   console.log("final Data before set submission", finalData);
+  //   setSubmissionData(finalData);
+  //   console.log(submissionData, "this is saved data");
+  // };
 
   //Final step in creating submission - will be api call to backend to update
 
-  const submitData = (data) => {
-    console.log(data);
-    const finalData = Object.assign({}, data);
+  const submitData = (e) => {
+    e.preventDefault();
+    // console.log(data);
+    const finalData = { ...getValues() };
+    console.log("final Data before set submission", finalData);
+    // const finalData = Object.assign({}, data);
     setSubmissionData(finalData);
     // console.log(submissionData, "this is final submission data");
     try {
@@ -80,7 +122,12 @@ export default function MilestoneSelection() {
     let minData = "org-1";
     const getMinistry = async () => {
       //update with api call for prior data
-      minData = ministryInherited ? ministryInherited : "org-30";
+      if (ministryInherited) {
+        minData = ministryInherited;
+      }
+      if (ministryRegistration) {
+        minData = ministryRegistration;
+      }
       console.log(minData, "this is minData");
       const ministry =
         (await formServices.lookup("organizations", minData)) ||
@@ -103,6 +150,10 @@ export default function MilestoneSelection() {
     setSteps(finalSteps);
   }, []);
 
+  useEffect(() => {
+    reset(registration);
+  }, [registration]);
+
   return (
     <>
       <div className="self-registration basic-profile">
@@ -122,15 +173,14 @@ export default function MilestoneSelection() {
               />
             </AppPanel>
             <div className="submission-buttons">
-              <AppButton secondary onClick={(e) => saveData(e)}>
+              <AppButton secondary onClick={handleSubmit(saveData)}>
                 Save
               </AppButton>
               <AppButton
-                type="submit"
-                onClick={handleSubmit(submitData)}
-                // disabled={!isValid}
+                onClick={(e) => submitData(e)}
+                disabled={!isValid || (isDirty && !formComplete)}
               >
-                Confirm/Submit
+                Continue
               </AppButton>
             </div>
           </form>

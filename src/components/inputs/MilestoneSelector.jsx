@@ -100,6 +100,13 @@ export default function MilestoneSelector(props) {
     resetField(`${panelGroupName}-priormilestones`);
     resetField(`${panelGroupName}-qualifyingyear`);
 
+    setValue(`${itemName}.currentmilestone`, null);
+    setValue(`${itemName}.priormilestones`, []);
+    setValue(`${itemName}.qualifyingyear`, "");
+    setValue(`${panelGroupName}-currentmilestone`, null);
+    setValue(`${panelGroupName}-priormilestones`, []);
+    setValue(`${panelGroupName}-qualifyingyear`, "");
+
     const fieldCalculation = props.itemNumber
       ? `${itemName}.`
       : `${panelGroupName}-`;
@@ -349,12 +356,12 @@ export default function MilestoneSelector(props) {
                     : `${panelGroupName}-priormilestones`
                 }
                 control={control}
-                rules={{
-                  required: {
-                    value: !milestoneSelected,
-                    message: "Error: Milestone selection is required.",
-                  },
-                }}
+                // rules={{
+                //   required: {
+                //     value: !milestoneSelected,
+                //     message: "Error: Milestone selection is required.",
+                //   },
+                // }}
                 render={({ field, fieldState }) => (
                   <MultiSelect
                     disabled={

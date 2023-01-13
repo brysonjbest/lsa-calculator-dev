@@ -16,10 +16,16 @@ export default function GalleryDisplay(props) {
   const [layout, setLayout] = useState("grid");
   //testing data
   const [items, setItems] = useState([]);
+  const [chosenItem, setChosenItem] = useState("");
 
   useEffect(() => {
     setItems(props.itemSet);
   }, [props.itemSet]);
+
+  useEffect(() => {
+    setChosenItem(props.chosenAward);
+    console.log("this is chosen award passed down", props.chosenAward);
+  }, [props.chosenAward]);
 
   const renderListItem = (data) => {
     return (
@@ -40,13 +46,13 @@ export default function GalleryDisplay(props) {
           <div className="item-list-action">
             <AppButton
               secondary
-              info={data.id === props.chosenAward}
+              info={data.id === chosenItem}
               onClick={(e) => {
                 e.preventDefault();
                 props.onClick(data.id);
               }}
             >
-              {data.id === props.chosenAward ? "Selected" : "View"}
+              {data.id === chosenItem ? "Selected" : "View"}
             </AppButton>
           </div>
         </div>
@@ -74,13 +80,13 @@ export default function GalleryDisplay(props) {
           <div className="item-grid-item-bottom">
             <AppButton
               secondary
-              info={data.name === props.chosenAward}
+              info={data.id === chosenItem}
               onClick={(e) => {
                 e.preventDefault();
                 props.onClick(data.id);
               }}
             >
-              {data.name === props.chosenAward ? "Selected" : "View"}
+              {data.id === chosenItem ? "Selected" : "View"}
             </AppButton>
           </div>
         </div>
