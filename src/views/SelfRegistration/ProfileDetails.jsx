@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
+import React, { useState, useEffect, useContext, useMemo, useRef } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useNavigate } from "react-router";
 import AppButton from "../../components/common/AppButton";
@@ -9,6 +9,8 @@ import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
 import AddressInput from "../../components/inputs/AddressInput";
 import { RegistrationContext } from "../../UserContext";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { Toast } from "primereact/toast";
 
 /**
  * Basic Registration.
@@ -19,6 +21,8 @@ import { RegistrationContext } from "../../UserContext";
 
 export default function ProfileDetails() {
   const navigate = useNavigate();
+  const toast = useRef(null);
+  const [loading, setLoading] = useState(false);
   const pageIndex = 2;
   const { registration, setRegistration } = useContext(RegistrationContext);
   const isLSAEligible = registration["personal-yearsofservice"] >= 25;
@@ -80,6 +84,8 @@ export default function ProfileDetails() {
     setSubmissionData(finalData);
     console.log(submissionData, "this is saved data");
     try {
+      toast.current.show(formServices.lookup("messages", "save"));
+      setLoading(true);
       //submit to api - submits current registration to api and updates current registration context with return from api
       //then statement
       //activates next page if valid
@@ -89,10 +95,18 @@ export default function ProfileDetails() {
         "this update is checking spread operator"
       );
       setRegistration(registrationUpdate);
-      console.log(newState, "this is newstate");
       setFormComplete(true);
       setFormChanged(false);
-    } catch (error) {}
+      //this would change to api dependent
+      setTimeout(() => {
+        toast.current.replace(formServices.lookup("messages", "savesuccess"));
+        setLoading(false);
+      }, 3000);
+    } catch (error) {
+      toast.current.replace(formServices.lookup("messages", "saveerror"));
+    } finally {
+      setLoading(false);
+    }
   };
 
   //Final step in creating submission - will be api call to backend to update
@@ -148,6 +162,12 @@ export default function ProfileDetails() {
 
   return (
     <>
+      <Toast ref={toast} />
+      {loading ? (
+        <div className="loading-modal">
+          <ProgressSpinner />
+        </div>
+      ) : null}
       <div className="self-registration additional-profile">
         <PageHeader
           title="Registration"

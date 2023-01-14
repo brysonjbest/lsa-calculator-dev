@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
+import React, { useState, useEffect, useContext, useMemo, useRef } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
 import PageHeader from "../../components/common/PageHeader";
 import FormSteps from "../../components/common/FormSteps";
+import { Toast } from "primereact/toast";
 import formServices from "../../services/settings.services";
 import { useLocation, useNavigate } from "react-router";
 import { RegistrationContext } from "../../UserContext";
 import LSADetails from "../../components/inputs/LSADetails";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 /**
  * LSA Attendance Questions.
@@ -16,8 +18,8 @@ import LSADetails from "../../components/inputs/LSADetails";
 
 export default function LSAAttendance() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const stateData = location.state ? location.state : null;
+  const toast = useRef(null);
+  const [loading, setLoading] = useState(false);
   const { registration, setRegistration } = useContext(RegistrationContext);
   const isLSAEligible = registration["personal-yearsofservice"] >= 25;
   const pageIndex = 3;
@@ -60,7 +62,9 @@ export default function LSAAttendance() {
     setSubmissionData(finalData);
     console.log(submissionData, "this is saved data");
     console.log(finalData, "this is final data that is being set");
+    toast.current.show(formServices.lookup("messages", "save"));
     try {
+      setLoading(true);
       //submit to api - submits current registration to api and updates current registration context with return from api
       //then statement
       //activates next page if valid
@@ -72,7 +76,16 @@ export default function LSAAttendance() {
       setRegistration(registrationUpdate);
       setFormComplete(true);
       setFormChanged(false);
-    } catch (error) {}
+      //this would change to api dependent
+      setTimeout(() => {
+        toast.current.replace(formServices.lookup("messages", "savesuccess"));
+        setLoading(false);
+      }, 3000);
+    } catch (error) {
+      toast.current.replace(formServices.lookup("messages", "saveerror"));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const submitData = (e) => {
@@ -102,6 +115,12 @@ export default function LSAAttendance() {
 
   return (
     <>
+      <Toast ref={toast} />
+      {loading ? (
+        <div className="loading-modal">
+          <ProgressSpinner />
+        </div>
+      ) : null}
       <div className="self-registration basic-profile">
         <PageHeader
           title="Registration"

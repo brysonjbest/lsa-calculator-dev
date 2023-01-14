@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
+import React, { useState, useEffect, useContext, useMemo, useRef } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
@@ -9,6 +9,8 @@ import formServices from "../../services/settings.services";
 import "./BasicProfile.css";
 import { useLocation, useNavigate } from "react-router";
 import { RegistrationContext } from "../../UserContext";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { Toast } from "primereact/toast";
 
 /**
  * Basic Registration.
@@ -20,6 +22,9 @@ import { RegistrationContext } from "../../UserContext";
 export default function BasicProfile() {
   const navigate = useNavigate();
   const location = useLocation();
+  const toast = useRef(null);
+  const [loading, setLoading] = useState(false);
+
   const stateData = location.state ? location.state : null;
   const pageIndex = 0;
   const { registration, setRegistration } = useContext(RegistrationContext);
@@ -61,15 +66,13 @@ export default function BasicProfile() {
   //to include try/catch api request block to save submitted data
 
   const saveData = (data) => {
-    // e.preventDefault();
-    // const finalData = { ...getValues() };
-    // console.log("final Data before set submission", finalData);
-    // setSubmissionData(finalData);
     const registrationData = registration;
     const finalData = Object.assign({}, data);
     setSubmissionData(finalData);
     console.log(submissionData, "this is saved data");
     try {
+      toast.current.show(formServices.lookup("messages", "save"));
+      setLoading(true);
       //submit to api - submits current registration to api and updates current registration context with return from api
       //then statement
       //activates next page if valid
@@ -84,14 +87,20 @@ export default function BasicProfile() {
       console.log(newState, "this is newstate");
       setFormComplete(true);
       setFormChanged(false);
-    } catch (error) {}
+      //this would change to api dependent
+      setTimeout(() => {
+        toast.current.replace(formServices.lookup("messages", "savesuccess"));
+        setLoading(false);
+      }, 3000);
+    } catch (error) {
+      toast.current.replace(formServices.lookup("messages", "saveerror"));
+    } finally {
+      setLoading(false);
+    }
   };
-
-  //Final step in creating submission - will be api call to backend to update
 
   const submitData = (e) => {
     e.preventDefault();
-    // console.log(data);
     const finalData = { ...getValues() };
     console.log("final Data before set submission", finalData);
 
@@ -118,7 +127,6 @@ export default function BasicProfile() {
       command: () => navigate(route),
       disabled: index >= pageIndex,
     }));
-    //to update all steps setting with conditoinal LSA/not recipient
     setSteps(finalSteps);
   }, []);
 
@@ -128,6 +136,12 @@ export default function BasicProfile() {
 
   return (
     <>
+      <Toast ref={toast} />
+      {loading ? (
+        <div className="loading-modal">
+          <ProgressSpinner />
+        </div>
+      ) : null}
       <div className="self-registration basic-profile">
         <PageHeader
           title="Registration"
@@ -135,10 +149,7 @@ export default function BasicProfile() {
         ></PageHeader>
         <FormSteps data={steps} stepIndex={pageIndex} category="Registration" />
         <FormProvider {...methods}>
-          <form
-            className="basic-details-form"
-            // onSubmit={methods.handleSubmit(submitData)}
-          >
+          <form className="basic-details-form">
             <AppPanel header="Profile Details">
               <ContactDetails
                 basic

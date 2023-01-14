@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
+import React, { useState, useEffect, useContext, useMemo, useRef } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
@@ -9,6 +9,8 @@ import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
 import { useNavigate, useLocation } from "react-router";
 import { RegistrationContext } from "../../UserContext";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { Toast } from "primereact/toast";
 
 /**
  * Basic Registration.
@@ -21,6 +23,9 @@ export default function MilestoneSelection() {
   const navigate = useNavigate();
   const pageIndex = 1;
   const location = useLocation();
+  const toast = useRef(null);
+  const [loading, setLoading] = useState(false);
+
   const { registration, setRegistration } = useContext(RegistrationContext);
   const isLSAEligible = registration["personal-yearsofservice"] >= 25;
 
@@ -78,6 +83,8 @@ export default function MilestoneSelection() {
     setSubmissionData(finalData);
     console.log(submissionData, "this is saved data");
     try {
+      toast.current.show(formServices.lookup("messages", "save"));
+      setLoading(true);
       //submit to api
       //then statement
       //activates next page if valid
@@ -87,21 +94,19 @@ export default function MilestoneSelection() {
         "this update is checking spread operator"
       );
       setRegistration(registrationUpdate);
-      console.log(newState, "this is newstate");
       setFormComplete(true);
       setFormChanged(false);
-    } catch (error) {}
+      //this would change to api dependent
+      setTimeout(() => {
+        toast.current.replace(formServices.lookup("messages", "savesuccess"));
+        setLoading(false);
+      }, 3000);
+    } catch (error) {
+      toast.current.replace(formServices.lookup("messages", "saveerror"));
+    } finally {
+      setLoading(false);
+    }
   };
-
-  // const saveData = (e) => {
-  //   e.preventDefault();
-  //   const finalData = { ...getValues() };
-  //   console.log("final Data before set submission", finalData);
-  //   setSubmissionData(finalData);
-  //   console.log(submissionData, "this is saved data");
-  // };
-
-  //Final step in creating submission - will be api call to backend to update
 
   const submitData = (e) => {
     e.preventDefault();
@@ -160,6 +165,12 @@ export default function MilestoneSelection() {
 
   return (
     <>
+      <Toast ref={toast} />
+      {loading ? (
+        <div className="loading-modal">
+          <ProgressSpinner />
+        </div>
+      ) : null}
       <div className="self-registration basic-profile">
         <PageHeader
           title="Registration"

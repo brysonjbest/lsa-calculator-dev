@@ -334,6 +334,37 @@ const schemaData = {
       route: "/register/confirmation",
     },
   ],
+  messages: [
+    {
+      value: "save",
+      text: {
+        severity: "info",
+        summary: "Submitting...",
+        detail: "Submitting registration data. Please Wait.",
+        sticky: true,
+        closable: false,
+      },
+    },
+    {
+      value: "saveerror",
+      text: {
+        severity: "error",
+        summary: "Error! Save Failed",
+        detail:
+          "There was an error in processing your registration. Please try again. If issues persist, please contact support",
+        sticky: true,
+      },
+    },
+    {
+      value: "savesuccess",
+      text: {
+        severity: "success",
+        summary: "Success!",
+        detail: "Registration Updated!",
+        life: 1000,
+      },
+    },
+  ],
 };
 
 export default {

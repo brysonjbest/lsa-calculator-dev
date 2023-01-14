@@ -38,16 +38,21 @@ export default function App() {
       });
   }, []);
 
-  if (registration["loading"] || user["loading"]) return <ProgressSpinner />;
+  // if (registration["loading"] || user["loading"]) return <ProgressSpinner />;
+  if (user["loading"]) return <ProgressSpinner />;
 
   return (
     <UserContext.Provider value={userProvider}>
       <RegistrationContext.Provider value={registrationProvider}>
         <div className="App">
           <Navbar />
-          <div className="main-content">
-            <Outlet />
-          </div>
+          {!registration["loading"] ? (
+            <div className="main-content">
+              <Outlet />
+            </div>
+          ) : (
+            <ProgressSpinner />
+          )}
         </div>
       </RegistrationContext.Provider>
     </UserContext.Provider>

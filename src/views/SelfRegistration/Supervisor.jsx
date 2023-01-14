@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
+import React, { useState, useEffect, useContext, useMemo, useRef } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
@@ -9,6 +9,8 @@ import formServices from "../../services/settings.services";
 import AddressInput from "../../components/inputs/AddressInput";
 import { useNavigate } from "react-router";
 import { RegistrationContext } from "../../UserContext";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { Toast } from "primereact/toast";
 
 /**
  * Basic Registration.
@@ -19,6 +21,8 @@ import { RegistrationContext } from "../../UserContext";
 
 export default function Supervisor() {
   const navigate = useNavigate();
+  const toast = useRef(null);
+  const [loading, setLoading] = useState(false);
   const { registration, setRegistration } = useContext(RegistrationContext);
   const isLSAEligible = registration["personal-yearsofservice"] >= 25;
   const pageIndex = isLSAEligible ? 5 : 3;
@@ -64,6 +68,8 @@ export default function Supervisor() {
     console.log(submissionData, "this is saved data");
 
     try {
+      toast.current.show(formServices.lookup("messages", "save"));
+      setLoading(true);
       //submit to api - submits current registration to api and updates current registration context with return from api
       //then statement
       //activates next page if valid
@@ -73,10 +79,18 @@ export default function Supervisor() {
         "this update is checking spread operator"
       );
       setRegistration(registrationUpdate);
-      console.log(newState, "this is newstate");
       setFormComplete(true);
       setFormChanged(false);
-    } catch (error) {}
+      //this would change to api dependent
+      setTimeout(() => {
+        toast.current.replace(formServices.lookup("messages", "savesuccess"));
+        setLoading(false);
+      }, 3000);
+    } catch (error) {
+      toast.current.replace(formServices.lookup("messages", "saveerror"));
+    } finally {
+      setLoading(false);
+    }
   };
 
   //Final step in creating submission - will be api call to backend to update
@@ -114,6 +128,12 @@ export default function Supervisor() {
 
   return (
     <>
+      <Toast ref={toast} />
+      {loading ? (
+        <div className="loading-modal">
+          <ProgressSpinner />
+        </div>
+      ) : null}
       <div className="self-registration supervisor-profile">
         <PageHeader
           title="Registration"
