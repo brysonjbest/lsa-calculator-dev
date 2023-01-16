@@ -67,7 +67,11 @@ export default function Confirmation() {
     console.log(data, "this is submission");
     const registrationData = registration;
     const finalData = Object.assign({}, data);
-    let registrationUpdate = { ...registrationData, ...finalData };
+    let registrationUpdate = {
+      ...registrationData,
+      ...finalData,
+      ...{ submitted: true },
+    };
 
     if (!isLSAEligible) {
       const defaultFormReset = {
@@ -201,7 +205,7 @@ export default function Confirmation() {
     };
 
     const finalData = isLSAEligible ? lsaDataSet : pinOnlyDataSet;
-    let errorValues = {
+    const errorValues = {
       milestone: !registration["personal-yearsofservice"],
       personal: !registration["personal-firstname"],
       office: !registration["officestreetaddress"],

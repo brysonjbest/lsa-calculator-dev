@@ -8,7 +8,7 @@ export async function getUserData() {
 
 export async function getRegistrationData(userData) {
   return {
-    submitted: true,
+    submitted: false,
     "personal-firstname": "testapifirstname",
     "personal-lastname": "testlastname",
     "personal-governmentemail": "testemail@test.com",

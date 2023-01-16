@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useLocation, useNavigate, redirect } from "react-router";
 import { UserContext, RegistrationContext } from "../../UserContext";
@@ -8,12 +8,12 @@ export default function RegistrationHandler() {
   const { user, setUser } = useContext(UserContext);
   const location = useLocation();
   const navigate = useNavigate();
+  const isLSAEligible = registration["personal-yearsofservice"] >= 25;
+  const [submitted, setSubmitted] = useState(registration["submitted"]);
 
   const stateData = location.state;
   const qualifyingYears = stateData && stateData.years ? stateData.years : null;
 
-  const submittedRegistration =
-    registration && registration.submitted ? registration.submitted : null;
   //update with check for truly active based on what api would return - probably null?
   const activeRegistration = JSON.stringify(registration) !== "{}";
 
@@ -22,28 +22,41 @@ export default function RegistrationHandler() {
 
   const registrationProgress = async () => {
     let route = `profile`;
-    const registrationRoute = `/register/${route}`;
     if (registration) {
-      const progress = Object.keys(registration).length;
-      //temp routing
-      if (progress > 7) route = "milestone";
-      if (progress > 8) route = "details";
-      if (progress > 9) route = "award";
-      if (progress > 10) route = "supervisor";
-      if (progress > 11) route = "confirmation";
+      if (registration["personal-firstname"]) {
+        route = "milestone";
+      }
+      if (registration["personal-yearsofservice"]) {
+        route = "details";
+      }
+      if (registration["personalstreetaddress"]) {
+        isLSAEligible ? (route = "attendance") : (route = "supervisor");
+      }
+
+      if (registration["personal-retiringcurrentyear"] != null) {
+        isLSAEligible ? (route = "award") : (route = "supervisor");
+      }
+
+      if (registration["awardname"]) {
+        route = "supervisor";
+      }
+
+      if (registration["supervisor-firstname"]) {
+        route = "confirmation";
+      }
     }
+    const registrationRoute = `/register/${route}`;
+
     return registrationRoute;
   };
 
   const loader = async () => {
     const finalRoute = await registrationProgress();
-    if (submittedRegistration) {
+    if (submitted) {
       navigate("/register/confirmation", { replace: true });
-    }
-    // else if (activeRegistration) {
-    //   navigate(finalRoute, { replace: true });
-    // }
-    else {
+    } else if (activeRegistration) {
+      navigate(finalRoute, { replace: true });
+    } else {
       //function to create a new application
       //qualifyingYears - check if available, and create new with qualifying years populated
       navigate("/register/profile", {
@@ -59,7 +72,6 @@ export default function RegistrationHandler() {
 
   return (
     <>
-      <div>{qualifyingYears} Test</div>
       <div className="loading">
         <ProgressSpinner />
       </div>
