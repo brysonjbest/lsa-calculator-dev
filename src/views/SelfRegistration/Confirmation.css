@@ -53,3 +53,14 @@
         white-space:normal;
     }
   }
+
+  .registration-confirmation-error{
+    border: solid 1px red;
+  }
+
+  .registration-confirmation-error-text {
+    display: flex;
+    justify-content: center;
+    color: red;
+    
+  }

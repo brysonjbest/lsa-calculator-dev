@@ -93,19 +93,12 @@ export default function MilestoneSelector(props) {
   }, [props.ministry]);
 
   const onYearsOfServiceChange = () => {
-    resetField(`${itemName}.currentmilestone`);
-    resetField(`${itemName}.priormilestones`);
-    resetField(`${itemName}.qualifyingyear`);
-    resetField(`${panelGroupName}-currentmilestone`);
-    resetField(`${panelGroupName}-priormilestones`);
-    resetField(`${panelGroupName}-qualifyingyear`);
-
-    setValue(`${itemName}.currentmilestone`, null);
-    setValue(`${itemName}.priormilestones`, []);
-    setValue(`${itemName}.qualifyingyear`, "");
-    setValue(`${panelGroupName}-currentmilestone`, null);
-    setValue(`${panelGroupName}-priormilestones`, []);
-    setValue(`${panelGroupName}-qualifyingyear`, "");
+    resetField(`${itemName}.currentmilestone`, { defaultValue: null });
+    resetField(`${itemName}.priormilestones`, { defaultValue: [] });
+    resetField(`${itemName}.qualifyingyear`, { defaultValue: "" });
+    resetField(`${panelGroupName}-currentmilestone`, { defaultValue: null });
+    resetField(`${panelGroupName}-priormilestones`, { defaultValue: [] });
+    resetField(`${panelGroupName}-qualifyingyear`, { defaultValue: "" });
 
     const fieldCalculation = props.itemNumber
       ? `${itemName}.`

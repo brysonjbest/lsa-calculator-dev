@@ -8,7 +8,7 @@ export async function getUserData() {
 
 export async function getRegistrationData(userData) {
   return {
-    submitted: false,
+    submitted: true,
     "personal-firstname": "testapifirstname",
     "personal-lastname": "testlastname",
     "personal-governmentemail": "testemail@test.com",
@@ -52,6 +52,10 @@ export async function getRegistrationData(userData) {
     supervisorcitycommunity: "Victoria",
     supervisorpostalcode: "V8T0R2",
     supervisorpobox: "98563",
+    retirementdate: new Date("Dec 27 2023"),
+    retiringcurrentyear: true,
+    bcgeumember: true,
+    ceremonyoptout: true,
   };
 }
 

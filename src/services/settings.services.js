@@ -346,6 +346,16 @@ const schemaData = {
       },
     },
     {
+      value: "submit",
+      text: {
+        severity: "info",
+        summary: "Submitting Registration...",
+        detail: "Submitting final registration. Please Wait.",
+        sticky: true,
+        closable: false,
+      },
+    },
+    {
       value: "saveerror",
       text: {
         severity: "error",

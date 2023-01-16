@@ -11,6 +11,7 @@ import { useNavigate } from "react-router";
 import { RegistrationContext } from "../../UserContext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Toast } from "primereact/toast";
+import SubmittedInfo from "../../components/composites/SubmittedInfo";
 
 /**
  * Basic Registration.
@@ -89,7 +90,8 @@ export default function Supervisor() {
     } catch (error) {
       toast.current.replace(formServices.lookup("messages", "saveerror"));
     } finally {
-      setLoading(false);
+      //update when using real api call to set here vs in try
+      // setLoading(false);
     }
   };
 
@@ -125,6 +127,18 @@ export default function Supervisor() {
   useEffect(() => {
     reset(registration);
   }, [registration]);
+
+  const [submitted, setSubmitted] = useState(registration["submitted"]);
+  if (submitted) {
+    return (
+      <>
+        <SubmittedInfo
+          title="Supervisor Details"
+          subtitle="Your Supervisor Information"
+        />
+      </>
+    );
+  }
 
   return (
     <>

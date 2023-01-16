@@ -11,6 +11,7 @@ import { RegistrationContext } from "../../UserContext";
 import { getAvailableAwards } from "../../api/api.services";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Toast } from "primereact/toast";
+import SubmittedInfo from "../../components/composites/SubmittedInfo";
 
 /**
  * Basic Registration.
@@ -87,7 +88,8 @@ export default function Award() {
     } catch (error) {
       toast.current.replace(formServices.lookup("messages", "saveerror"));
     } finally {
-      setLoading(false);
+      //update when using real api call to set here vs in try
+      // setLoading(false);
     }
   };
 
@@ -151,6 +153,15 @@ export default function Award() {
     }
     setAwards();
   }, []);
+
+  const [submitted, setSubmitted] = useState(registration["submitted"]);
+  if (submitted) {
+    return (
+      <>
+        <SubmittedInfo title="Award Selection" subtitle="Award Selection" />
+      </>
+    );
+  }
 
   return (
     <>

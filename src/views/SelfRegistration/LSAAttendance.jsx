@@ -10,6 +10,7 @@ import { useLocation, useNavigate } from "react-router";
 import { RegistrationContext } from "../../UserContext";
 import LSADetails from "../../components/inputs/LSADetails";
 import { ProgressSpinner } from "primereact/progressspinner";
+import SubmittedInfo from "../../components/composites/SubmittedInfo";
 
 /**
  * LSA Attendance Questions.
@@ -84,7 +85,8 @@ export default function LSAAttendance() {
     } catch (error) {
       toast.current.replace(formServices.lookup("messages", "saveerror"));
     } finally {
-      setLoading(false);
+      //update when using real api call to set here vs in try
+      // setLoading(false);
     }
   };
 
@@ -112,6 +114,18 @@ export default function LSAAttendance() {
   useEffect(() => {
     reset(registration);
   }, [registration]);
+
+  const [submitted, setSubmitted] = useState(registration["submitted"]);
+  if (submitted) {
+    return (
+      <>
+        <SubmittedInfo
+          title="LSA Attendance Details"
+          subtitle="Your LSA Attendance Details"
+        />
+      </>
+    );
+  }
 
   return (
     <>

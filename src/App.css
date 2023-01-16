@@ -52,6 +52,13 @@
   right: 0;
   z-index: 9999 !important;
   margin: auto;
+  height: fit-content;
+  width: fit-content;
+}
+
+.p-toast-top-right {
+  --toast-indent: 20px;
+  top: 5vh !important;
 }
 
 .loading-modal {
