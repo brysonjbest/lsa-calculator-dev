@@ -54,6 +54,7 @@ export default function Award() {
     formState: { errors, isValid, isDirty },
     watch,
     getValues,
+    setValue,
     handleSubmit,
   } = methods;
 
@@ -79,11 +80,11 @@ export default function Award() {
       setRegistration(registrationUpdate);
       // setFormComplete(true);
       // setFormChanged(false);
-      setAwardSelected(true);
       //this would change to api dependent
       setTimeout(() => {
         toast.current.replace(formServices.lookup("messages", "savesuccess"));
         setLoading(false);
+        registrationUpdate["awardname"] ? setAwardSelected(true) : false;
       }, 3000);
     } catch (error) {
       toast.current.replace(formServices.lookup("messages", "saveerror"));
@@ -93,13 +94,23 @@ export default function Award() {
     }
   };
 
-  const submitSelection = (e, selectedID) => {
-    e.preventDefault();
-    setChosenAward(selectedID);
-    const finalData = { ...getValues() };
-    // console.log("final Data before set submission", finalData);
+  const submitSelection = (data) => {
+    const testValues = getValues("awardoptions")[0];
+    const testData = data.options.map((each) => each.name);
+    const finalOptions = {};
+
+    testData.forEach((element) => {
+      testValues[element]
+        ? (finalOptions[element] = testValues[element])
+        : null;
+    });
+
+    setValue("awardoptions", [finalOptions]);
+    const registrationData = { ...registration, ...{ awardoptions: [] } };
+    const finalData = Object.assign({}, data);
+    setChosenAward(data.id);
+    setRegistration(registrationData);
     setSubmissionData(finalData);
-    console.log(submissionData, "this is submission data");
     setAwardSelected(false);
   };
 

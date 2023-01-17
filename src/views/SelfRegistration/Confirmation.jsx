@@ -117,7 +117,6 @@ export default function Confirmation() {
       //update when using real api call to set here vs in try
       // setLoading(false);
     }
-    //check fo isLSAEligible before submit, and strip irrelevant data if not eligible (just in case someone changed things on the way)
   };
 
   useEffect(() => {

@@ -69,6 +69,7 @@ export default function MilestoneSelection() {
     setValue,
     handleSubmit,
     reset,
+    resetField,
   } = methods;
 
   //extend isDirty status to monitor for change and warn about leaving without saving
@@ -79,6 +80,19 @@ export default function MilestoneSelection() {
     // const finalData = { ...getValues() };
     // console.log("final Data before set submission", finalData);
     // setSubmissionData(finalData);
+    let updateData = {};
+    if (
+      data["personal-currentmilestone"] !==
+        registration["personal-currentmilestone"] &&
+      registration["awardname"]
+    ) {
+      updateData = {
+        awardID: "",
+        awardname: "",
+        awarddescription: "",
+        awardoptions: [],
+      };
+    }
     const registrationData = registration;
     const finalData = Object.assign({}, data);
     setSubmissionData(finalData);
@@ -89,7 +103,11 @@ export default function MilestoneSelection() {
       //submit to api
       //then statement
       //activates next page if valid
-      const registrationUpdate = { ...registrationData, ...finalData };
+      const registrationUpdate = {
+        ...registrationData,
+        ...finalData,
+        ...updateData,
+      };
       console.log(
         registrationUpdate,
         "this update is checking spread operator"

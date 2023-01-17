@@ -35,6 +35,7 @@ export default function AwardSelector(props) {
     resetField,
     getValues,
     watch,
+    handleSubmit,
     formState: { isDirty, isValid },
   } = methods;
 
@@ -86,18 +87,22 @@ export default function AwardSelector(props) {
           </ul>
           <div className="options-list-action">
             <AppButton
-              disabled={!isValid}
-              onClick={(e) => {
-                e.preventDefault();
-                props.submitAward ? props.submitAward(e, data.id) : null;
-                if (isValid) {
-                  setValue("awardID", data.id);
-                  setValue("awardname", data.name);
-                  setValue("awarddescription", data.description);
-                  setAwardDialog(false);
-                  setAwardChosen(data.name);
-                }
-              }}
+              // disabled={!isValid}
+              onClick={handleSubmit(() => {
+                // e.preventDefault();
+                props.submitAward ? props.submitAward(data) : null;
+                // props.submitAward ? props.submitAward(data.id) : null;
+
+                // props.submitAward ? props.submitAward(e, data.id) : null;
+
+                // if (isValid) {
+                setValue("awardID", data.id);
+                setValue("awardname", data.name);
+                setValue("awarddescription", data.description);
+                setAwardDialog(false);
+                setAwardChosen(data.name);
+                // }
+              })}
             >
               Select Award
             </AppButton>
