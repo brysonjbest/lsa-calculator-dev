@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 export default function SubmittedInfo(props) {
   const navigate = useNavigate();
   return (
-    <>
+    <div>
       <PageHeader title="Registration" subtitle={props.subtitle}></PageHeader>
 
       <AppPanel header={`${props.title} - Submitted`}>
@@ -36,6 +36,6 @@ export default function SubmittedInfo(props) {
           support.
         </div>
       </AppPanel>
-    </>
+    </div>
   );
 }
