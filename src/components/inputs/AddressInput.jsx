@@ -138,7 +138,7 @@ export default function AddressInput(props) {
         </div>
         <div className="address-form-field-container">
           <label
-            htmlFor={`${addressGroupName}streetaddress2`}
+            htmlFor={`${props.addressIdentifier}streetaddress2`}
             className="block"
           >
             {`${addressGroupName} Street Address 2`}
@@ -165,7 +165,10 @@ export default function AddressInput(props) {
           )}
         </div>
         <div className="address-form-field-container">
-          <label htmlFor={`${addressGroupName}citycommunity`} className="block">
+          <label
+            htmlFor={`${props.addressIdentifier}citycommunity`}
+            className="block"
+          >
             {`${addressGroupName} City/Community`}
           </label>
           <Controller
@@ -200,7 +203,7 @@ export default function AddressInput(props) {
         {props.province ? (
           <div className="address-form-field-container">
             <label
-              htmlFor={`${addressGroupName}provincestate`}
+              htmlFor={`${props.addressIdentifier}provincestate`}
               className="block"
             >
               {`${addressGroupName} Province/State`}
@@ -229,7 +232,10 @@ export default function AddressInput(props) {
           </div>
         ) : null}
         <div className="address-form-field-container">
-          <label htmlFor={`${addressGroupName}postalcode`} className="block">
+          <label
+            htmlFor={`${props.addressIdentifier}postalcode`}
+            className="block"
+          >
             {`${addressGroupName} Postal Code`}
           </label>
           <Controller
@@ -258,7 +264,7 @@ export default function AddressInput(props) {
 
       {props.pobox && props.addressIdentifier.match(/supervisor/i) ? (
         <div className="address-form-field-container">
-          <label htmlFor={`${addressGroupName}pobox`} className="block">
+          <label htmlFor={`${props.addressIdentifier}pobox`} className="block">
             {`${addressGroupName} P.O. Box`}
           </label>
           <Controller

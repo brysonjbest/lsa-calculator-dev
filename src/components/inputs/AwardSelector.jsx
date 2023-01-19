@@ -71,16 +71,18 @@ export default function AwardSelector(props) {
     return (
       <div>
         <div className="award-selection-options">
-          <div>{data.description}</div>
-          <div>
-            <img
-              src={`${data.image_url}`}
-              onError={(e) =>
-                (e.target.src =
-                  "https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png")
-              }
-              alt={data.name}
-            />
+          <h2>{data.description}</h2>
+          <div className="award-title-block">
+            {!pecsfOptions ? (
+              <img
+                src={`${data.image_url}`}
+                onError={(e) =>
+                  (e.target.src =
+                    "https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png")
+                }
+                alt={data.name}
+              />
+            ) : null}
           </div>
           <ul className="options-list">
             {pecsfOptions ? <PecsfForm errors={props.errors} /> : listOptions}
@@ -100,7 +102,7 @@ export default function AwardSelector(props) {
                 setValue("awardname", data.name);
                 setValue("awarddescription", data.description);
                 setAwardDialog(false);
-                setAwardChosen(data.name);
+                setAwardChosen(data.id);
                 // }
               })}
             >
@@ -148,7 +150,6 @@ export default function AwardSelector(props) {
 
   useEffect(() => {
     setAwardChosen(props.chosenAward);
-    console.log(props.chosenAward, "this is chosenAWard");
   }, [props.chosenAward]);
 
   return (
@@ -160,15 +161,16 @@ export default function AwardSelector(props) {
         // chosenAward={props.award}
         chosenAward={awardChosen}
       />
+
       <Dialog
         visible={awardDialog}
         onHide={() => awardHide()}
         maximizable
         modal
-        style={{ width: "80vw" }}
+        style={{ minWidth: "fit-content", width: "50vw" }}
         breakpoints={{ "960px": "75vw" }}
       >
-        {optionDisplay}
+        <div className="award-selection-dialog">{optionDisplay}</div>
       </Dialog>
     </div>
   );

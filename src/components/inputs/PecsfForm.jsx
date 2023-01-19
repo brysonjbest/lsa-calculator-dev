@@ -6,6 +6,7 @@ import { Dropdown } from "primereact/dropdown";
 
 import getFormErrorMessage from "../../services/helpers/ErrorMessage";
 import classNames from "classnames";
+import "./PecsfForm.css";
 
 /**
  * Pecsf Award Options Component.
@@ -14,7 +15,6 @@ import classNames from "classnames";
  */
 
 export default function PecsfForm(props) {
-  const [selectedDonation, setSelectedDonation] = useState(null);
   const formName = `awardoptions.${0}`;
   const [regions1, setRegions1] = useState([
     "Vancouver",
@@ -34,20 +34,26 @@ export default function PecsfForm(props) {
   const {
     control,
     getValues,
+    setValue,
     register,
     watch,
+    setFocus,
     formState: { isDirty, isValid },
   } = methods;
+
+  const [selectedDonation, setSelectedDonation] = useState(
+    getValues(`donation-choice`)
+  );
 
   //to update regions/charities by api
   useEffect(() => {}, []);
 
   function RenderDropdown({
     name,
-    options,
-    required,
-    placeholder,
-    disabled,
+    dropoptions,
+    isrequired,
+    dropplaceholder,
+    isdisabled,
     errormessage,
   }) {
     return (
@@ -55,25 +61,26 @@ export default function PecsfForm(props) {
         <Controller
           name={`${formName}.${name}`}
           control={control}
-          defaultValue=""
           rules={{
             required: {
-              value: required,
-              message: `${errormessage} is required`,
+              value: isrequired || false,
+              message: `Error: ${errormessage} is required.`,
             },
           }}
           render={({ field, fieldState }) => (
             <Dropdown
-              disabled={disabled}
               id={`${field.name}`}
+              disabled={isdisabled}
               value={field.value}
-              options={options}
-              aria-describedby={`${field.name}-help`}
-              {...field}
+              onChange={(e) => {
+                field.onChange(e.value);
+              }}
+              aria-describedby={`${name}-help`}
+              options={dropoptions}
               className={classNames("form-field block", {
                 "p-invalid": fieldState.error,
               })}
-              placeholder={placeholder}
+              placeholder={`${dropplaceholder}`}
             />
           )}
         />
@@ -96,8 +103,8 @@ export default function PecsfForm(props) {
         <p>
           {" "}
           In lieu of receiving a Long Service Award, you may opt to make a
-          charitable donation via PRovincial Employees Community Services Fund
-          (PECSF).{" "}
+          charitable donation via Provincial Employees Community Services Fund
+          (PECSF). <br />
           <b>
             Please Note - charitable tax receipts are not issued for LSA
             donations.
@@ -117,74 +124,64 @@ export default function PecsfForm(props) {
         </ol>
       </div>
       <div className="donation-choice-block">
-        <li className="award-option-block">
-          <label
-            htmlFor={`${formName}.donation-choice`}
-            className={classNames("block", {
-              "p-error": errors[`${formName}.donation-choice`],
-            })}
-          >
-            Choose Your Donation
-          </label>
-
-          {/* <RadioButton
-            inputId="regionalpool"
-            name="donation-choice"
-            value="regionalpool"
-            onChange={(e) => setSelectedDonation(e.value)}
-            checked={selectedDonation === "regionalpool"}
-          /> */}
-
-          <input
-            {...register(`${formName}.donation-choice`, {
-              required: {
-                value: true,
-                message: `Option selection is required`,
-              },
-            })}
-            type="radio"
-            onClick={(e) => {
-              setSelectedDonation(`${e.target.value}`);
-            }}
-            value={"regionalpool"}
-          />
-          <label
-            htmlFor={`${formName}.donation-choice-regionalpool`}
-            className="block"
-          >
-            Donate to the PECSF Regional Pool Fund
-          </label>
-          <input
-            {...register(`${formName}.donation-choice`, {
-              required: {
-                value: true,
-                message: `Option selection is required`,
-              },
-            })}
-            type="radio"
-            onClick={(e) => {
-              setSelectedDonation(`${e.target.value}`);
-            }}
-            value={"choosecharity"}
-            className={classNames("form-field block", {
-              "p-invalid": errors["awardoptions"]
-                ? errors["awardoptions"][0]["donation-choice"]
-                : false,
-            })}
-          />
-          {/* <RadioButton
-            inputId="choosecharity"
-            name="donation-choice"
-            value="choosecharity"
-            onChange={(e) => setSelectedDonation(e.value)}
-            checked={selectedDonation === "choosecharity"}
-          /> */}
-          <label
-            htmlFor={`${formName}.donation-choice-regionalpool`}
-            className="block"
-          >
-            Donate to a registered charitable organization (maximum of two)
-          </label>
+        <h3
+          htmlFor={`${formName}.donation-choice`}
+          className={classNames("block", {
+            "p-error": errors[`${formName}.donation-choice`],
+          })}
+        >
+          Choose Your Donation
+        </h3>
+        <li className="award-option-block-radio">
+          <div className="radio-option-line">
+            <input
+              {...register(`${formName}.donation-choice`, {
+                required: {
+                  value: true,
+                  message: `Option selection is required`,
+                },
+              })}
+              type="radio"
+              onClick={(e) => {
+                setFocus("firstregion");
+                setSelectedDonation(`${e.target.value}`);
+              }}
+              value="regionalpool"
+            />
+            <label
+              htmlFor={`${formName}.donation-choice-regionalpool`}
+              className="block"
+            >
+              Donate to the PECSF Regional Pool Fund
+            </label>
+          </div>
+          <div className="radio-option-line">
+            <input
+              {...register(`${formName}.donation-choice`, {
+                required: {
+                  value: true,
+                  message: `Option selection is required`,
+                },
+              })}
+              type="radio"
+              onClick={(e) => {
+                setFocus("firstregion");
+                setSelectedDonation(`${e.target.value}`);
+              }}
+              value="choosecharity"
+              className={classNames("form-field block", {
+                "p-invalid": errors["awardoptions"]
+                  ? errors["awardoptions"][0]["donation-choice"]
+                  : false,
+              })}
+            />
+            <label
+              htmlFor={`${formName}.donation-choice-regionalpool`}
+              className="block"
+            >
+              Donate to a registered charitable organization (maximum of two)
+            </label>
+          </div>
           {getFormErrorMessage(
             `${"donation-choice"}`,
             `${"donation-choice"}-help`,
@@ -206,28 +203,28 @@ export default function PecsfForm(props) {
             </label>
             <RenderDropdown
               name="firstregion"
-              options={regions1}
-              required
-              placeholder="Please select a PECSF region"
-              disabled={false}
+              dropoptions={regions1}
+              isrequired={true}
+              dropplaceholder="Please select a PECSF region"
+              isdisabled={false}
               errormessage="PECSF region"
             />
           </li>
           <li className="award-option-block">
             <label
-              htmlFor={"donation-choice"}
+              htmlFor={"firstcharity"}
               className={classNames("block", {
-                "p-error": errors["donation-choice"],
+                "p-error": errors["firstcharity"],
               })}
             >
               Choose a charity for your first donation
             </label>
             <RenderDropdown
               name="firstcharity"
-              options={charity1}
-              required
-              placeholder="Select a region to view charities"
-              disabled={!watchRegion1}
+              dropoptions={charity1}
+              isrequired={true}
+              dropplaceholder="Select a region to view charities"
+              isdisabled={!watchRegion1}
               errormessage="Charity selection"
             />
             <small>
@@ -249,29 +246,29 @@ export default function PecsfForm(props) {
               </label>
               <RenderDropdown
                 name="secondregion"
-                options={regions2}
-                required={false}
-                placeholder="Please select a PECSF region"
-                disabled={selectedDonation !== "choosecharity"}
+                dropoptions={regions2}
+                isrequired={false}
+                isdisabled={false}
+                dropplaceholder="Please select a PECSF region"
                 errormessage="PECSF region"
               />
               <small>Optional</small>
             </li>
             <li className="award-option-block">
               <label
-                htmlFor={"donation-choice"}
+                htmlFor={"secondcharity"}
                 className={classNames("block", {
-                  "p-error": errors["donation-choice"],
+                  "p-error": errors["secondcharity"],
                 })}
               >
                 Choose a charity for your second donation
               </label>
               <RenderDropdown
                 name="secondcharity"
-                options={charity2}
-                required={getValues(`${formName}.secondregion`)}
-                placeholder="Select a region to view charities"
-                disabled={!watchRegion2}
+                dropoptions={charity2}
+                isrequired={getValues(`${formName}.secondregion`)}
+                dropplaceholder="Select a region to view charities"
+                isdisabled={!watchRegion2}
                 errormessage="Charity selection"
               />
               <small>
@@ -283,7 +280,7 @@ export default function PecsfForm(props) {
         ) : null}
       </div>
 
-      <li className="award-option-block">
+      <div className="award-option-block">
         <label
           htmlFor={"donation-certificate"}
           className={classNames("block", {
@@ -326,7 +323,7 @@ export default function PecsfForm(props) {
           errors,
           ["awardoptions", 0, "donation-certificate"]
         )}
-      </li>
+      </div>
     </div>
   );
 }

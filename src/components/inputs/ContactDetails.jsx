@@ -70,7 +70,11 @@ export default function ContactDetails(props) {
             <div className="contact-form-basic-details">
               <div className="contact-form-field-container">
                 <label
-                  htmlFor={`${panelGroupName}-firstname`}
+                  htmlFor={
+                    props.itemNumber
+                      ? `${props.panelName}.${props.itemNumber - 1}.firstname`
+                      : `${panelGroupName}-firstname`
+                  }
                   className={classNames("block", {
                     "p-error": errors.firstname,
                   })}
@@ -192,7 +196,7 @@ export default function ContactDetails(props) {
               {props.extended ? (
                 <div className="contact-form-field-container">
                   <label
-                    htmlFor={`${panelGroupName}-government-phone`}
+                    htmlFor={`${panelGroupName}-governmentphone`}
                     className={classNames("block", {
                       "p-error": errors.governmentphone,
                     })}

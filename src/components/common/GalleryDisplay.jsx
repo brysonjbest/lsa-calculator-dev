@@ -24,7 +24,6 @@ export default function GalleryDisplay(props) {
 
   useEffect(() => {
     setChosenItem(props.chosenAward);
-    console.log("this is chosen award passed down", props.chosenAward);
   }, [props.chosenAward]);
 
   const renderListItem = (data) => {

@@ -2,3 +2,23 @@
     display: flex;
     flex-direction: column;
 }
+
+.award-title-block {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+
+.award-selection-options {
+    font-size: large;
+}
+
+.options-list-action {
+    display: flex;
+    justify-content: center;
+}
+
+.options-list {
+    /* width: fit-content; */
+}

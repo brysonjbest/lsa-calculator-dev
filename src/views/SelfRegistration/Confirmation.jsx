@@ -524,7 +524,7 @@ export default function Confirmation() {
                     </label>
                   </div>
                   <div className="consent-true">
-                    <label htmlFor={`consent-block`} className="block">
+                    <label htmlFor={`consent`} className="block">
                       I consent to be contacted regarding this for a survey.
                     </label>
                     <Controller

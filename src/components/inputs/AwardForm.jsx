@@ -28,7 +28,7 @@ export default function AwardForm({ option, errors }) {
     const optionName = `awardoptions.${0}.${data.name}`;
     const radioMap = radioOptions.map((option, index) => (
       <div key={index}>
-        <li className="award-option-block">
+        <li className="award-option-block-radio">
           <input
             {...register(`${optionName}`, {
               required: {
@@ -131,6 +131,7 @@ export default function AwardForm({ option, errors }) {
               id={`${field.name}`}
               value={field.value}
               options={option.options}
+              display="chip"
               aria-describedby={`${field.name}-help`}
               {...field}
               className={classNames("form-field block", {

@@ -14,7 +14,7 @@
 
     & .p-dataview-content .p-grid::after {
         content: '';
-        flex-grow: 1000000000;
+        flex-grow: 3.3;
     }
 
     & .item-grid-item-content {
