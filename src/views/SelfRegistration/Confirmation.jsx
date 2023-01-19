@@ -210,7 +210,11 @@ export default function Confirmation() {
       office: !registration["officestreetaddress"],
       supervisor: !registration["supervisor-firstname"],
 
-      award: isLSAEligible ? !registration["awardname"] : false,
+      award: isLSAEligible
+        ? !registration["awardname"] ||
+          (registration["awardname"] === "PECSF Donation" &&
+            registration["awardoptions"].length === 0)
+        : false,
       lsa: false,
       contact: isLSAEligible ? !registration["personalstreetaddress"] : false,
     };
