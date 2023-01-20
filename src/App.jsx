@@ -1,14 +1,16 @@
 import { useRef, useState, useMemo, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
+import SubmittedInfo from "./components/composites/SubmittedInfo";
 import "./App.css";
-import { UserContext, RegistrationContext } from "./UserContext";
+import { UserContext, RegistrationContext, ToastContext } from "./UserContext";
 import { getUserData, getRegistrationData } from "./api/api.services";
-
+import { Toast } from "primereact/toast";
 import { ProgressSpinner } from "primereact/progressspinner";
- 
 
 export default function App() {
+  // const toast = useRef(null);
+  const toastProvider = useRef(null);
   const [user, setUser] = useState({ loading: true });
   const userProvider = useMemo(() => ({ user, setUser }), [user, setUser]);
 
@@ -44,16 +46,27 @@ export default function App() {
   return (
     <UserContext.Provider value={userProvider}>
       <RegistrationContext.Provider value={registrationProvider}>
-        <div className="App">
-          <Navbar />
-          {!registration["loading"] ? (
+        <ToastContext.Provider value={toastProvider}>
+          <div className="App">
+            <Navbar />
             <div className="main-content">
+              <Toast ref={toastProvider} />
+              {/* {!registration["loading"] ? (
+                <Outlet />
+              ) : (
+                <div className="loading-modal">
+                  <ProgressSpinner />
+                </div>
+              )} */}
               <Outlet />
+              {registration["loading"] ? (
+                <div className="loading-modal">
+                  <ProgressSpinner />
+                </div>
+              ) : null}
             </div>
-          ) : (
-            <ProgressSpinner />
-          )}
-        </div>
+          </div>
+        </ToastContext.Provider>
       </RegistrationContext.Provider>
     </UserContext.Provider>
   );

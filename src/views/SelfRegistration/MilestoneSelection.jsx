@@ -8,7 +8,7 @@ import MilestoneSelector from "../../components/inputs/MilestoneSelector";
 import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
 import { useNavigate, useLocation } from "react-router";
-import { RegistrationContext } from "../../UserContext";
+import { RegistrationContext, ToastContext } from "../../UserContext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Toast } from "primereact/toast";
 import SubmittedInfo from "../../components/composites/SubmittedInfo";
@@ -24,11 +24,12 @@ export default function MilestoneSelection() {
   const navigate = useNavigate();
   const pageIndex = 1;
   const location = useLocation();
-  const toast = useRef(null);
+  // const toast = useRef(null);
+  const toast = useContext(ToastContext);
   const [loading, setLoading] = useState(false);
 
   const { registration, setRegistration } = useContext(RegistrationContext);
-  const isLSAEligible = registration["personal-yearsofservice"] >= 25;
+  const isLSAEligible = registration["personal-currentmilestone"] >= 25;
 
   // console.log(location.state);
   const yearsData = location.state ? location.state["qualifyingYears"] : "";
@@ -99,7 +100,7 @@ export default function MilestoneSelection() {
     console.log(submissionData, "this is saved data");
     try {
       toast.current.show(formServices.lookup("messages", "save"));
-      setLoading(true);
+      // setLoading(true);
       //submit to api
       //then statement
       //activates next page if valid
@@ -107,6 +108,7 @@ export default function MilestoneSelection() {
         ...registrationData,
         ...finalData,
         ...updateData,
+        ...{ loading: true },
       };
       console.log(
         registrationUpdate,
@@ -118,7 +120,8 @@ export default function MilestoneSelection() {
       //this would change to api dependent
       setTimeout(() => {
         toast.current.replace(formServices.lookup("messages", "savesuccess"));
-        setLoading(false);
+        // setLoading(false);
+        setRegistration((state) => ({ ...state, loading: false }));
       }, 3000);
     } catch (error) {
       toast.current.replace(formServices.lookup("messages", "saveerror"));
@@ -183,8 +186,8 @@ export default function MilestoneSelection() {
     reset(registration);
   }, [registration]);
 
-  const [submitted, setSubmitted] = useState(registration["submitted"]);
-  if (submitted) {
+  // const [submitted, setSubmitted] = useState(registration["submitted"]);
+  if (registration["submitted"]) {
     return (
       <>
         <SubmittedInfo
@@ -197,12 +200,12 @@ export default function MilestoneSelection() {
 
   return (
     <>
-      <Toast ref={toast} />
+      {/* <Toast ref={toast} />
       {loading ? (
         <div className="loading-modal">
           <ProgressSpinner />
         </div>
-      ) : null}
+      ) : null} */}
       <div className="self-registration basic-profile">
         <PageHeader
           title="Registration"

@@ -8,7 +8,7 @@ export default function RegistrationHandler() {
   const { user, setUser } = useContext(UserContext);
   const location = useLocation();
   const navigate = useNavigate();
-  const isLSAEligible = registration["personal-yearsofservice"] >= 25;
+  const isLSAEligible = registration["personal-currentmilestone"] >= 25;
   const [submitted, setSubmitted] = useState(registration["submitted"]);
 
   const stateData = location.state;

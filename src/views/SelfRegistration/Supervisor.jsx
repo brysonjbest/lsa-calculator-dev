@@ -8,7 +8,7 @@ import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
 import AddressInput from "../../components/inputs/AddressInput";
 import { useNavigate } from "react-router";
-import { RegistrationContext } from "../../UserContext";
+import { RegistrationContext, ToastContext } from "../../UserContext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Toast } from "primereact/toast";
 import SubmittedInfo from "../../components/composites/SubmittedInfo";
@@ -22,10 +22,11 @@ import SubmittedInfo from "../../components/composites/SubmittedInfo";
 
 export default function Supervisor() {
   const navigate = useNavigate();
-  const toast = useRef(null);
+  // const toast = useRef(null);
+  const toast = useContext(ToastContext);
   const [loading, setLoading] = useState(false);
   const { registration, setRegistration } = useContext(RegistrationContext);
-  const isLSAEligible = registration["personal-yearsofservice"] >= 25;
+  const isLSAEligible = registration["personal-currentmilestone"] >= 25;
   const pageIndex = isLSAEligible ? 5 : 3;
 
   const defaultFormValues = {
@@ -70,11 +71,15 @@ export default function Supervisor() {
 
     try {
       toast.current.show(formServices.lookup("messages", "save"));
-      setLoading(true);
+      // setLoading(true);
       //submit to api - submits current registration to api and updates current registration context with return from api
       //then statement
       //activates next page if valid
-      const registrationUpdate = { ...registrationData, ...finalData };
+      const registrationUpdate = {
+        ...registrationData,
+        ...finalData,
+        ...{ loading: true },
+      };
       console.log(
         registrationUpdate,
         "this update is checking spread operator"
@@ -85,7 +90,8 @@ export default function Supervisor() {
       //this would change to api dependent
       setTimeout(() => {
         toast.current.replace(formServices.lookup("messages", "savesuccess"));
-        setLoading(false);
+        // setLoading(false);
+        setRegistration((state) => ({ ...state, loading: false }));
       }, 3000);
     } catch (error) {
       toast.current.replace(formServices.lookup("messages", "saveerror"));
@@ -128,8 +134,8 @@ export default function Supervisor() {
     reset(registration);
   }, [registration]);
 
-  const [submitted, setSubmitted] = useState(registration["submitted"]);
-  if (submitted) {
+  // const [submitted, setSubmitted] = useState(registration["submitted"]);
+  if (registration["submitted"]) {
     return (
       <>
         <SubmittedInfo
@@ -142,12 +148,12 @@ export default function Supervisor() {
 
   return (
     <>
-      <Toast ref={toast} />
+      {/* <Toast ref={toast} />
       {loading ? (
         <div className="loading-modal">
           <ProgressSpinner />
         </div>
-      ) : null}
+      ) : null} */}
       <div className="self-registration supervisor-profile">
         <PageHeader
           title="Registration"

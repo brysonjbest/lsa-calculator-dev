@@ -7,7 +7,7 @@ import formServices from "../../services/settings.services";
 import "./Award.css";
 import AwardSelector from "../../components/inputs/AwardSelector";
 import { useNavigate } from "react-router";
-import { RegistrationContext } from "../../UserContext";
+import { RegistrationContext, ToastContext } from "../../UserContext";
 import { getAvailableAwards } from "../../api/api.services";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Toast } from "primereact/toast";
@@ -22,10 +22,11 @@ import SubmittedInfo from "../../components/composites/SubmittedInfo";
 
 export default function Award() {
   const navigate = useNavigate();
-  const toast = useRef(null);
+  // const toast = useRef(null);
+  const toast = useContext(ToastContext);
   const [loading, setLoading] = useState(false);
   const { registration, setRegistration } = useContext(RegistrationContext);
-  const isLSAEligible = registration["personal-yearsofservice"] >= 25;
+  const isLSAEligible = registration["personal-currentmilestone"] >= 25;
   const pageIndex = 4;
 
   const defaultFormValues = {
@@ -68,11 +69,15 @@ export default function Award() {
     console.log(submissionData, "this is saved data");
     try {
       toast.current.show(formServices.lookup("messages", "save"));
-      setLoading(true);
+      // setLoading(true);
       //submit to api - submits current registration to api and updates current registration context with return from api
       //then statement
       //activates next page if valid
-      const registrationUpdate = { ...registrationData, ...finalData };
+      const registrationUpdate = {
+        ...registrationData,
+        ...finalData,
+        ...{ loading: true },
+      };
       console.log(
         registrationUpdate,
         "this update is checking spread operator"
@@ -83,7 +88,9 @@ export default function Award() {
       //this would change to api dependent
       setTimeout(() => {
         toast.current.replace(formServices.lookup("messages", "savesuccess"));
-        setLoading(false);
+        // setLoading(false);
+        setRegistration((state) => ({ ...state, loading: false }));
+
         registrationUpdate["awardname"] ? setAwardSelected(true) : false;
       }, 3000);
     } catch (error) {
@@ -165,8 +172,8 @@ export default function Award() {
     setAwards();
   }, []);
 
-  const [submitted, setSubmitted] = useState(registration["submitted"]);
-  if (submitted) {
+  // const [submitted, setSubmitted] = useState(registration["submitted"]);
+  if (registration["submitted"]) {
     return (
       <>
         <SubmittedInfo title="Award Selection" subtitle="Award Selection" />
@@ -176,12 +183,12 @@ export default function Award() {
 
   return (
     <>
-      <Toast ref={toast} />
+      {/* <Toast ref={toast} />
       {loading ? (
         <div className="loading-modal">
           <ProgressSpinner />
         </div>
-      ) : null}
+      ) : null} */}
       <div className="self-registration award-profile">
         <PageHeader
           title="Registration"

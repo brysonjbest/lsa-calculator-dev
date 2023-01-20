@@ -8,7 +8,7 @@ import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
 import "./BasicProfile.css";
 import { useLocation, useNavigate } from "react-router";
-import { RegistrationContext } from "../../UserContext";
+import { RegistrationContext, ToastContext } from "../../UserContext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Toast } from "primereact/toast";
 import SubmittedInfo from "../../components/composites/SubmittedInfo";
@@ -23,13 +23,14 @@ import SubmittedInfo from "../../components/composites/SubmittedInfo";
 export default function BasicProfile() {
   const navigate = useNavigate();
   const location = useLocation();
-  const toast = useRef(null);
+  // const toast = useRef(null);
+  const toast = useContext(ToastContext);
   const [loading, setLoading] = useState(false);
 
   const stateData = location.state ? location.state : null;
   const pageIndex = 0;
   const { registration, setRegistration } = useContext(RegistrationContext);
-  const isLSAEligible = registration["personal-yearsofservice"] >= 25;
+  const isLSAEligible = registration["personal-currentmilestone"] >= 25;
 
   const defaultFormValues = {
     "personal-firstname": "",
@@ -73,13 +74,19 @@ export default function BasicProfile() {
     console.log(submissionData, "this is saved data");
     try {
       toast.current.show(formServices.lookup("messages", "save"));
-      setLoading(true);
+      // setLoading(true);
+
+      setRegistration((state) => ({ ...state, loading: true }));
       //submit to api - submits current registration to api and updates current registration context with return from api
       //then statement
       //activates next page if valid
       const ministryData = getValues("personal-ministryorganization");
       const newState = { ...stateData, ministryData };
-      const registrationUpdate = { ...registrationData, ...finalData };
+      const registrationUpdate = {
+        ...registrationData,
+        ...finalData,
+        ...{ loading: true },
+      };
       console.log(
         registrationUpdate,
         "this update is checking spread operator"
@@ -91,7 +98,8 @@ export default function BasicProfile() {
       //this would change to api dependent
       setTimeout(() => {
         toast.current.replace(formServices.lookup("messages", "savesuccess"));
-        setLoading(false);
+        // setLoading(false);
+        setRegistration((state) => ({ ...state, loading: false }));
       }, 3000);
     } catch (error) {
       toast.current.replace(formServices.lookup("messages", "saveerror"));
@@ -150,7 +158,7 @@ export default function BasicProfile() {
 
   return (
     <>
-      <Toast ref={toast} />
+      {/* <Toast ref={toast} /> */}
       {loading ? (
         <div className="loading-modal">
           <ProgressSpinner />

@@ -10,7 +10,7 @@ import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
 import DataDisplay from "../../components/common/DataDisplay";
 import "./Confirmation.css";
-import { RegistrationContext } from "../../UserContext";
+import { RegistrationContext, ToastContext } from "../../UserContext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Toast } from "primereact/toast";
 
@@ -27,9 +27,10 @@ export default function Confirmation() {
   };
   const navigate = useNavigate();
   const { registration, setRegistration } = useContext(RegistrationContext);
-  const isLSAEligible = registration["personal-yearsofservice"] >= 25;
+  const isLSAEligible = registration["personal-currentmilestone"] >= 25;
   const pageIndex = isLSAEligible ? 6 : 4;
-  const toast = useRef(null);
+  // const toast = useRef(null);
+  const toast = useContext(ToastContext);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(registration["submitted"]);
   const [errorsRegistration, setErrorsRegistration] = useState({
@@ -70,7 +71,7 @@ export default function Confirmation() {
     let registrationUpdate = {
       ...registrationData,
       ...finalData,
-      ...{ submitted: true },
+      ...{ submitted: true, loading: true },
     };
 
     if (!isLSAEligible) {
@@ -108,7 +109,8 @@ export default function Confirmation() {
       //this would change to api dependent
       setTimeout(() => {
         toast.current.replace(formServices.lookup("messages", "savesuccess"));
-        setLoading(false);
+        // setLoading(false);
+        setRegistration((state) => ({ ...state, loading: false }));
         setSubmitted(true);
       }, 3000);
     } catch (error) {
@@ -271,12 +273,12 @@ export default function Confirmation() {
 
   return (
     <>
-      <Toast ref={toast} />
+      {/* <Toast ref={toast} />
       {loading ? (
         <div className="loading-modal">
           <ProgressSpinner />
         </div>
-      ) : null}
+      ) : null} */}
       {hasLoaded ? (
         <div className="self-registration confirmation-profile">
           <PageHeader

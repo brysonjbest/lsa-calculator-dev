@@ -8,7 +8,7 @@ import ContactDetails from "../../components/inputs/ContactDetails";
 import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
 import AddressInput from "../../components/inputs/AddressInput";
-import { RegistrationContext } from "../../UserContext";
+import { RegistrationContext, ToastContext } from "../../UserContext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Toast } from "primereact/toast";
 import SubmittedInfo from "../../components/composites/SubmittedInfo";
@@ -22,11 +22,12 @@ import SubmittedInfo from "../../components/composites/SubmittedInfo";
 
 export default function ProfileDetails() {
   const navigate = useNavigate();
-  const toast = useRef(null);
+  // const toast = useRef(null);
+  const toast = useContext(ToastContext);
   const [loading, setLoading] = useState(false);
   const pageIndex = 2;
   const { registration, setRegistration } = useContext(RegistrationContext);
-  const isLSAEligible = registration["personal-yearsofservice"] >= 25;
+  const isLSAEligible = registration["personal-currentmilestone"] >= 25;
 
   const defaultFormValues = {
     "personal-personalphone": "",
@@ -54,7 +55,7 @@ export default function ProfileDetails() {
   const [submissionData, setSubmissionData] = useState({});
   const [formComplete, setFormComplete] = useState(false);
   const [formChanged, setFormChanged] = useState(true);
-  const [lsaEligible, setLsaEligible] = useState(false);
+  // const [lsaEligible, setLsaEligible] = useState(false);
 
   const {
     formState: { errors, isValid, isDirty },
@@ -90,7 +91,11 @@ export default function ProfileDetails() {
       //submit to api - submits current registration to api and updates current registration context with return from api
       //then statement
       //activates next page if valid
-      const registrationUpdate = { ...registrationData, ...finalData };
+      const registrationUpdate = {
+        ...registrationData,
+        ...finalData,
+        ...{ loading: true },
+      };
       console.log(
         registrationUpdate,
         "this update is checking spread operator"
@@ -101,7 +106,8 @@ export default function ProfileDetails() {
       //this would change to api dependent
       setTimeout(() => {
         toast.current.replace(formServices.lookup("messages", "savesuccess"));
-        setLoading(false);
+        // setLoading(false);
+        setRegistration((state) => ({ ...state, loading: false }));
       }, 3000);
     } catch (error) {
       toast.current.replace(formServices.lookup("messages", "saveerror"));
@@ -142,21 +148,21 @@ export default function ProfileDetails() {
     setSteps(finalSteps);
   }, []);
 
-  useEffect(() => {
-    const registrationWait = async () => {
-      await registration;
-      if (registration && registration["personal-yearsofservice"]) {
-        console.log(
-          registration["personal-yearsofservice"],
-          "this is years total"
-        );
-        registration["personal-yearsofservice"] >= 25
-          ? setLsaEligible(true)
-          : null;
-      }
-    };
-    registrationWait();
-  }, []);
+  // useEffect(() => {
+  //   const registrationWait = async () => {
+  //     await registration;
+  //     if (registration && registration["personal-currentmilestone"]) {
+  //       console.log(
+  //         registration["personal-currentmilestone"],
+  //         "this is years total"
+  //       );
+  //       registration["personal-currentmilestone"] >= 25
+  //         ? setLsaEligible(true)
+  //         : null;
+  //     }
+  //   };
+  //   registrationWait();
+  // }, []);
 
   useEffect(() => {
     reset(registration);
@@ -176,12 +182,12 @@ export default function ProfileDetails() {
 
   return (
     <>
-      <Toast ref={toast} />
+      {/* <Toast ref={toast} />
       {loading ? (
         <div className="loading-modal">
           <ProgressSpinner />
         </div>
-      ) : null}
+      ) : null} */}
       <div className="self-registration additional-profile">
         <PageHeader
           title="Registration"
@@ -190,7 +196,7 @@ export default function ProfileDetails() {
         <FormSteps data={steps} stepIndex={pageIndex} category="Registration" />
         <FormProvider {...methods}>
           <form className="additional-details-form">
-            {lsaEligible ? (
+            {isLSAEligible ? (
               <>
                 <AppPanel header="Personal Contact Details">
                   <ContactDetails
