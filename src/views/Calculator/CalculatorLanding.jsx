@@ -7,9 +7,6 @@ import "./CalculatorLanding.css";
 
 /**
  * Calculator Splash Page.
- * @param {object} props
- * @param {() => void} props.formSubmit function to execute on form submission
- * @returns
  */
 
 export default function CalculatorLanding() {

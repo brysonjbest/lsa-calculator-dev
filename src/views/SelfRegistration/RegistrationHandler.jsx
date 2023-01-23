@@ -1,7 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { useLocation, useNavigate, redirect } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { UserContext, RegistrationContext } from "../../UserContext";
+
+/**
+ * Registration Handling Page
+ * Re-routes to appropriate page based on current stage in registration process.
+ */
 
 export default function RegistrationHandler() {
   const { registration, setRegistration } = useContext(RegistrationContext);

@@ -1,37 +1,28 @@
-import React, { useState, useEffect, useContext, useMemo, useRef } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
+import { useNavigate, useLocation, useOutletContext } from "react-router";
+import { RegistrationContext, ToastContext } from "../../UserContext";
+
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
-import PageHeader from "../../components/common/PageHeader";
-import ContactDetails from "../../components/inputs/ContactDetails";
 import MilestoneSelector from "../../components/inputs/MilestoneSelector";
-import FormSteps from "../../components/common/FormSteps";
+
 import formServices from "../../services/settings.services";
-import { useNavigate, useLocation } from "react-router";
-import { RegistrationContext, ToastContext } from "../../UserContext";
-import { ProgressSpinner } from "primereact/progressspinner";
-import { Toast } from "primereact/toast";
-import SubmittedInfo from "../../components/composites/SubmittedInfo";
 
 /**
- * Basic Registration.
- * @param {object} props
- * @param {() => void} props.formSubmit function to execute on form submission
- * @returns
+ * Milestone Selection.
+ * Allows user to use built in calculator to determine years of service and potential milestones.
  */
 
 export default function MilestoneSelection() {
   const navigate = useNavigate();
   const pageIndex = 1;
   const location = useLocation();
-  // const toast = useRef(null);
+  const isLSAEligible = useOutletContext();
   const toast = useContext(ToastContext);
-  const [loading, setLoading] = useState(false);
 
   const { registration, setRegistration } = useContext(RegistrationContext);
-  const isLSAEligible = registration["personal-currentmilestone"] >= 25;
 
-  // console.log(location.state);
   const yearsData = location.state ? location.state["qualifyingYears"] : "";
   const ministryInherited = location.state
     ? location.state["ministryData"]
@@ -52,35 +43,21 @@ export default function MilestoneSelection() {
   const methods = useForm({
     defaultValues: useMemo(() => {
       const defaultSetting = { ...defaultFormValues, ...registration };
-      console.log(defaultSetting, "this is default settings");
       return defaultSetting;
     }, [registration]),
   });
 
-  const [steps, setSteps] = useState([]);
-  const [submissionData, setSubmissionData] = useState({});
   const [formComplete, setFormComplete] = useState(false);
-  const [formChanged, setFormChanged] = useState(true);
   const [ministrySelected, setMinistrySelected] = useState("");
 
   const {
     formState: { errors, isValid, isDirty },
-    watch,
     getValues,
     setValue,
     handleSubmit,
     reset,
-    resetField,
   } = methods;
-
-  //extend isDirty status to monitor for change and warn about leaving without saving
-  watch(() => setFormChanged(true));
-
   const saveData = (data) => {
-    // e.preventDefault();
-    // const finalData = { ...getValues() };
-    // console.log("final Data before set submission", finalData);
-    // setSubmissionData(finalData);
     let updateData = {};
     if (
       data["personal-currentmilestone"] !==
@@ -96,8 +73,6 @@ export default function MilestoneSelection() {
     }
     const registrationData = registration;
     const finalData = Object.assign({}, data);
-    setSubmissionData(finalData);
-    console.log(submissionData, "this is saved data");
     try {
       toast.current.show(formServices.lookup("messages", "save"));
       // setLoading(true);
@@ -116,33 +91,23 @@ export default function MilestoneSelection() {
       );
       setRegistration(registrationUpdate);
       setFormComplete(true);
-      setFormChanged(false);
       //this would change to api dependent
       setTimeout(() => {
         toast.current.replace(formServices.lookup("messages", "savesuccess"));
-        // setLoading(false);
         setRegistration((state) => ({ ...state, loading: false }));
       }, 3000);
     } catch (error) {
       toast.current.replace(formServices.lookup("messages", "saveerror"));
     } finally {
       //update when using real api call to set here vs in try
-      // setLoading(false);
     }
   };
 
   const submitData = (e) => {
     e.preventDefault();
-    // console.log(data);
     const finalData = { ...getValues() };
     console.log("final Data before set submission", finalData);
-    // const finalData = Object.assign({}, data);
-    setSubmissionData(finalData);
-    // console.log(submissionData, "this is final submission data");
     try {
-      //submit to api
-      //then statement
-      //navigate to next page on success
       navigate("/register/details");
     } catch (error) {}
   };
@@ -158,7 +123,6 @@ export default function MilestoneSelection() {
       if (ministryRegistration) {
         minData = ministryRegistration;
       }
-      console.log(minData, "this is minData");
       const ministry =
         (await formServices.lookup("organizations", minData)) ||
         (await formServices.lookup("currentPinsOnlyOrganizations", minData)) ||
@@ -170,48 +134,12 @@ export default function MilestoneSelection() {
   }, []);
 
   useEffect(() => {
-    const stepsTemplate = isLSAEligible
-      ? formServices.get("selfregistrationsteps")
-      : formServices.get("pinOnlyselfregistrationsteps");
-    const finalSteps = stepsTemplate.map(({ label, route }, index) => ({
-      label: label,
-      command: () => navigate(route),
-      disabled: index >= pageIndex,
-    }));
-    //to update all steps setting with conditional LSA/not recipient
-    setSteps(finalSteps);
-  }, []);
-
-  useEffect(() => {
     reset(registration);
   }, [registration]);
 
-  // const [submitted, setSubmitted] = useState(registration["submitted"]);
-  if (registration["submitted"]) {
-    return (
-      <>
-        <SubmittedInfo
-          title="Milestone Details"
-          subtitle="Identify your milestones"
-        />
-      </>
-    );
-  }
-
   return (
     <>
-      {/* <Toast ref={toast} />
-      {loading ? (
-        <div className="loading-modal">
-          <ProgressSpinner />
-        </div>
-      ) : null} */}
       <div className="self-registration basic-profile">
-        <PageHeader
-          title="Registration"
-          subtitle="Identify your milestones"
-        ></PageHeader>
-        <FormSteps data={steps} stepIndex={pageIndex} category="Registration" />
         <FormProvider {...methods}>
           <form className="milestones-form">
             <AppPanel header="Milestone Details">

@@ -44,9 +44,6 @@
     }
   }
 
-
-
-  
   /* Change the link color to #111 (black) on hover */
   & .navigation-item a:hover {
     background-color: #111;

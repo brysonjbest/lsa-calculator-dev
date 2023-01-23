@@ -3,14 +3,11 @@ import AppButton from "../components/common/AppButton";
 import AppPanel from "../components/common/AppPanel";
 import PageHeader from "../components/common/PageHeader";
 import { RegistrationContext } from "../UserContext";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Splash.css";
 
 /**
- * Splash Page.
- * @param {object} props
- * @param {() => void} props.formSubmit function to execute on form submission
- * @returns
+ * Home Splash Page.
  */
 
 export default function Splash() {

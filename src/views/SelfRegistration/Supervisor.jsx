@@ -1,33 +1,25 @@
-import React, { useState, useEffect, useContext, useMemo, useRef } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
+import { useNavigate, useOutletContext } from "react-router";
+import { RegistrationContext, ToastContext } from "../../UserContext";
+
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
-import PageHeader from "../../components/common/PageHeader";
-import ContactDetails from "../../components/inputs/ContactDetails";
-import FormSteps from "../../components/common/FormSteps";
-import formServices from "../../services/settings.services";
 import AddressInput from "../../components/inputs/AddressInput";
-import { useNavigate } from "react-router";
-import { RegistrationContext, ToastContext } from "../../UserContext";
-import { ProgressSpinner } from "primereact/progressspinner";
-import { Toast } from "primereact/toast";
-import SubmittedInfo from "../../components/composites/SubmittedInfo";
+import ContactDetails from "../../components/inputs/ContactDetails";
+
+import formServices from "../../services/settings.services";
 
 /**
- * Basic Registration.
- * @param {object} props
- * @param {() => void} props.formSubmit function to execute on form submission
- * @returns
+ * Supervisor Information Page.
  */
 
 export default function Supervisor() {
   const navigate = useNavigate();
-  // const toast = useRef(null);
+  const isLSAEligible = useOutletContext();
   const toast = useContext(ToastContext);
-  const [loading, setLoading] = useState(false);
   const { registration, setRegistration } = useContext(RegistrationContext);
-  const isLSAEligible = registration["personal-currentmilestone"] >= 25;
-  const pageIndex = isLSAEligible ? 5 : 3;
+  const [formComplete, setFormComplete] = useState(false);
 
   const defaultFormValues = {
     "supervisor-firstname": "",
@@ -40,38 +32,25 @@ export default function Supervisor() {
     supervisorpobox: "",
   };
 
-  // const methods = useForm({ defaultValues });
   const methods = useForm({
     defaultValues: useMemo(() => {
       const defaultSetting = { ...defaultFormValues, ...registration };
       return defaultSetting;
     }, [registration]),
   });
-  const [steps, setSteps] = useState([]);
-  const [submissionData, setSubmissionData] = useState({});
-  const [formComplete, setFormComplete] = useState(false);
-  const [formChanged, setFormChanged] = useState(true);
 
   const {
     formState: { errors, isValid, isDirty },
-    watch,
     getValues,
     handleSubmit,
     reset,
   } = methods;
 
-  //extend isDirty status to monitor for change and warn about leaving without saving
-  watch(() => setFormChanged(true));
-
   const saveData = (data) => {
     const registrationData = registration;
     const finalData = Object.assign({}, data);
-    setSubmissionData(finalData);
-    console.log(submissionData, "this is saved data");
-
     try {
       toast.current.show(formServices.lookup("messages", "save"));
-      // setLoading(true);
       //submit to api - submits current registration to api and updates current registration context with return from api
       //then statement
       //activates next page if valid
@@ -86,80 +65,32 @@ export default function Supervisor() {
       );
       setRegistration(registrationUpdate);
       setFormComplete(true);
-      setFormChanged(false);
       //this would change to api dependent
       setTimeout(() => {
         toast.current.replace(formServices.lookup("messages", "savesuccess"));
-        // setLoading(false);
         setRegistration((state) => ({ ...state, loading: false }));
       }, 3000);
     } catch (error) {
       toast.current.replace(formServices.lookup("messages", "saveerror"));
     } finally {
       //update when using real api call to set here vs in try
-      // setLoading(false);
     }
   };
 
-  //Final step in creating submission - will be api call to backend to update
-
   const submitData = (e) => {
     e.preventDefault();
-    const finalData = { ...getValues() };
-
-    setSubmissionData(finalData);
-    console.log(submissionData, "this is final submission data");
     try {
-      //submit to api
-      //then statement
-      //navigate to next page on success
       navigate("/register/confirmation");
     } catch (error) {}
   };
 
   useEffect(() => {
-    const stepsTemplate = isLSAEligible
-      ? formServices.get("selfregistrationsteps")
-      : formServices.get("pinOnlyselfregistrationsteps");
-    const finalSteps = stepsTemplate.map(({ label, route }, index) => ({
-      label: label,
-      command: () => navigate(route),
-      disabled: index >= pageIndex,
-    }));
-    //to update all steps setting with conditional LSA/not recipient
-    setSteps(finalSteps);
-  }, []);
-
-  useEffect(() => {
     reset(registration);
   }, [registration]);
 
-  // const [submitted, setSubmitted] = useState(registration["submitted"]);
-  if (registration["submitted"]) {
-    return (
-      <>
-        <SubmittedInfo
-          title="Supervisor Details"
-          subtitle="Your Supervisor Information"
-        />
-      </>
-    );
-  }
-
   return (
     <>
-      {/* <Toast ref={toast} />
-      {loading ? (
-        <div className="loading-modal">
-          <ProgressSpinner />
-        </div>
-      ) : null} */}
       <div className="self-registration supervisor-profile">
-        <PageHeader
-          title="Registration"
-          subtitle="Your Supervisor Information"
-        ></PageHeader>
-        <FormSteps data={steps} stepIndex={pageIndex} category="Registration" />
         <FormProvider {...methods}>
           <form className="supervisor-details-form">
             <AppPanel header="Supervisor Details">

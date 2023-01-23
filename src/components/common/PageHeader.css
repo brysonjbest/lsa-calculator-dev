@@ -10,7 +10,6 @@
 }
 
 .p-card-title {
-/* height: 7rem !important; */
 font-style: normal;
 font-weight: normal !important;
 font-size: clamp(2rem, 3.5vw, 3.5rem)!important;
@@ -22,7 +21,6 @@ word-wrap:anywhere;
 
 .p-card-subtitle{
 text-transform: capitalize;
-/* height: 2rem !important; */
 font-size: clamp(1rem, 1.5vw, 1.5rem) !important;
 }
 

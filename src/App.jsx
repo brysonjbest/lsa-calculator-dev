@@ -1,15 +1,18 @@
 import { useRef, useState, useMemo, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
-import SubmittedInfo from "./components/composites/SubmittedInfo";
 import "./App.css";
 import { UserContext, RegistrationContext, ToastContext } from "./UserContext";
 import { getUserData, getRegistrationData } from "./api/api.services";
 import { Toast } from "primereact/toast";
 import { ProgressSpinner } from "primereact/progressspinner";
 
+/**
+ * Main application. Loads user, registration, and messaging states prior to mounting main application.
+ * @returns
+ */
+
 export default function App() {
-  // const toast = useRef(null);
   const toastProvider = useRef(null);
   const [user, setUser] = useState({ loading: true });
   const userProvider = useMemo(() => ({ user, setUser }), [user, setUser]);
@@ -40,7 +43,6 @@ export default function App() {
       });
   }, []);
 
-  // if (registration["loading"] || user["loading"]) return <ProgressSpinner />;
   if (user["loading"]) return <ProgressSpinner />;
 
   return (
@@ -51,13 +53,6 @@ export default function App() {
             <Navbar />
             <div className="main-content">
               <Toast ref={toastProvider} />
-              {/* {!registration["loading"] ? (
-                <Outlet />
-              ) : (
-                <div className="loading-modal">
-                  <ProgressSpinner />
-                </div>
-              )} */}
               <Outlet />
               {registration["loading"] ? (
                 <div className="loading-modal">

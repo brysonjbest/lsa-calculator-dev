@@ -1,37 +1,37 @@
-import React, { useState, useEffect, useContext, useMemo, useRef } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useForm, FormProvider, Controller } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import classNames from "classnames";
+import { Link, useOutletContext } from "react-router-dom";
+import { RegistrationContext, ToastContext } from "../../UserContext";
 import { Checkbox } from "primereact/checkbox";
+
+import classNames from "classnames";
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
-import PageHeader from "../../components/common/PageHeader";
-import FormSteps from "../../components/common/FormSteps";
 import formServices from "../../services/settings.services";
 import DataDisplay from "../../components/common/DataDisplay";
 import "./Confirmation.css";
-import { RegistrationContext, ToastContext } from "../../UserContext";
-import { ProgressSpinner } from "primereact/progressspinner";
-import { Toast } from "primereact/toast";
 
 /**
- * Basic Registration.
- * @param {object} props
- * @param {() => void} props.formSubmit function to execute on form submission
- * @returns
+ * Final Confirmation page. User verifies previously input data and is given the option to return and edit prior selections, or submit registration.
  */
 
 export default function Confirmation() {
+  const isLSAEligible = useOutletContext();
+  const { registration, setRegistration } = useContext(RegistrationContext);
+  const toast = useContext(ToastContext);
+
+  //Load default form values and
   const defaultFormValues = {
     consent: false,
   };
-  const navigate = useNavigate();
-  const { registration, setRegistration } = useContext(RegistrationContext);
-  const isLSAEligible = registration["personal-currentmilestone"] >= 25;
-  const pageIndex = isLSAEligible ? 6 : 4;
-  // const toast = useRef(null);
-  const toast = useContext(ToastContext);
-  const [loading, setLoading] = useState(false);
+
+  const methods = useForm({
+    defaultValues: useMemo(() => {
+      const defaultSetting = { ...defaultFormValues, ...registration };
+      return defaultSetting;
+    }, [registration]),
+  });
+
   const [submitted, setSubmitted] = useState(registration["submitted"]);
   const [errorsRegistration, setErrorsRegistration] = useState({
     milestone: true,
@@ -43,29 +43,14 @@ export default function Confirmation() {
     supervisor: true,
   });
 
-  // const methods = useForm({ defaultValues });
-  const methods = useForm({
-    defaultValues: useMemo(() => {
-      const defaultSetting = { ...defaultFormValues, ...registration };
-      return defaultSetting;
-    }, [registration]),
-  });
-  const [steps, setSteps] = useState([]);
   const [formData, setFormData] = useState([{}]);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [declaration, setDeclaration] = useState(false);
   const [registrationReady, setRegistrationReady] = useState(false);
 
-  //Final step in creating submission - will be api call to backend to update
-  const {
-    formState: { errors, isValid, isDirty },
-    control,
-    reset,
-    handleSubmit,
-  } = methods;
+  const { control, reset, handleSubmit } = methods;
 
   const submitData = (data) => {
-    console.log(data, "this is submission");
     const registrationData = registration;
     const finalData = Object.assign({}, data);
     let registrationUpdate = {
@@ -97,7 +82,7 @@ export default function Confirmation() {
     }
     try {
       toast.current.show(formServices.lookup("messages", "submit"));
-      setLoading(true);
+      // setLoading(true);
       //submit to api
       //then statement
       //activates next page if valid
@@ -109,7 +94,6 @@ export default function Confirmation() {
       //this would change to api dependent
       setTimeout(() => {
         toast.current.replace(formServices.lookup("messages", "savesuccess"));
-        // setLoading(false);
         setRegistration((state) => ({ ...state, loading: false }));
         setSubmitted(true);
       }, 3000);
@@ -117,7 +101,6 @@ export default function Confirmation() {
       toast.current.replace(formServices.lookup("messages", "saveerror"));
     } finally {
       //update when using real api call to set here vs in try
-      // setLoading(false);
     }
   };
 
@@ -233,21 +216,10 @@ export default function Confirmation() {
   }, []);
 
   useEffect(() => {
-    const stepsTemplate = isLSAEligible
-      ? formServices.get("selfregistrationsteps")
-      : formServices.get("pinOnlyselfregistrationsteps");
-    const finalSteps = stepsTemplate.map(({ label, route }, index) => ({
-      label: label,
-      command: () => navigate(route),
-      disabled: index >= pageIndex,
-    }));
-    setSteps(finalSteps);
-  }, []);
-
-  useEffect(() => {
     reset(registration);
   }, [registration]);
 
+  // Basic Panel header formatting specific to confirmation page
   const header = (title, path) => {
     const titlePath = title.toLowerCase().replace(/\s/g, "");
     return (
@@ -273,29 +245,8 @@ export default function Confirmation() {
 
   return (
     <>
-      {/* <Toast ref={toast} />
-      {loading ? (
-        <div className="loading-modal">
-          <ProgressSpinner />
-        </div>
-      ) : null} */}
       {hasLoaded ? (
         <div className="self-registration confirmation-profile">
-          <PageHeader
-            title="Registration"
-            subtitle={
-              submitted
-                ? "Your Registration Details"
-                : "Confirm your registration details"
-            }
-          ></PageHeader>
-          {!submitted ? (
-            <FormSteps
-              data={steps}
-              stepIndex={pageIndex}
-              category="Registration"
-            />
-          ) : null}
           <AppPanel header="Registration Information">
             The information you have submitted indicates that you are
             registering for the following recognition awards: <br />

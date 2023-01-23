@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataView, DataViewLayoutOptions } from "primereact/dataview";
 import classNames from "classnames";
 import AppButton from "./AppButton";
@@ -8,13 +8,12 @@ import "./GalleryDisplay.css";
  * Gallery Display common display component to display items in list with details
  * @param {object} props
  * @param {Array} props.itemSet Array of objects to display in gallery view
+ * @param {Array} props.chosenAward Identifying string of chosen item
  * @returns
  */
 
 export default function GalleryDisplay(props) {
-  // const [items, setItems] = useState([]);
   const [layout, setLayout] = useState("grid");
-  //testing data
   const [items, setItems] = useState([]);
   const [chosenItem, setChosenItem] = useState("");
 
@@ -40,7 +39,6 @@ export default function GalleryDisplay(props) {
           />
           <div className="item-list-detail">
             <div className="item-name">{data.name}</div>
-            {/* <div className="item-description">{data.description}</div> */}
           </div>
           <div className="item-list-action">
             <AppButton

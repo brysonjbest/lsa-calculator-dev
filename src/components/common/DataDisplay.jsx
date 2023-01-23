@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 //temporary use of apiservices to pull in example data for formatting prior to api being ready - to reformat when doing api proper
@@ -12,8 +12,6 @@ import "./DataDisplay.css";
  * @param {string} props.identifier if object contains nested array, the string name identifier for that array
  * @param {string} props.category determines the formfield options that should be selected (options: contact, address, milestone, award, lsa, delegated)
  * @param {boolean} props.stacked boolean that determines if data table will be forced into permanent stacked layout, or will be responsive
- * @param {() => void} props.callback function to execute on data prior to display
- * @param {() => void} props.formSubmit function to execute on form submission
  * @returns
  */
 
@@ -61,7 +59,6 @@ export default function DataDisplay(props) {
     const userData = props.identifier
       ? [...props.data[props.identifier]]
       : [...props.data];
-    // props.callback ? props.callback(userData) : null;
     setUserData(userData);
   }, [props.data]);
 

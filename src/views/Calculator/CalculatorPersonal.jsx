@@ -7,10 +7,8 @@ import ServiceCalculator from "../../components/inputs/ServiceCalculator";
 import "./CalculatorPersonal.css";
 
 /**
- * Calculator Splash Page.
- * @param {object} props
- * @param {() => void} props.formSubmit function to execute on form submission
- * @returns
+ * Personal Calculator Page. Allows individuals to calculate eligibility.
+ * Carries forward eligibility calculation into application if they choose to apply.
  */
 
 export default function CalculatorPersonal() {

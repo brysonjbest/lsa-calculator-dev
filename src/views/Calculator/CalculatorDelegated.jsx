@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
 import AppButton from "../../components/common/AppButton";
@@ -9,15 +9,10 @@ import DataDisplay from "../../components/common/DataDisplay";
 import EmployeeList from "../../components/composites/EmployeeList";
 import ContactDetails from "../../components/inputs/ContactDetails";
 import AddressInput from "../../components/inputs/AddressInput";
-import formServices from "../../services/settings.services";
-
 import "./CalculatorDelegated.css";
 
 /**
- * Calculator Splash Page.
- * @param {object} props
- * @param {() => void} props.formSubmit function to execute on form submission
- * @returns
+ * Delegated Calculator Page. Allows users to submit delegated applications for LSA/Service Pin registration.
  */
 
 export default function CalculatorDelegated() {

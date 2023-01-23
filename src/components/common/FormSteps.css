@@ -9,11 +9,6 @@
     text-align: start;
 }
 
-/* ul {
-    display: flex;
-    flex-direction: row;
-} */
-
 .steps .p-steps {
     font-size: clamp(15px, 75%, 2rem);
 }

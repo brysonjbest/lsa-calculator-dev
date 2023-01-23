@@ -22,6 +22,7 @@ import Supervisor from "./views/SelfRegistration/Supervisor";
 import Confirmation from "./views/SelfRegistration/Confirmation";
 import Splash from "./views/Splash";
 import RegistrationHandler from "./views/SelfRegistration/RegistrationHandler";
+import PanelHeader from "./views/SelfRegistration/PanelHeader";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
       { path: "personal", element: <CalculatorPersonal /> },
       {
         path: "register",
+        element: <PanelHeader />,
         children: [
           { path: "self", element: <RegistrationHandler /> },
           { path: "profile", element: <BasicProfile /> },

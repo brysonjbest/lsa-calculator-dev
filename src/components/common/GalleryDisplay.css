@@ -22,11 +22,6 @@
 
     }
 
-    & .item-grid-item {
-        /* height: 95%; */
-
-    }
-
     & .item-grid-item-bottom {
         display: flex;
         justify-content: center;

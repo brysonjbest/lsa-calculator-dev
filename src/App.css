@@ -1,24 +1,17 @@
 #root {
-  /* margin: 0 auto;
-  padding: 0 2rem 0 2rem; */
   text-align: center;
 }
 
 .App .main-content {
   display: flex;
   justify-content: center;
-  /* flex-direction: column;
-  gap: 1rem; */
 }
 
 .App .main-content > div {
-  /* padding: 0 2rem 0 2rem;  */
-  width: clamp(285px, 90vw, 80rem)
-  /* padding-top: 0;
-  padding-bottom: 0;
-  padding-right: clamp(15px, 5%, 200px);
-  padding-left: clamp(15px, 5%, 200px); */
-
+  width: clamp(285px, 90vw, 80rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .App .main-content form {
@@ -44,12 +37,6 @@
 
 .read-the-docs {
   color: #888;
-}
-
-@media screen and (max-width: 565px) {
-  .App .main-content > div {
-    /* padding: 0 .25rem 0 .25rem;  */
-  }
 }
 
 .p-toast {
@@ -82,7 +69,6 @@
 }
 
 .p-progress-spinner {
-  position: fixed !important;
   top: 70vh !important;
   z-index: 9998 !important;
   margin: auto;

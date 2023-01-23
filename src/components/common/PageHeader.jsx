@@ -26,11 +26,6 @@ export default function PageHeader(props) {
     { "page-header-gradient-3": props.gradient3 }
   );
 
-  const cardTitle = props.title ? props.title : "Registration";
-  const cardSubtitle = props.subtitle
-    ? props.subtitle
-    : "Long Service Awards And Service Pin Registration";
-
   return (
     <div>
       <Card
