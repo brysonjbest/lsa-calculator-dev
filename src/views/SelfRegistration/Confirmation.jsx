@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useForm, FormProvider, Controller } from "react-hook-form";
-import { Link, useOutletContext } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import { RegistrationContext, ToastContext } from "../../UserContext";
 import { Checkbox } from "primereact/checkbox";
 
@@ -12,10 +12,12 @@ import DataDisplay from "../../components/common/DataDisplay";
 import "./Confirmation.css";
 
 /**
- * Final Confirmation page. User verifies previously input data and is given the option to return and edit prior selections, or submit registration.
+ * Final Confirmation page.
+ * User verifies previously input data and is given the option to return and edit prior selections, or submit registration.
  */
 
 export default function Confirmation() {
+  const navigate = useNavigate();
   const isLSAEligible = useOutletContext();
   const { registration, setRegistration } = useContext(RegistrationContext);
   const toast = useContext(ToastContext);
@@ -226,18 +228,17 @@ export default function Confirmation() {
       <div className="confirmation-panel-details-header">
         <span>{title}:</span>
         {!submitted ? (
-          <Link
-            to={`/register/${path ? path : titlePath}`}
-            className="p-menuitem-link"
+          <AppButton
+            className="confirmation-panel-edit"
+            passClass="p-button-raised"
+            info
+            onClick={(e) => {
+              e.preventDefault();
+              navigate(`/register/${path ? path : titlePath}`);
+            }}
           >
-            <AppButton
-              className="confirmation-panel-edit"
-              passClass="p-button-raised"
-              info
-            >
-              Edit
-            </AppButton>
-          </Link>
+            Edit
+          </AppButton>
         ) : null}
       </div>
     );
