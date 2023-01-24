@@ -15,34 +15,28 @@ import AwardForm from "./AwardForm";
 /**
  * Award Selection Component.
  * @param {object} props
+ * @param {Array} props.awards Array of award items that populate the available awards options in the gallery
+ * @param {string} props.chosenAward The id of the chosen award.
+ * @param {()=> void} props.submitAward callback to run on award selection
+ * @param {object} props.errors Inherited errors object from higher level form control
  * @returns
  */
 
-export default function AwardSelector(props) {
+export default function AwardSelector({
+  awards,
+  chosenAward,
+  submitAward,
+  errors,
+}) {
   const [availableAwards, setAvailableAwards] = useState([]);
-
   const [awardOptions, setAwardOptions] = useState({});
-  const [awardDialog, setAwardDialog] = useState(false);
   const [awardChosen, setAwardChosen] = useState("");
-  const [formChanged, setFormChanged] = useState(false);
+  const [awardDialog, setAwardDialog] = useState(false);
 
   const methods = useFormContext();
-  const errors = props.errors;
-  const {
-    control,
-    setValue,
-    clearErrors,
-    resetField,
-    getValues,
-    watch,
-    handleSubmit,
-    formState: { isDirty, isValid },
-  } = methods;
-
-  watch(() => setFormChanged(true));
+  const { setValue, handleSubmit } = methods;
 
   const renderAwardOptions = (data) => {
-    // console.log(data, "this is data selected");
     const options = data.options || [];
     const pecsfOptions = data.name
       ? data.name.toLowerCase().includes("pecsf")
@@ -85,25 +79,17 @@ export default function AwardSelector(props) {
             ) : null}
           </div>
           <ul className="options-list">
-            {pecsfOptions ? <PecsfForm errors={props.errors} /> : listOptions}
+            {pecsfOptions ? <PecsfForm errors /> : listOptions}
           </ul>
           <div className="options-list-action">
             <AppButton
-              // disabled={!isValid}
               onClick={handleSubmit(() => {
-                // e.preventDefault();
-                props.submitAward ? props.submitAward(data) : null;
-                // props.submitAward ? props.submitAward(data.id) : null;
-
-                // props.submitAward ? props.submitAward(e, data.id) : null;
-
-                // if (isValid) {
+                submitAward ? submitAward(data) : null;
                 setValue("awardID", data.id);
                 setValue("awardname", data.name);
                 setValue("awarddescription", data.description);
                 setAwardDialog(false);
                 setAwardChosen(data.id);
-                // }
               })}
             >
               Select Award
@@ -120,37 +106,23 @@ export default function AwardSelector(props) {
       return item.id === itemID;
     });
     setAwardOptions(awardLookup[0]);
-    // const defaultOptions = awardLookup[0].options.map((option) => {
-    //   const name = option.name;
-    //   return { [name]: "" };
-    // });
-    // console.log(defaultOptions, "this should be all options");
-
-    // setValue([{ awardoptions: defaultOptions }]);
-
-    // console.log(itemID, "this is selected", awardLookup);
-
-    // return;
   };
 
   const awardHide = () => {
     setAwardDialog(false);
     setAwardOptions([]);
-    //currently fully resets - will have to be selective
     setValue("awardoptions", []);
-
-    // console.log("this is deselected");
   };
 
   const optionDisplay = renderAwardOptions(awardOptions);
 
   useEffect(() => {
-    setAvailableAwards(props.awards);
-  }, [props.awards]);
+    setAvailableAwards(awards);
+  }, [awards]);
 
   useEffect(() => {
-    setAwardChosen(props.chosenAward);
-  }, [props.chosenAward]);
+    setAwardChosen(chosenAward);
+  }, [chosenAward]);
 
   return (
     <div className={`award-selection-form`}>
@@ -158,7 +130,6 @@ export default function AwardSelector(props) {
         onClick={awardSelect}
         header="Award Options"
         itemSet={availableAwards}
-        // chosenAward={props.award}
         chosenAward={awardChosen}
       />
 

@@ -397,4 +397,10 @@ export default {
     const found = schemaData[key].filter((item) => item.value === value);
     return found.length > 0 ? found[0].text : null;
   },
+
+  capitalize: function capitalize(value) {
+    const capitalizedValue =
+      value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+    return value !== "undefined" ? capitalizedValue : null;
+  },
 };

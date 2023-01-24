@@ -10,6 +10,7 @@ import classNames from "classnames";
 /**
  * Common Award Options Component.
  * @param {object} props
+ * @param {object} props.option Award option object
  * @returns
  */
 
@@ -17,11 +18,7 @@ export default function AwardForm({ option, errors }) {
   const type = option.type;
 
   const methods = useFormContext();
-  const {
-    control,
-    register,
-    formState: { isDirty, isValid },
-  } = methods;
+  const { control, register } = methods;
 
   const renderRadioButtons = (data) => {
     const radioOptions = data.options ? data.options : [];
