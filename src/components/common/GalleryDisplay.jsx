@@ -3,6 +3,7 @@ import { DataView, DataViewLayoutOptions } from "primereact/dataview";
 import classNames from "classnames";
 import AppButton from "./AppButton";
 import "./GalleryDisplay.css";
+import logo from "../../assets/bclogo.jpg";
 
 /**
  * Gallery Display common display component to display items in list with details
@@ -31,10 +32,7 @@ export default function GalleryDisplay(props) {
         <div className="item-list-item">
           <img
             src={`images/item/${data.image_url}`}
-            onError={(e) =>
-              (e.target.src =
-                "https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png")
-            }
+            onError={(e) => (e.target.src = logo)}
             alt={data.name}
           />
           <div className="item-list-detail">
@@ -65,10 +63,7 @@ export default function GalleryDisplay(props) {
             <img
               // src={`images/items/${data.image_url}`}
               src={`${data.image_url}`}
-              onError={(e) =>
-                (e.target.src =
-                  "https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png")
-              }
+              onError={(e) => (e.target.src = logo)}
               alt={data.name}
             />
             <div className="item-name">{data.name}</div>

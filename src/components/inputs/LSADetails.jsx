@@ -9,30 +9,28 @@ import classNames from "classnames";
 /**
  * LSA Details reusable component.
  * @param {object} props
- * @param {object} props.errors errors object
+ * @param {object} props.errors inherited form errors object
  * @param {string} props.panelName string describing what panel these contact details belong to ex: Supervisor, Personal
+  * @param {integer} props.itemNumber index of item within sublist; when used multiple times in a form, contact details will be registered as a separate item on form
  * @returns
  */
 
-export default function LSADetails(props) {
-  //fix this formatting in milestones and contactdetails
+export default function LSADetails({ errors, panelName, itemNumber }) {
+  //set todays date and populate start and end of year based on current date
   const today = new Date();
   const year = today.getFullYear();
   const startYear = new Date(year, 0, 0);
   const endYear = new Date(year, 11, 31);
 
-  let panelGroupName = props.panelName
-    ? `${props.panelName.replace(/\s/g, "")}`
+  //Form input name formatting
+  let panelGroupName = panelName
+    ? `${panelName.replace(/\s/g, "")}`
     : "default";
-
-  panelGroupName =
-    props.panelName && props.itemNumber
-      ? `${props.panelName.replace(/\s/g, "")} ${props.itemNumber}`
-      : panelGroupName;
+  if (panelName && itemNumber) {
+    panelGroupName += ` ${itemNumber}`;
+  }
 
   const { control, watch, setValue } = useFormContext();
-
-  const errors = props.errors;
 
   const isRetiring = watch("retiringcurrentyear");
 

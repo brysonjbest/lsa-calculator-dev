@@ -12,7 +12,7 @@ import classNames from "classnames";
 import "./MilestoneSelector.css";
 
 /**
- * Address Input reusable component. Conditional PO Box requirement for address's identified for supervisors.
+ * Milestones reusable component.
  * @param {object} props
  * @param {boolean} props.selfregister state variable boolean for controlling if all fields are displayed
  * @param {boolean} props.delegated state variable boolean for controlling if all fields are displayed
@@ -47,6 +47,7 @@ export default function MilestoneSelector(props) {
     : `${panelGroupName}-`;
 
   const milestones = formServices.get("milestones") || [];
+  //Get eligible years
   const date = new Date().getFullYear();
   const yearsDateRange = [];
   for (let i = 0; i < 4; i++) {
