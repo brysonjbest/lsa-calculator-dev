@@ -1,20 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
-import "./ServiceCalculator.css";
+
 import AppButton from "../common/AppButton";
 import InfoToolTip from "../common/InfoToolTip";
+import "./ServiceCalculator.css";
 
 /**
  * Service Calculator component calculates years of service from given year inputs.
- * @param {object} props
  * @param {() => void} props.formSubmit function to execute on form submission
  * @returns
  */
 
-export default function ServiceCalculator(props) {
-  const [yearsArray, setYearsArray] = useState([]);
+export default function ServiceCalculator({ formSubmit }) {
   const { control, handleSubmit, reset, setValue, getValues } = useForm({
     defaultValues: {
       serviceCalculator: [{ startYear: "", endYear: "", years: "" }],
@@ -42,7 +41,7 @@ export default function ServiceCalculator(props) {
 
     const finalYears = [...new Set(yearSet)].length;
 
-    props.formSubmit ? props.formSubmit(finalYears) : null;
+    formSubmit ? formSubmit(finalYears) : null;
   };
 
   const YearCalculator = (index) => {

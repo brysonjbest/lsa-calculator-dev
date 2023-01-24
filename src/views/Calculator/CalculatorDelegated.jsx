@@ -47,7 +47,7 @@ export default function CalculatorDelegated() {
   const [formChanged, setFormChanged] = useState(true);
 
   const {
-    formState: { errors, isValid },
+    formState: { errors },
     watch,
     handleSubmit,
   } = methods;

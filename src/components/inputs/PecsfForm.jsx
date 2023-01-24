@@ -11,10 +11,11 @@ import "./PecsfForm.css";
 /**
  * Pecsf Award Options Component.
  * @param {object} props
+ * @param {object} errors Inherited form errors object
  * @returns
  */
 
-export default function PecsfForm(props) {
+export default function PecsfForm({ errors }) {
   const formName = `awardoptions.${0}`;
   const [regions1, setRegions1] = useState([
     "Vancouver",
@@ -30,16 +31,7 @@ export default function PecsfForm(props) {
   const [charity2, setCharity2] = useState(["Charlie", "Bobtail", "charity2"]);
 
   const methods = useFormContext();
-  const errors = props.errors;
-  const {
-    control,
-    getValues,
-    setValue,
-    register,
-    watch,
-    setFocus,
-    formState: { isDirty, isValid },
-  } = methods;
+  const { control, getValues, register, watch, setFocus } = methods;
 
   const [selectedDonation, setSelectedDonation] = useState(
     getValues(`donation-choice`)
@@ -48,6 +40,7 @@ export default function PecsfForm(props) {
   //to update regions/charities by api
   useEffect(() => {}, []);
 
+  //Reusable drop down form component
   function RenderDropdown({
     name,
     dropoptions,
@@ -97,6 +90,10 @@ export default function PecsfForm(props) {
 
   const watchRegion1 = watch(`${formName}.firstregion`);
   const watchRegion2 = watch(`${formName}.secondregion`);
+
+  //to update sub-selection\ by watching for changes in regions
+  useEffect(() => {}, [watchRegion1]);
+  useEffect(() => {}, [watchRegion2]);
 
   return (
     <div className="pecsf-award-options">

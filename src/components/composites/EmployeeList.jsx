@@ -6,6 +6,12 @@ import AppPanel from "../../components/common/AppPanel";
 import ContactDetails from "../../components/inputs/ContactDetails";
 import MilestoneSelector from "../../components/inputs/MilestoneSelector";
 
+/**
+ * Composite component builds a list of employees with user ability to increase/decrease number of employees in form
+ * @param {object} props.errors inherited form errors object
+ * @returns 
+ */
+
 const EmployeeList = ({ errors }) => {
   const { control, reset } = useFormContext();
 

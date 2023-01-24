@@ -14,20 +14,20 @@ import "./MilestoneSelector.css";
 /**
  * Milestones reusable component.
  * @param {object} props
- * @param {boolean} props.selfregister state variable boolean for controlling if all fields are displayed
- * @param {boolean} props.delegated state variable boolean for controlling if all fields are displayed
+ * @param {boolean} props.selfregister state variable boolean for controlling if all fields are displayed dependent on whether or not this is a user self-registering
  * @param {string} props.ministry state describing what ministry has been selected for the user
+ * @param {object} props.errors inherited form errors object
  * @param {string} props.panelName string describing what panel these contact details belong to ex: Supervisor, Personal
- * @param {integer} props.index index of item within form
+  * @param {integer} props.itemNumber index of item within sublist; when used multiple times in a form, contact details will be registered as a separate item on form
  * @returns
  */
 
 export default function MilestoneSelector({
+  selfregister,
+  ministry,
+  errors,
   panelName,
   itemNumber,
-  errors,
-  ministry,
-  selfregister,
 }) {
   //Form input name formatting
   let panelGroupName = panelName
