@@ -22,31 +22,33 @@ import "./MilestoneSelector.css";
  * @returns
  */
 
-export default function MilestoneSelector(props) {
-  //fix this formatting in milestones and contactdetails
-  let panelGroupName = props.panelName
-    ? `${props.panelName.replace(/\s/g, "")}`
+export default function MilestoneSelector({
+  panelName,
+  itemNumber,
+  errors,
+  ministry,
+  selfregister,
+}) {
+  //Form input name formatting
+  let panelGroupName = panelName
+    ? `${panelName.replace(/\s/g, "")}`
     : "default";
-  panelGroupName =
-    props.panelName && props.itemNumber
-      ? `${props.panelName.replace(/\s/g, "")} ${props.itemNumber}`
-      : panelGroupName;
-  const panelCapitalized =
-    props.panelName === "personal"
-      ? ""
-      : props.panelName.charAt(0).toUpperCase() +
-          props.panelName.slice(1).toLowerCase() || "defaultCapitalized";
+  if (panelName && itemNumber) {
+    panelGroupName += ` ${itemNumber}`;
+  }
+  const panelTitle =
+    panelName === "personal" ? "" : formServices.capitalize(panelName) || "";
   const panelPlaceholder =
-    props.panelName === "personal"
-      ? "Your"
-      : props.panelName.charAt(0).toUpperCase() +
-          props.panelName.slice(1).toLowerCase() || "";
+    panelName === "personal"
+      ? "your"
+      : formServices.capitalize(panelName) || "";
 
-  const itemName = props.itemNumber
-    ? `${props.panelName}.${props.itemNumber - 1}.`
+  const itemName = itemNumber
+    ? `${panelName}.${itemNumber - 1}.`
     : `${panelGroupName}-`;
 
   const milestones = formServices.get("milestones") || [];
+
   //Get eligible years
   const date = new Date().getFullYear();
   const yearsDateRange = [];
@@ -66,52 +68,35 @@ export default function MilestoneSelector(props) {
 
   const [calculatorButton, setCalculatorButton] = useState(false);
   const [calculatorDropdown, setCalculatorDropdown] = useState(false);
-  const [ministry, setMinistry] = useState("");
-
-  const methods = useFormContext();
-  const errors = props.errors;
-
-  const defaultValues = {
-    yearsofservice: null,
-    currentmilestone: null,
-    qualifyingyear: null,
-    priormilestones: [],
-  };
+  const [ministryCalc, setMinistryCalc] = useState("");
 
   const { control, setValue, clearErrors, resetField, getValues, watch } =
-    methods;
-
-  const watchYearsOfService = watch(
-    props.itemNumber
-      ? `${props.panelName}.${props.itemNumber - 1}.yearsofservice`
-      : `${panelGroupName}-yearsofservice`
-  );
+    useFormContext();
 
   useEffect(() => {
-    setMinistry(props.ministry);
-  }, [props.ministry]);
+    setMinistryCalc(ministry);
+  }, [ministry]);
+
+  //Monitor years of service change and update fields any time anything new is entered
 
   const onYearsOfServiceChange = () => {
     resetField(`${itemName}currentmilestone`, { defaultValue: null });
     resetField(`${itemName}priormilestones`, { defaultValue: [] });
     resetField(`${itemName}qualifyingyear`, { defaultValue: "" });
 
-    const fieldCalculation = props.itemNumber
-      ? `${itemName}`
-      : `${panelGroupName}-`;
-
     const milestones = formServices.get("milestones") || [];
     const filteredMilestones = milestones.filter(
       (milestone) =>
-        milestone["value"] <= getValues(`${fieldCalculation}yearsofservice`)
+        milestone["value"] <= getValues(`${itemName}yearsofservice`)
     );
     const filteredPriorMilestones = milestones.filter(
-      (milestone) =>
-        milestone["value"] < getValues(`${fieldCalculation}yearsofservice`)
+      (milestone) => milestone["value"] < getValues(`${itemName}yearsofservice`)
     );
     setAvailableMilestones(filteredMilestones);
     setPriorMilestonesAvailable(filteredPriorMilestones);
   };
+
+  const watchYearsOfService = watch(`${itemName}yearsofservice`);
 
   useEffect(() => {
     onYearsOfServiceChange();
@@ -127,7 +112,7 @@ export default function MilestoneSelector(props) {
     formServices.get("currentPinsOnlyOrganizations") || [];
 
   const ministryEligible = currentPinsOnlyOrgs.some(
-    (org) => org["text"] === ministry
+    (org) => org["text"] === ministryCalc
   )
     ? false
     : true;
@@ -159,7 +144,7 @@ export default function MilestoneSelector(props) {
                   "p-error": errors.yearsofservice,
                 })}
               >
-                {`${panelCapitalized} Years of Service`}
+                {`${panelTitle} Years of Service`}
               </label>
               <Controller
                 name={`${itemName}yearsofservice`}
@@ -186,8 +171,8 @@ export default function MilestoneSelector(props) {
               {getFormErrorMessage(
                 `${panelGroupName}-yearsofservice`,
                 errors,
-                props.panelName,
-                props.itemNumber - 1,
+                panelName,
+                itemNumber - 1,
                 "yearsofservice"
               )}
             </div>
@@ -211,7 +196,7 @@ export default function MilestoneSelector(props) {
                 "p-error": errors.currentmilestone,
               })}
             >
-              {`${panelCapitalized} Current Milestone`}
+              {`${panelTitle} Current Milestone`}
             </label>
             <Controller
               name={`${itemName}currentmilestone`}
@@ -244,12 +229,12 @@ export default function MilestoneSelector(props) {
             {getFormErrorMessage(
               `${panelGroupName}-currentmilestone`,
               errors,
-              props.panelName,
-              props.itemNumber - 1,
+              panelName,
+              itemNumber - 1,
               "currentmilestone"
             )}
           </div>
-          {getValues(`${itemName}currentmilestone`) && props.selfregister ? (
+          {getValues(`${itemName}currentmilestone`) && selfregister ? (
             <div className="milestone-form-field-container">
               <label
                 htmlFor={`${itemName}qualifyingyear`}
@@ -257,7 +242,7 @@ export default function MilestoneSelector(props) {
                   "p-error": errors.qualifyingyear,
                 })}
               >
-                {`${panelCapitalized} Qualifying Year`}
+                {`${panelTitle} Qualifying Year`}
               </label>
               <Controller
                 name={`${itemName}qualifyingyear`}
@@ -287,8 +272,8 @@ export default function MilestoneSelector(props) {
               {getFormErrorMessage(
                 `${panelGroupName}-qualifyingyear`,
                 errors,
-                props.panelName,
-                props.itemNumber - 1,
+                panelName,
+                itemNumber - 1,
                 "qualifyingyear"
               )}
             </div>
@@ -302,7 +287,7 @@ export default function MilestoneSelector(props) {
                   "p-error": errors.priormilestones,
                 })}
               >
-                {`${panelCapitalized} Prior Unclaimed Milestone(s) Selected`}
+                {`${panelTitle} Prior Unclaimed Milestone(s) Selected`}
               </label>
               <Controller
                 name={`${itemName}priormilestones`}
@@ -330,8 +315,8 @@ export default function MilestoneSelector(props) {
               {getFormErrorMessage(
                 `${panelGroupName}-priormilestones`,
                 errors,
-                props.panelName,
-                props.itemNumber - 1,
+                panelName,
+                itemNumber - 1,
                 "priormilestones"
               )}
             </div>
