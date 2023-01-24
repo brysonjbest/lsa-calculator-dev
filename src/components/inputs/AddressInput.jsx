@@ -108,11 +108,7 @@ export default function AddressInput({
               />
             )}
           />
-          {getFormErrorMessage(
-            `${addressIdentifier}streetaddress`,
-            `${addressIdentifier}-streetaddress-help`,
-            errors
-          )}
+          {getFormErrorMessage(`${addressIdentifier}streetaddress`, errors)}
         </div>
         <div className="address-form-field-container">
           <label
@@ -136,11 +132,7 @@ export default function AddressInput({
               />
             )}
           />
-          {getFormErrorMessage(
-            `${addressIdentifier}streetaddress2`,
-            `${addressIdentifier}-streetaddress2-help`,
-            errors
-          )}
+          {getFormErrorMessage(`${addressIdentifier}streetaddress2`, errors)}
         </div>
         <div className="address-form-field-container">
           <label
@@ -172,11 +164,7 @@ export default function AddressInput({
               />
             )}
           />
-          {getFormErrorMessage(
-            `${addressIdentifier}citycommunity`,
-            `${addressIdentifier}-citycommunity-help`,
-            errors
-          )}
+          {getFormErrorMessage(`${addressIdentifier}citycommunity`, errors)}
         </div>
         {province ? (
           <div className="address-form-field-container">
@@ -202,11 +190,7 @@ export default function AddressInput({
                 />
               )}
             />
-            {getFormErrorMessage(
-              `${addressIdentifier}provincestate`,
-              `${addressIdentifier}-provincestate-help`,
-              errors
-            )}
+            {getFormErrorMessage(`${addressIdentifier}provincestate`, errors)}
           </div>
         ) : null}
         <div className="address-form-field-container">
@@ -229,11 +213,7 @@ export default function AddressInput({
               />
             )}
           />
-          {getFormErrorMessage(
-            `${addressIdentifier}postalcode`,
-            `${addressIdentifier}-postalcode-help`,
-            errors
-          )}
+          {getFormErrorMessage(`${addressIdentifier}postalcode`, errors)}
         </div>
       </div>
 
@@ -260,11 +240,7 @@ export default function AddressInput({
               />
             )}
           />
-          {getFormErrorMessage(
-            `${addressIdentifier}pobox`,
-            `${addressIdentifier}-pobox-help`,
-            errors
-          ) ? (
+          {getFormErrorMessage(`${addressIdentifier}pobox`, errors) ? (
             <small
               id={`pobox-${addressGroupName}-help`}
               className="validation-error p-error block"

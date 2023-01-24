@@ -36,13 +36,20 @@ export default function ContactDetails({
   itemNumber,
   errors,
 }) {
+  const { control } = useFormContext();
+  //Organization dropdown list - to be moved up
+  const organizations = formServices.get("organizations") || [];
+  const fullOrgList = organizations.concat(
+    formServices.get("currentPinsOnlyOrganizations") || []
+  );
+
+  //Form input name formatting
   let panelGroupName = panelName
     ? `${panelName.replace(/\s/g, "")}`
     : "default";
   if (panelName && itemNumber) {
     panelGroupName += ` ${itemNumber}`;
   }
-
   const panelTitle =
     panelName === "personal" ? "" : formServices.capitalize(panelName) || "";
   const panelPlaceholder =
@@ -50,23 +57,17 @@ export default function ContactDetails({
       ? "Your"
       : formServices.capitalize(panelName) || "";
 
-  const { control } = useFormContext();
+  const formItemName = itemNumber
+    ? `${panelName}.${itemNumber - 1}.`
+    : `${panelGroupName}-`;
 
+  //On blur of ministry selection runs callback with given form value
   const onBlurMinistry = (event) => {
     const currentFormValue =
       formServices.lookup("organizations", event) ||
       formServices.lookup("currentPinsOnlyOrganizations", event);
     ministryRef ? ministryRef(index, currentFormValue) : null;
   };
-
-  const organizations = formServices.get("organizations") || [];
-  const fullOrgList = organizations.concat(
-    formServices.get("currentPinsOnlyOrganizations") || []
-  );
-
-  const formItemName = itemNumber
-    ? `${panelName}.${itemNumber - 1}.`
-    : `${panelGroupName}-`;
 
   return (
     <div className={`contact-details-form-${panelGroupName}`}>
@@ -103,9 +104,10 @@ export default function ContactDetails({
                 />
                 {getFormErrorMessage(
                   `${panelGroupName}-firstname`,
-                  `${panelGroupName}-firstname-help`,
                   errors,
-                  [panelName, itemNumber - 1, "firstname"]
+                  panelName,
+                  itemNumber - 1,
+                  "firstname"
                 )}
               </div>
               <div className="contact-form-field-container">
@@ -135,9 +137,10 @@ export default function ContactDetails({
                 />
                 {getFormErrorMessage(
                   `${panelGroupName}-lastname`,
-                  `${panelGroupName}-lastname-help`,
                   errors,
-                  [panelName, itemNumber - 1, "lastname"]
+                  panelName,
+                  itemNumber - 1,
+                  "lastname"
                 )}
               </div>
               <div className="contact-form-field-container">
@@ -174,9 +177,10 @@ export default function ContactDetails({
                 />
                 {getFormErrorMessage(
                   `${panelGroupName}-governmentemail`,
-                  `${panelGroupName}-government-email-help`,
                   errors,
-                  [panelName, itemNumber - 1, "governmentemail"]
+                  panelName,
+                  itemNumber - 1,
+                  "governmentemail"
                 )}
               </div>
             </div>
@@ -220,9 +224,10 @@ export default function ContactDetails({
                   />
                   {getFormErrorMessage(
                     `${panelGroupName}-governmentphone`,
-                    `${panelGroupName}-government-phone-help`,
                     errors,
-                    [panelName, itemNumber - 1, "governmentphone"]
+                    panelName,
+                    itemNumber - 1,
+                    "governmentphone"
                   )}
                 </div>
               ) : null}
@@ -256,9 +261,10 @@ export default function ContactDetails({
                   />
                   {getFormErrorMessage(
                     `${panelGroupName}-employeenumber`,
-                    `${panelGroupName}-employeenumber-help`,
                     errors,
-                    [panelName, itemNumber - 1, "employeenumber"]
+                    panelName,
+                    itemNumber - 1,
+                    "employeenumber"
                   )}
                 </div>
               ) : null}
@@ -298,9 +304,10 @@ export default function ContactDetails({
                   />
                   {getFormErrorMessage(
                     `${panelGroupName}-ministryorganization`,
-                    `${panelGroupName}-ministryorganization-help`,
                     errors,
-                    [panelName, itemNumber - 1, "ministryorganization"]
+                    panelName,
+                    itemNumber - 1,
+                    "ministryorganization"
                   )}
                 </div>
               ) : null}
@@ -332,9 +339,10 @@ export default function ContactDetails({
                   />
                   {getFormErrorMessage(
                     `${panelGroupName}-branch`,
-                    `${panelGroupName}-branch-help`,
                     errors,
-                    [panelName, itemNumber - 1, "branch"]
+                    panelName,
+                    itemNumber - 1,
+                    "branch"
                   )}
                 </div>
               ) : null}
@@ -378,9 +386,10 @@ export default function ContactDetails({
                 />
                 {getFormErrorMessage(
                   `${panelGroupName}-personalphone`,
-                  `${panelGroupName}-personalphone-help`,
                   errors,
-                  [panelName, itemNumber - 1, "personalphone"]
+                  panelName,
+                  itemNumber - 1,
+                  "personalphone"
                 )}
               </div>
               <div className="contact-form-field-container">
@@ -417,9 +426,10 @@ export default function ContactDetails({
                 />
                 {getFormErrorMessage(
                   `${panelGroupName}-personalemail`,
-                  `${panelGroupName}-personalemail-help`,
                   errors,
-                  [panelName, itemNumber - 1, "personalemail"]
+                  panelName,
+                  itemNumber - 1,
+                  "personalemail"
                 )}
               </div>
             </div>

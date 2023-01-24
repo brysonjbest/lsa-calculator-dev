@@ -14,13 +14,11 @@ import "./MilestoneSelector.css";
 /**
  * Address Input reusable component. Conditional PO Box requirement for address's identified for supervisors.
  * @param {object} props
- * @param {ref} props.submitReference reference for form submission to be handled by parent component
  * @param {boolean} props.selfregister state variable boolean for controlling if all fields are displayed
  * @param {boolean} props.delegated state variable boolean for controlling if all fields are displayed
  * @param {string} props.ministry state describing what ministry has been selected for the user
  * @param {string} props.panelName string describing what panel these contact details belong to ex: Supervisor, Personal
  * @param {integer} props.index index of item within form
- * @param {() => void} props.formSubmit function to execute on form submission
  * @returns
  */
 
@@ -198,9 +196,10 @@ export default function MilestoneSelector(props) {
               />
               {getFormErrorMessage(
                 `${panelGroupName}-yearsofservice`,
-                `${panelGroupName}-yearsofservice-help`,
                 errors,
-                [props.panelName, props.itemNumber - 1, "yearsofservice"]
+                props.panelName,
+                props.itemNumber - 1,
+                "yearsofservice"
               )}
             </div>
             <div className="calculator-button-toggle">
@@ -266,9 +265,10 @@ export default function MilestoneSelector(props) {
             />
             {getFormErrorMessage(
               `${panelGroupName}-currentmilestone`,
-              `${panelGroupName}-currentmilestone-help`,
               errors,
-              [props.panelName, props.itemNumber - 1, "currentmilestone"]
+              props.panelName,
+              props.itemNumber - 1,
+              "currentmilestone"
             )}
           </div>
           {(getValues(`${itemName}.currentmilestone`) ||
@@ -323,9 +323,10 @@ export default function MilestoneSelector(props) {
               />
               {getFormErrorMessage(
                 `${panelGroupName}-qualifyingyear`,
-                `${panelGroupName}-qualifyingyear-help`,
                 errors,
-                [props.panelName, props.itemNumber - 1, "qualifyingyear"]
+                props.panelName,
+                props.itemNumber - 1,
+                "qualifyingyear"
               )}
             </div>
           ) : null}
@@ -382,18 +383,14 @@ export default function MilestoneSelector(props) {
               />
               {getFormErrorMessage(
                 `${panelGroupName}-priormilestones`,
-                `${panelGroupName}-priormilestones-help`,
                 errors,
-                [props.panelName, props.itemNumber - 1, "priormilestones"]
+                props.panelName,
+                props.itemNumber - 1,
+                "priormilestones"
               )}
             </div>
           ) : null}
         </div>
-        <button
-          ref={props.submitReference}
-          type="submit"
-          style={{ display: "none" }}
-        />
       </div>
     </div>
   );

@@ -70,7 +70,7 @@ export default function LSADetails(props) {
                 />
                 <small>Yes, I am a BCGEU member.</small>
               </div>
-              {getFormErrorMessage(`bcgeumember`, `bcgeumember-help`, errors)}
+              {getFormErrorMessage(`bcgeumember`, errors)}
             </div>
 
             <div className="lsa-attendance-form-field-container">
@@ -105,11 +105,7 @@ export default function LSADetails(props) {
                 />
                 <small>Yes, I am retiring this year.</small>
               </div>
-              {getFormErrorMessage(
-                `retiringcurrentyear`,
-                `retiringcurrentyear-help`,
-                errors
-              )}
+              {getFormErrorMessage(`retiringcurrentyear`, errors)}
             </div>
             {isRetiring ? (
               <div className="lsa-attendance-form-field-container">
@@ -151,11 +147,7 @@ export default function LSADetails(props) {
                 />
                 <small>Please select your retirement date.</small>
 
-                {getFormErrorMessage(
-                  `retirementdate`,
-                  `retirementdate-help`,
-                  errors
-                )}
+                {getFormErrorMessage(`retirementdate`, errors)}
               </div>
             ) : null}
             <div className="lsa-attendance-form-field-container">
@@ -190,11 +182,7 @@ export default function LSADetails(props) {
                   the ceremony.
                 </small>
               </div>
-              {getFormErrorMessage(
-                `ceremonyoptout`,
-                `ceremonyoptout-help`,
-                errors
-              )}
+              {getFormErrorMessage(`ceremonyoptout`, errors)}
             </div>
           </div>
         </div>

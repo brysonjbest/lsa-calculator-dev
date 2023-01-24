@@ -55,9 +55,10 @@ export default function AwardSelector({
           <AwardForm errors={errors} option={option} />
           {getFormErrorMessage(
             `${option.name}`,
-            `${option.name}-help`,
             errors,
-            ["awardoptions", 0, option.name]
+            "awardoptions",
+            0,
+            option.name
           )}
         </li>
       </div>
@@ -79,7 +80,7 @@ export default function AwardSelector({
             ) : null}
           </div>
           <ul className="options-list">
-            {pecsfOptions ? <PecsfForm errors /> : listOptions}
+            {pecsfOptions ? <PecsfForm errors={errors} /> : listOptions}
           </ul>
           <div className="options-list-action">
             <AppButton

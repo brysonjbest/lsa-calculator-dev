@@ -57,7 +57,7 @@ export default function PecsfForm(props) {
     errormessage,
   }) {
     return (
-      <div>
+      <>
         <Controller
           name={`${formName}.${name}`}
           control={control}
@@ -86,11 +86,12 @@ export default function PecsfForm(props) {
         />
         {getFormErrorMessage(
           `awardoptions.${0}.${name}`,
-          `awardoptions.${0}.${name}-help`,
           errors,
-          ["awardoptions", 0, name]
+          "awardoptions",
+          0,
+          name
         )}
-      </div>
+      </>
     );
   }
 
@@ -184,9 +185,10 @@ export default function PecsfForm(props) {
           </div>
           {getFormErrorMessage(
             `${"donation-choice"}`,
-            `${"donation-choice"}-help`,
             errors,
-            ["awardoptions", 0, "donation-choice"]
+            "awardoptions",
+            0,
+            "donation-choice"
           )}
         </li>
       </div>
@@ -318,10 +320,11 @@ export default function PecsfForm(props) {
           You can make the donation in memory or in honour of someone
         </small>
         {getFormErrorMessage(
-          `${"donation-certificate"}`,
-          `${"donation-certificate"}-help`,
+          `donation-certificate`,
           errors,
-          ["awardoptions", 0, "donation-certificate"]
+          "awardoptions",
+          0,
+          "donation-certificate"
         )}
       </div>
     </div>
