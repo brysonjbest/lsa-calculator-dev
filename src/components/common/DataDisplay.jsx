@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-//temporary use of apiservices to pull in example data for formatting prior to api being ready - to reformat when doing api proper
 import formServices from "../../services/settings.services";
 import "./DataDisplay.css";
 
@@ -68,7 +67,7 @@ export default function DataDisplay(props) {
         <DataTable
           value={userData}
           responsiveLayout="stack"
-          breakpoint={props.stacked ? "100vw" : "960px"}
+          breakpoint={props.stacked ? "100vw" : "1240px"}
         >
           {dynamicColumns}
         </DataTable>

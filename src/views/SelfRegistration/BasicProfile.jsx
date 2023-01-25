@@ -6,6 +6,7 @@ import { RegistrationContext, ToastContext } from "../../UserContext";
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
 import ContactDetails from "../../components/inputs/ContactDetails";
+import InfoToolTip from "../../components/common/InfoToolTip";
 import formServices from "../../services/settings.services";
 import "./BasicProfile.css";
 
@@ -109,7 +110,17 @@ export default function BasicProfile() {
       <div className="self-registration basic-profile">
         <FormProvider {...methods}>
           <form className="basic-details-form">
-            <AppPanel header="Profile Details">
+            <AppPanel
+              header={
+                <>
+                  Profile Details
+                  <InfoToolTip
+                    target="basic-details-form"
+                    content="Enter your basic profile information on this page. This information will be used to populate the options available to you for this registration."
+                  />
+                </>
+              }
+            >
               <ContactDetails
                 basic
                 extended
