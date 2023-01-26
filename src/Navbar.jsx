@@ -1,6 +1,6 @@
+import React, { useRef, useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Menu } from "primereact/menu";
-import { useRef, useContext } from "react";
 import "./Navbar.css";
 import AppButton from "./components/common/AppButton";
 import { UserContext } from "./UserContext";
@@ -8,37 +8,23 @@ import { UserContext } from "./UserContext";
 const Navbar = () => {
   const dropdown = useRef(null);
   const { user } = useContext(UserContext);
+
+  //Update navbar items based on screen width
+  const adaptiveWidth = 770;
+  const [screenSize, setScreenSize] = useState(
+    window.innerWidth > adaptiveWidth
+  );
+
+  const updateNavItems = () => {
+    setScreenSize(window.innerWidth > adaptiveWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", updateNavItems);
+    return () => window.removeEventListener("resize", updateNavItems);
+  });
+
   const pages = [
-    {
-      label: "Calculator Landing",
-      template: () => {
-        return (
-          <Link to="/calculator" className="p-menuitem-link">
-            Calculator Landing
-          </Link>
-        );
-      },
-    },
-    {
-      label: "Calculator Delegated",
-      template: () => {
-        return (
-          <Link to="/delegated" className="p-menuitem-link">
-            Calculator Delegated
-          </Link>
-        );
-      },
-    },
-    {
-      label: "Calculator Personal",
-      template: () => {
-        return (
-          <Link to="/personal" className="p-menuitem-link">
-            Calculator Personal
-          </Link>
-        );
-      },
-    },
     {
       label: "Self-Registration",
       items: [
@@ -116,6 +102,33 @@ const Navbar = () => {
     },
   ];
 
+  const mobilePages = [
+    {
+      label: "Registration Start",
+      template: () => {
+        return (
+          <a
+            href="https://longserviceawards.gww.gov.bc.ca/"
+            target={"_blank"}
+            className="p-menuitem-link"
+          >
+            About
+          </a>
+        );
+      },
+    },
+    {
+      label: "Registration Start",
+      template: () => {
+        return (
+          <Link to="/calculator" className="p-menuitem-link">
+            Service Calculator
+          </Link>
+        );
+      },
+    },
+  ];
+
   return (
     <>
       <nav className="navbar">
@@ -135,12 +148,20 @@ const Navbar = () => {
                 About
               </a>
             </li>
+            <li className="navigation-item">
+              <Link to="/calculator">Service Calculator</Link>
+            </li>
           </div>
           <div>
             <li style={{ float: "right !important" }}>
-              <Menu model={pages} popup ref={dropdown} id="navbar-dropdown" />
+              <Menu
+                model={screenSize ? pages : mobilePages.concat(pages)}
+                popup
+                ref={dropdown}
+                id="navbar-dropdown"
+              />
               <AppButton
-                icon="pi pi-bars"
+                icon={!screenSize ? "pi pi-bars" : ""}
                 onClick={(event) => dropdown.current.toggle(event)}
                 aria-controls="navbar-dropdown"
                 aria-haspopup

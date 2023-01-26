@@ -1,18 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
+
+import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
 
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
 import ContactDetails from "../../components/inputs/ContactDetails";
 import MilestoneSelector from "../../components/inputs/MilestoneSelector";
+import { ToastContext } from "../../UserContext";
 
 /**
  * Composite component builds a list of employees with user ability to increase/decrease number of employees in form
  * @param {object} props.errors inherited form errors object
- * @returns 
+ * @returns
  */
 
 const EmployeeList = ({ errors }) => {
+  const toast = useContext(ToastContext);
   const { control, reset } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
@@ -22,6 +26,27 @@ const EmployeeList = ({ errors }) => {
 
   const [employees, setEmployees] = useState({});
   const [resetList, setResetList] = useState(false);
+
+  const acceptreset = () => {
+    toast.current.show({
+      severity: "info",
+      summary: "Confirmed",
+      detail: "Form Reset",
+      life: 2000,
+    });
+    setResetList(!resetList);
+  };
+
+  const confirmReset = (event) => {
+    confirmPopup({
+      target: event.currentTarget,
+      message:
+        "Are you sure you want to reset the form? This will reset all fields.",
+      icon: "pi pi-exclamation-triangle",
+      accept: acceptreset,
+      reject: null,
+    });
+  };
 
   useEffect(() => {
     reset({
@@ -115,8 +140,15 @@ const EmployeeList = ({ errors }) => {
         >
           Add Another Employee
         </AppButton>
-        <AppButton danger onClick={() => setResetList(!resetList)}>
-          Reset Employees
+        <ConfirmPopup />
+        <AppButton
+          danger
+          onClick={(e) => {
+            e.preventDefault();
+            confirmReset(e);
+          }}
+        >
+          Reset Form
         </AppButton>
       </div>
     </>

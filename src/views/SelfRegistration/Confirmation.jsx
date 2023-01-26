@@ -3,6 +3,7 @@ import { useForm, FormProvider, Controller } from "react-hook-form";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { RegistrationContext, ToastContext } from "../../UserContext";
 import { Checkbox } from "primereact/checkbox";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 
 import classNames from "classnames";
 import AppButton from "../../components/common/AppButton";
@@ -242,6 +243,22 @@ export default function Confirmation() {
         ) : null}
       </div>
     );
+  };
+
+  const finalConfirm = () => {
+    console.log("finalConfirm has worked");
+    handleSubmit(submitData)();
+  };
+
+  const confirmSubmit = (event) => {
+    confirmDialog({
+      target: event.currentTarget,
+      message:
+        "Are you sure you want to submit?\n This action cannot be undone.\n Confirm that you have double checked all details, and your selections are correct.",
+      icon: "pi pi-exclamation-triangle",
+      accept: finalConfirm,
+      reject: null,
+    });
   };
 
   return (
@@ -518,9 +535,13 @@ export default function Confirmation() {
                   id="confirmation-final-submission-details"
                   className="submission-buttons"
                 >
+                  <ConfirmDialog />
                   <AppButton
                     secondary
-                    onClick={handleSubmit(submitData)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      confirmSubmit(e);
+                    }}
                     disabled={!declaration || !registrationReady}
                   >
                     Confirm/Submit
