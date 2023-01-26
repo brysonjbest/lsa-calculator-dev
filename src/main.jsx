@@ -31,9 +31,14 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Splash /> },
-      { path: "calculator", element: <CalculatorLanding /> },
-      { path: "delegated", element: <CalculatorDelegated /> },
-      { path: "personal", element: <CalculatorPersonal /> },
+      {
+        path: "calculator",
+        element: <CalculatorLanding />,
+        children: [
+          { path: "delegated", element: <CalculatorDelegated /> },
+          { path: "personal", element: <CalculatorPersonal /> },
+        ],
+      },
       {
         path: "register",
         element: <PanelHeader />,

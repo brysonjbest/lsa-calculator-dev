@@ -46,8 +46,17 @@ ul {
     gap: 1rem;
 }
 
+.employee-list-options {
+    display: flex;
+    gap: 1rem;
+}
+
 .calculator-splash {
     width: clamp(285px, 90vw, 95rem);
+}
+
+.calculator-button-toggle {
+    margin-top: 1rem;
 }
 
 .p-datatable-table {

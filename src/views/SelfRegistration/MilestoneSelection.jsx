@@ -6,6 +6,7 @@ import { RegistrationContext, ToastContext } from "../../UserContext";
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
 import MilestoneSelector from "../../components/inputs/MilestoneSelector";
+import InfoToolTip from "../../components/common/InfoToolTip";
 
 import formServices from "../../services/settings.services";
 
@@ -142,7 +143,51 @@ export default function MilestoneSelection() {
       <div className="self-registration basic-profile">
         <FormProvider {...methods}>
           <form className="milestones-form">
-            <AppPanel header="Milestone Details">
+            <AppPanel header="Milestones Information" collapsed toggleable>
+              <div className="information-only-panel">
+                <p>
+                  Eligibility for service recognition programs is calculated
+                  differently than pensionable time.
+                  <ul>
+                    <li>
+                      Calculate your years of service by counting the calendar
+                      years you’ve been working for an eligible organization,
+                      including the year you started and the current year.{" "}
+                    </li>
+                    <li>
+                      Time worked as a seasonal, co-op, part-time or auxiliary
+                      employee counts.
+                    </li>
+                    <li>
+                      Your service time is calculated based on cumulative
+                      service time, rather than continuous.{" "}
+                    </li>
+                    <li>
+                      That means any time worked prior to a break in service
+                      counts towards your service time. Periods of leave with
+                      pay (STIIP, maternity/parental leave, educational leave,
+                      deferred salary leave, LTD up to a maximum of two years)
+                      count towards years of service, but unpaid leave does not.
+                    </li>
+                  </ul>
+                </p>
+                <p>
+                  Contact Careers & MyHR if you need to confirm your individual
+                  service dates.
+                </p>
+              </div>
+            </AppPanel>
+            <AppPanel
+              header={
+                <>
+                  Milestone Details
+                  <InfoToolTip
+                    target="milestones-form"
+                    content="Enter your years of service and claim milestones in recognition of years served."
+                  />
+                </>
+              }
+            >
               <MilestoneSelector
                 selfregister
                 panelName="personal"

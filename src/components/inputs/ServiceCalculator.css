@@ -5,6 +5,18 @@ ul {
 
 .service-calculator-component {
     text-align: left;
+    border: 1px solid #dee2e6;
+    border-radius: 25px;
+    background: #f8f9fa;
+    padding: .5rem;
+    margin: .5rem;
+}
+
+.service-calculator-header {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    justify-content: space-between;
 }
 
 .service-calculator-fields {

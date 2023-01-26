@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
+import { Dialog } from "primereact/dialog";
 
 import AppButton from "../common/AppButton";
 import InfoToolTip from "../common/InfoToolTip";
@@ -14,6 +15,11 @@ import "./ServiceCalculator.css";
  */
 
 export default function ServiceCalculator({ formSubmit }) {
+  const [displayHelp, setDisplayHelp] = useState(false);
+  const toggleHelp = () => {
+    setDisplayHelp(!displayHelp);
+  };
+
   const { control, handleSubmit, reset, setValue, getValues } = useForm({
     defaultValues: {
       serviceCalculator: [{ startYear: "", endYear: "", years: "" }],
@@ -81,6 +87,54 @@ export default function ServiceCalculator({ formSubmit }) {
 
   return (
     <div className="service-calculator-component">
+      <span className="service-calculator-header">
+        <h4>Years of Service Calculator</h4>
+        <AppButton
+          icon="pi pi-question-circle"
+          onClick={(e) => {
+            {
+              e.preventDefault();
+              toggleHelp();
+            }
+          }}
+        >
+          Help
+        </AppButton>
+      </span>
+      <Dialog
+        header="How to use the years of service calculator"
+        visible={displayHelp}
+        style={{ width: "90vw" }}
+        onHide={() => toggleHelp()}
+        className="information-only-panel"
+      >
+        <p>You only need to input years.</p>
+        <p>
+          Enter your start year and your end year to check eligibility. Since
+          service is cumulative, you can add additional rows to account for any
+          breaks in service. Enter each group of continuous years on separate
+          lines.
+        </p>
+        <p>For example:</p>
+        <ul>
+          <li>
+            If you have been working with no breaks in service since 2008, enter
+            “2008” as your start year and the current calendar year as your end
+            year.
+          </li>
+          <li>
+            If you worked from 2008 to 2010, had a two year break in service and
+            then resumed service in 2012, enter “2008” as the start year and
+            “2010” as the end year. Then add another row and enter “2012” as the
+            start year and current calendar year as the end year.
+          </li>
+        </ul>
+        <p>
+          Note: If an end year is not set, the calculator will use the start
+          year as the end year. If the start year is later than the end year,
+          the row will be calculated as 0 years.
+        </p>
+      </Dialog>
       <ul>
         {fields.map((item, index) => {
           return (
@@ -205,7 +259,7 @@ export default function ServiceCalculator({ formSubmit }) {
           </span>
           <InfoToolTip
             target="total-years-counter"
-            content="Total Year count may differ from years of service per row, as duplicated years are only counted once."
+            content="Total Years count may differ from years of service per row, as duplicated years are only counted once."
           />
         </div>
         <AppButton onClick={handleSubmit(onSubmit)}>

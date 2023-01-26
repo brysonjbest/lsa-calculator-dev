@@ -25,4 +25,6 @@
 .calculator-button-toggle {
     display: flex;
     height: fit-content;
+    align-items: center;
+    gap: .5rem;
 }

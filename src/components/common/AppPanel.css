@@ -7,11 +7,6 @@
 
 }
 
-.p-panel-title {
-    display: flex;
-    gap: .5rem;
-}
-
 .p-panel-header-full {
     padding: 0 !important;
 }

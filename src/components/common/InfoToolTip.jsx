@@ -20,6 +20,7 @@ export default function InfoToolTip(props) {
         target={`.info-${props.target}`}
         content={props.content}
         event="both"
+        position={props.position || "right"}
       />
 
       <i className={infoClass}></i>

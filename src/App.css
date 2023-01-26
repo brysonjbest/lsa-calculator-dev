@@ -73,3 +73,17 @@
   z-index: 9998 !important;
   margin: auto;
 }
+
+.self-registration .p-panel-title {
+    display: flex;
+    gap: .5rem;
+} 
+
+.information-only-panel {
+  & p {
+    margin: .5rem 0;
+  }
+  & li {
+  list-style: inside !important;
+}
+}

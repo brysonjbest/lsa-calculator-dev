@@ -123,12 +123,6 @@ export default function Award() {
     if (registration["awardID"]) {
       setChosenAward(registration["awardID"]);
       setAwardSelected(true);
-      console.log(
-        registration["awardID"],
-        chosenAward,
-        awardSelected,
-        "status of state"
-      );
     }
     setAwards();
   }, []);

@@ -10,6 +10,7 @@ import getFormErrorMessage from "../../services/helpers/ErrorMessage";
 
 import classNames from "classnames";
 import "./MilestoneSelector.css";
+import InfoToolTip from "../common/InfoToolTip";
 
 /**
  * Milestones reusable component.
@@ -18,7 +19,7 @@ import "./MilestoneSelector.css";
  * @param {string} props.ministry state describing what ministry has been selected for the user
  * @param {object} props.errors inherited form errors object
  * @param {string} props.panelName string describing what panel these contact details belong to ex: Supervisor, Personal
-  * @param {integer} props.itemNumber index of item within sublist; when used multiple times in a form, contact details will be registered as a separate item on form
+ * @param {integer} props.itemNumber index of item within sublist; when used multiple times in a form, contact details will be registered as a separate item on form
  * @returns
  */
 
@@ -165,6 +166,8 @@ export default function MilestoneSelector({
                       "p-invalid": fieldState.error,
                     })}
                     placeholder={`Enter ${panelPlaceholder} years of service`}
+                    tooltip="Enter your total years of service. Only individuals with 25+ years of service are eligible for the Long Service Awards."
+                    tooltipOptions={{ position: "right" }}
                   />
                 )}
               />
@@ -184,6 +187,11 @@ export default function MilestoneSelector({
               >
                 {calculatorButton ? "Hide Calculator" : "Show Calculator"}
               </AppButton>
+              <InfoToolTip
+                target="calculator-button"
+                content="Use the calculator if you are not sure of the total years of service you have worked."
+                position="top"
+              />
             </div>
           </div>
           {calculatorDropdown ? (
@@ -223,6 +231,8 @@ export default function MilestoneSelector({
                     "p-invalid": fieldState.error,
                   })}
                   placeholder={`Select ${panelPlaceholder} current milestone.`}
+                  tooltip="Service Pin Milestone Years include: 5, 10, 15, 20. Service Pin and LSA Milestone Years include: 25, 30, 35, 40, 45, 50."
+                  tooltipOptions={{ position: "top" }}
                 />
               )}
             />
@@ -262,6 +272,8 @@ export default function MilestoneSelector({
                     aria-describedby={`${panelGroupName}-qualifyingyear-help`}
                     options={qualifyingYears}
                     optionLabel="text"
+                    tooltip="Select the year that you qualified for your current milestone."
+                    tooltipOptions={{ position: "top" }}
                     className={classNames("form-field block", {
                       "p-invalid": fieldState.error,
                     })}
@@ -305,6 +317,8 @@ export default function MilestoneSelector({
                     aria-describedby={`${panelGroupName}-priormilestones-help`}
                     options={priorMilestonesAvailable}
                     optionLabel="text"
+                    tooltip="If prior Service Pins have not been claimed, use this field to submit your claim for eligibility for those years."
+                    tooltipOptions={{ position: "top" }}
                     className={classNames("form-field block", {
                       "p-invalid": fieldState.error,
                     })}
