@@ -129,12 +129,15 @@ export default function Award() {
 
   if (!isLSAEligible) return <LSAIneligible />;
 
+  const currentMilestone = registration["personal-currentmilestone"] || null;
+
   return (
     <>
       <div className="self-registration award-profile">
         <FormProvider {...methods}>
           <form className="award-details-form">
             <AwardSelector
+              milestone={currentMilestone}
               errors={errors}
               chosenAward={chosenAward}
               submitAward={submitSelection}

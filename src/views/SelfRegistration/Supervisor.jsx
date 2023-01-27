@@ -7,6 +7,7 @@ import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
 import AddressInput from "../../components/inputs/AddressInput";
 import ContactDetails from "../../components/inputs/ContactDetails";
+import InfoToolTip from "../../components/common/InfoToolTip";
 
 import formServices from "../../services/settings.services";
 
@@ -93,10 +94,37 @@ export default function Supervisor() {
       <div className="self-registration supervisor-profile">
         <FormProvider {...methods}>
           <form className="supervisor-details-form">
-            <AppPanel header="Supervisor Details">
+            <AppPanel
+              header={
+                <>
+                  <span className="supervisor-details-profile">
+                    Supervisor Details
+                  </span>
+
+                  <InfoToolTip
+                    target="supervisor-details-profile"
+                    content="Please enter the contact information of your current supervisor."
+                  />
+                </>
+              }
+            >
               <ContactDetails basic panelName="supervisor" errors={errors} />
             </AppPanel>
-            <AppPanel header="Supervisor Office Address">
+            <AppPanel
+              header={
+                <>
+                  <span className="supervisor-details-office">
+                    Supervisor Office Address
+                  </span>
+
+                  <InfoToolTip
+                    target="supervisor-details-office"
+                    content="Please enter the local office address of your current supervisor."
+                    position="top"
+                  />
+                </>
+              }
+            >
               <AddressInput
                 pobox
                 addressIdentifier="supervisor"

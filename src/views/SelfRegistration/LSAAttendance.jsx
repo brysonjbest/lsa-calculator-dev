@@ -7,6 +7,7 @@ import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
 import LSADetails from "../../components/inputs/LSADetails";
 import LSAIneligible from "../../components/composites/LSAIneligible";
+import InfoToolTip from "../../components/common/InfoToolTip";
 
 import formServices from "../../services/settings.services";
 
@@ -102,8 +103,19 @@ export default function LSAAttendance() {
     <>
       <div className="self-registration basic-profile">
         <FormProvider {...methods}>
-          <form className="basic-details-form">
-            <AppPanel header="LSA Attendance Details">
+          <form className="lsa-attendance-form">
+            <AppPanel
+              header={
+                <>
+                  Long Service Awards Attendance Details
+                  <InfoToolTip
+                    target="lsa-attendance-form"
+                    content="Please provide your employment status and attendance plans for the Long Service Awards below."
+                    position="top"
+                  />
+                </>
+              }
+            >
               <LSADetails panelName="personal" errors={errors} />
             </AppPanel>
             <div className="submission-buttons">

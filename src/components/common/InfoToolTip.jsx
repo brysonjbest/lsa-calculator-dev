@@ -6,6 +6,7 @@ import classNames from "classnames";
  * @param {object} props
  * @param {string} props.target the custom target classname for the icon
  * @param {string} props.content the content of the tooltip
+ * @param {string} props.position the location of the tooltip
  * @returns
  */
 

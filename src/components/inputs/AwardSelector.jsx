@@ -11,10 +11,12 @@ import "./AwardSelector.css";
 import GalleryDisplay from "../common/GalleryDisplay";
 import PecsfForm from "./PecsfForm";
 import AwardForm from "./AwardForm";
+import InfoToolTip from "../common/InfoToolTip";
 
 /**
  * Award Selection Component.
  * @param {object} props
+ * @param {string} props.milestone The milestone year of the available awards.
  * @param {Array} props.awards Array of award items that populate the available awards options in the gallery
  * @param {string} props.chosenAward The id of the chosen award.
  * @param {()=> void} props.submitAward callback to run on award selection
@@ -23,6 +25,7 @@ import AwardForm from "./AwardForm";
  */
 
 export default function AwardSelector({
+  milestone,
   awards,
   chosenAward,
   submitAward,
@@ -125,11 +128,24 @@ export default function AwardSelector({
     setAwardChosen(chosenAward);
   }, [chosenAward]);
 
+  const milestoneYear = milestone
+    ? `Current Milestone - ${milestone} Years`
+    : "";
+
   return (
     <div className={`award-selection-form`}>
       <GalleryDisplay
         onClick={awardSelect}
-        header="Award Options"
+        header={
+          <>
+            <span>Award Options: {milestoneYear}</span>
+            <InfoToolTip
+              target="award-selection-form"
+              content="As a LSA recipient, you are eligible to select an award for your current milestone. Please select from the available options below."
+              position="top"
+            />
+          </>
+        }
         itemSet={availableAwards}
         chosenAward={awardChosen}
       />

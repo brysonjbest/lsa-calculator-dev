@@ -166,7 +166,7 @@ export default function MilestoneSelector({
                       "p-invalid": fieldState.error,
                     })}
                     placeholder={`Enter ${panelPlaceholder} years of service`}
-                    tooltip="Enter your total years of service. Only individuals with 25+ years of service are eligible for the Long Service Awards."
+                    tooltip="Enter total years of service. Only individuals with 25+ years of service are eligible for the Long Service Awards."
                     tooltipOptions={{ position: "right" }}
                   />
                 )}
@@ -189,7 +189,7 @@ export default function MilestoneSelector({
               </AppButton>
               <InfoToolTip
                 target="calculator-button"
-                content="Use the calculator if you are not sure of the total years of service you have worked."
+                content="Use the calculator if you are not sure of the total years of service worked."
                 position="top"
               />
             </div>
@@ -272,7 +272,7 @@ export default function MilestoneSelector({
                     aria-describedby={`${panelGroupName}-qualifyingyear-help`}
                     options={qualifyingYears}
                     optionLabel="text"
-                    tooltip="Select the year that you qualified for your current milestone."
+                    tooltip="Select the year that qualified for the current milestone."
                     tooltipOptions={{ position: "top" }}
                     className={classNames("form-field block", {
                       "p-invalid": fieldState.error,
@@ -317,7 +317,7 @@ export default function MilestoneSelector({
                     aria-describedby={`${panelGroupName}-priormilestones-help`}
                     options={priorMilestonesAvailable}
                     optionLabel="text"
-                    tooltip="If prior Service Pins have not been claimed, use this field to submit your claim for eligibility for those years."
+                    tooltip="If prior Service Pins have not been claimed, use this field to submit a claim of eligibility for those years."
                     tooltipOptions={{ position: "top" }}
                     className={classNames("form-field block", {
                       "p-invalid": fieldState.error,

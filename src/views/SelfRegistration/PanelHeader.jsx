@@ -27,7 +27,10 @@ export default function PanelHeader() {
     profile: { text: "Your Basic Profile Information", index: 0 },
     milestone: { text: "Identify your milestones", index: 1 },
     details: { text: "Additional Profile Information", index: 2 },
-    attendance: { text: "Your LSA Attendance Details", index: 3 },
+    attendance: {
+      text: "Your Long Service Awards Attendance Details",
+      index: 3,
+    },
     award: { text: "Award Selection", index: 4 },
     supervisor: {
       text: "Your Supervisor Information",

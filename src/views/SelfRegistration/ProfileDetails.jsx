@@ -7,6 +7,7 @@ import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
 import ContactDetails from "../../components/inputs/ContactDetails";
 import AddressInput from "../../components/inputs/AddressInput";
+import InfoToolTip from "../../components/common/InfoToolTip";
 
 import formServices from "../../services/settings.services";
 
@@ -106,7 +107,19 @@ export default function ProfileDetails() {
           <form className="additional-details-form">
             {isLSAEligible ? (
               <>
-                <AppPanel header="Personal Contact Details">
+                <AppPanel
+                  header={
+                    <>
+                      <span className="additional-details-personal-contact">
+                        Personal Contact Details
+                      </span>
+                      <InfoToolTip
+                        target="additional-details-personal-contact"
+                        content="Personal Contact Details are required for Long Service Award recipients."
+                      />
+                    </>
+                  }
+                >
                   <ContactDetails
                     personalContact
                     panelName="personal"
@@ -114,7 +127,20 @@ export default function ProfileDetails() {
                   />
                 </AppPanel>
 
-                <AppPanel header="Personal Address">
+                <AppPanel
+                  header={
+                    <>
+                      <span className="additional-details-personal-address">
+                        Personal Address
+                      </span>
+
+                      <InfoToolTip
+                        target="additional-details-personal-address"
+                        content="Personal Address Details are required for Long Service Award recipients."
+                      />
+                    </>
+                  }
+                >
                   <AddressInput
                     province
                     addressIdentifier="personal"
@@ -123,7 +149,20 @@ export default function ProfileDetails() {
                 </AppPanel>
               </>
             ) : null}
-            <AppPanel header="Office Address">
+            <AppPanel
+              header={
+                <>
+                  <span className="additional-details-office-address">
+                    Office Address
+                  </span>
+
+                  <InfoToolTip
+                    target="additional-details-office-address"
+                    content="Please enter your current local office address."
+                  />
+                </>
+              }
+            >
               <AddressInput addressIdentifier="office" errors={errors} />
             </AppPanel>
             <div className="submission-buttons">

@@ -22,3 +22,9 @@
 .options-list {
     /* width: fit-content; */
 }
+
+.gallery-display-header > div:first-of-type {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+} 
