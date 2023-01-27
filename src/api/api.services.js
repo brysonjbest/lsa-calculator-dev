@@ -1,3 +1,24 @@
+/*!
+ * API services (React)
+ * File: api.services.js
+ * Copyright(c) 2023 BC Gov
+ * MIT Licensed
+ */
+
+import axios from "axios";
+import temp from "./temp.json";
+
+const api = axios.create({
+  baseURL: import.meta.env.LSA_APPS_API_URL,
+  headers: {
+    "Content-Type": "application/json",
+    dataType: "json",
+  },
+  withCredentials: true,
+});
+
+export default api;
+
 export async function getUserData() {
   return {
     id: "512350",
@@ -7,56 +28,61 @@ export async function getUserData() {
 }
 
 export async function getRegistrationData(userData) {
-  return {
-    submitted: false,
-    "personal-firstname": "testapifirstname",
-    "personal-lastname": "testlastname",
-    "personal-governmentemail": "testemail@test.com",
-    "personal-governmentphone": "(604) 525-2525",
-    "personal-employeenumber": "2138adse12",
-    "personal-ministryorganization": "org-10",
-    "personal-branch": "testbranch",
-    "personal-currentmilestone": 25,
-    "personal-priormilestones": [20, 15],
-    "personal-qualifyingyear": 2023,
-    "personal-yearsofservice": 25,
-    officecitycommunity: "Toronto",
-    officecountry: "Canada",
-    officepostalcode: "M4K 2P9",
-    officestreetaddress: "855 Broadview Avenue",
-    officestreetaddress2: "",
-    "personal-personalemail": "personalEmail@test.com",
-    "personal-personalphone": "(778) 525-2525",
-    personalcitycommunity: "Sunnyvale",
-    personalcountry: "United States",
-    personalpostalcode: "94086-2919",
-    personalprovincestate: "California",
-    personalstreetaddress: "785 East El Camino Real",
-    personalstreetaddress2: "",
-    awardID: "1001",
-    awarddescription: "A magnificent painting of a Whale Tail",
-    awardname: "Whale Tail Painting",
-    awardoptions: [
-      {
-        inscription: "testing",
-        paintingtype: "oil",
-        whaletype: "orca",
-        paintingtools: ["fork", "brush", "spoon"],
-      },
-    ],
-    "supervisor-firstname": "testingSuperFirst",
-    "supervisor-lastname": "testingSuperLast",
-    "supervisor-governmentemail": "superemail@test.com",
-    supervisorstreetaddress: "123 Fake Street",
-    supervisorstreetaddress2: "Apartment 2",
-    supervisorcitycommunity: "Victoria",
-    supervisorpostalcode: "V8T0R2",
-    supervisorpobox: "98563",
-    retirementdate: new Date("Dec 27 2023"),
-    retiringcurrentyear: true,
-    bcgeumember: true,
-    ceremonyoptout: true,
-  };
+  if (userData.idir === "BBEST") {
+    return temp;
+    //  {
+    //   submitted: false,
+    //   "personal-firstname": "testapifirstname",
+    //   "personal-lastname": "testlastname",
+    //   "personal-governmentemail": "testemail@test.com",
+    //   "personal-governmentphone": "(604) 525-2525",
+    //   "personal-employeenumber": "2138adse12",
+    //   "personal-ministryorganization": "org-10",
+    //   "personal-branch": "testbranch",
+    //   "personal-currentmilestone": 25,
+    //   "personal-priormilestones": [20, 15],
+    //   "personal-qualifyingyear": 2023,
+    //   "personal-yearsofservice": 25,
+    //   officecitycommunity: "Toronto",
+    //   officecountry: "Canada",
+    //   officepostalcode: "M4K 2P9",
+    //   officestreetaddress: "855 Broadview Avenue",
+    //   officestreetaddress2: "",
+    //   "personal-personalemail": "personalEmail@test.com",
+    //   "personal-personalphone": "(778) 525-2525",
+    //   personalcitycommunity: "Sunnyvale",
+    //   personalcountry: "United States",
+    //   personalpostalcode: "94086-2919",
+    //   personalprovincestate: "California",
+    //   personalstreetaddress: "785 East El Camino Real",
+    //   personalstreetaddress2: "",
+    //   awardID: "1001",
+    //   awarddescription: "A magnificent painting of a Whale Tail",
+    //   awardname: "Whale Tail Painting",
+    //   awardoptions: [
+    //     {
+    //       inscription: "testing",
+    //       paintingtype: "oil",
+    //       whaletype: "orca",
+    //       paintingtools: ["fork", "brush", "spoon"],
+    //     },
+    //   ],
+    //   "supervisor-firstname": "testingSuperFirst",
+    //   "supervisor-lastname": "testingSuperLast",
+    //   "supervisor-governmentemail": "superemail@test.com",
+    //   supervisorstreetaddress: "123 Fake Street",
+    //   supervisorstreetaddress2: "Apartment 2",
+    //   supervisorcitycommunity: "Victoria",
+    //   supervisorpostalcode: "V8T0R2",
+    //   supervisorpobox: "98563",
+    //   retirementdate: new Date("Dec 27 2023"),
+    //   retiringcurrentyear: true,
+    //   bcgeumember: true,
+    //   ceremonyoptout: true,
+    // };
+  } else {
+    return {};
+  }
 }
 
 export async function getAvailableAwards(milestone) {

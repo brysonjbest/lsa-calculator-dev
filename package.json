@@ -10,6 +10,7 @@
     "cypress": "npx cypress open"
   },
   "dependencies": {
+    "axios": "^1.2.5",
     "classnames": "^2.3.2",
     "dotenv": "^16.0.3",
     "postcss-nesting": "^10.2.0",

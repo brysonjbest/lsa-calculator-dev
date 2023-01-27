@@ -45,6 +45,10 @@ export default function LSAAttendance() {
   const saveData = (data) => {
     const registrationData = registration;
     const finalData = Object.assign({}, data);
+    const date = finalData.retirementdate
+      ? new Date(finalData.retirementdate).getTime()
+      : null;
+    console.log("this is date", date);
     try {
       toast.current.show(formServices.lookup("messages", "save"));
       //submit to api - submits current registration to api and updates current registration context with return from api
@@ -58,6 +62,14 @@ export default function LSAAttendance() {
       console.log(
         registrationUpdate,
         "this update is checking spread operator"
+      );
+      const finalRegistrationPost = {
+        ...registrationUpdate,
+        ...{ retirementdate: date },
+      };
+      console.log(
+        "this should be posted and needs testing - but posts final date to api in utc",
+        finalRegistrationPost
       );
       setRegistration(registrationUpdate);
       setFormComplete(true);
