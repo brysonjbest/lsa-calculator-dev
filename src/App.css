@@ -87,3 +87,9 @@
   list-style: inside !important;
 }
 }
+
+.confirmation-redirection-panel{
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}

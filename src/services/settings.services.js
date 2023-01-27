@@ -348,6 +348,26 @@ const schemaData = {
       },
     },
     {
+      value: "create",
+      text: {
+        severity: "info",
+        summary: "Creating...",
+        detail: "Creating a new registration. Please Wait.",
+        sticky: true,
+        closable: false,
+      },
+    },
+    {
+      value: "successcreate",
+      text: {
+        severity: "success",
+        summary: "Success!",
+        detail: "Registration Started!",
+        closable: true,
+        life: 1000,
+      },
+    },
+    {
       value: "submit",
       text: {
         severity: "info",

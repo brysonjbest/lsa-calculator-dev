@@ -23,6 +23,10 @@ export default function Confirmation() {
   const { registration, setRegistration } = useContext(RegistrationContext);
   const toast = useContext(ToastContext);
 
+  //set todays date and populate end of year based on current date
+  const today = new Date().getFullYear();
+  const endYear = new Date(today, 11, 31).toDateString();
+
   //Load default form values and
   const defaultFormValues = {
     consent: false,
@@ -49,6 +53,7 @@ export default function Confirmation() {
   const [formData, setFormData] = useState([{}]);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [declaration, setDeclaration] = useState(false);
+  const [consentChecked, setConsentChecked] = useState(false);
   const [registrationReady, setRegistrationReady] = useState(false);
 
   const { control, reset, handleSubmit } = methods;
@@ -265,29 +270,48 @@ export default function Confirmation() {
     <>
       {hasLoaded ? (
         <div className="self-registration confirmation-profile">
-          <AppPanel header="Registration Information">
-            The information you have submitted indicates that you are
-            registering for the following recognition awards: <br />
-            Service Pins
-            <br />
-            {isLSAEligible ? (
-              <span>
-                Long Service Awards
-                <br />
-              </span>
-            ) : null}
-            {!submitted ? (
-              <span>
-                Please review the confirmation details below and ensure that
-                what you have entered is correct. Your submission will not be
-                complete until you have confirmed your registration below.
-              </span>
-            ) : (
-              <span>
-                If you have any concerns about your registration details, please
-                contact support.
-              </span>
-            )}
+          <AppPanel
+            header={
+              <>
+                <span>
+                  Registration Information: Status -{" "}
+                  {submitted ? (
+                    <span style={{ color: "green" }}>Submitted</span>
+                  ) : (
+                    <span style={{ color: "red" }}>In Progress</span>
+                  )}
+                </span>
+              </>
+            }
+          >
+            <div className="information-only-panel">
+              <h4>Service Recognition</h4>
+              <p>
+                The information you have submitted indicates that you are
+                {!submitted ? " registering" : " registered"} for the following
+                recognition awards:
+              </p>
+              <ul>
+                <li>Service Pins</li>
+                {isLSAEligible ? <li>Long Service Awards</li> : null}
+              </ul>
+
+              {!submitted ? (
+                <p>
+                  Please review the confirmation details below and ensure that
+                  the information you have entered is correct. Your submission
+                  will not be complete until you have confirmed your
+                  registration below. After confirming your registration, you
+                  will not be able to make additional changes, so please check
+                  that all information is correct.
+                </p>
+              ) : (
+                <p>
+                  If you have any concerns about your registration details,
+                  please contact support.
+                </p>
+              )}
+            </div>
           </AppPanel>
 
           <AppPanel header="Registration Confirmation">
@@ -487,37 +511,130 @@ export default function Confirmation() {
           <FormProvider {...methods}>
             {!submitted ? (
               <form className="confirmation-details-form">
-                <div className="consent-and-declaration">
-                  <div className="declaration-true">
-                    <Checkbox
-                      inputId="declaration"
-                      checked={declaration}
-                      onChange={(e) => setDeclaration(e.checked)}
-                    />
-                    <label htmlFor="declaration">
-                      I declare everything is true and accurate.
-                    </label>
-                  </div>
-                  <div className="consent-true">
-                    <label htmlFor={`consent`} className="block">
-                      I consent to be contacted regarding this for a survey.
-                    </label>
-                    <Controller
-                      name="consent"
-                      defaultValue={false}
-                      control={control}
-                      render={({ field }) => (
+                <AppPanel header="Declaration and Consent">
+                  <div className="consent-and-declaration">
+                    <div className="declaration-true">
+                      <div className="declaration-body">
+                        <h4>Eligible Programs:</h4>
+                        <p>
+                          I declare, to the best of my knowledge and consistent
+                          with the Service Pin{" "}
+                          <a
+                            href="https://longserviceawards.gww.gov.bc.ca/service-pins/"
+                            target={"_blank"}
+                          >
+                            eligibility guidelines
+                          </a>{" "}
+                          (which I have reviewed) that as of {endYear}, I will
+                          have worked for the BC Public Service for 5, 10, 15,
+                          20, 25, 30, 35, 40, 45 or 50 years and I am therefore
+                          eligible for a Service Pin.
+                        </p>
+                        {isLSAEligible ? (
+                          <>
+                            <p>
+                              I declare, to the best of my knowledge and
+                              consistent with the Long Service Awards{" "}
+                              <a
+                                href="https://longserviceawards.gww.gov.bc.ca/eligibility/"
+                                target={"_blank"}
+                              >
+                                eligibility guidelines
+                              </a>{" "}
+                              (which I have reviewed) that as of {endYear}, I
+                              will have worked for the BC Public Service for 25,
+                              30, 35, 40, 45 or 50 years and I am therefore
+                              eligible for a Long Service Award.
+                            </p>
+                          </>
+                        ) : null}
+                        <h4>Information Disclosure:</h4>
+                        <p>
+                          By providing my personal information, I am allowing
+                          the BC Public Service Agency to use and disclose this
+                          information for the planning and delivery of the
+                          Service Pin program
+                          {isLSAEligible ? (
+                            <> and Long Service Award recognition events</>
+                          ) : null}
+                          .{" "}
+                        </p>
+                        <p>
+                          This personal information is required to process your
+                          application for the recognition programs and is
+                          collected in accordance with{" "}
+                          <a
+                            href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/96165_03#section26"
+                            target={"_blank"}
+                          >
+                            section 26(c)
+                          </a>{" "}
+                          of the Freedom of Information and Protection of
+                          Privacy Act (FOIPPA).{" "}
+                        </p>{" "}
+                        <p>
+                          Questions about the collection or use of this
+                          information can be directed to Program Manager,{" "}
+                          <a href="mailto: LongServiceAwards@gov.bc.ca">
+                            LongServiceAwards@gov.bc.ca
+                          </a>
+                          , 1st floor - 563 Superior Street, Victoria BC, V8V
+                          0C5, or by calling{" "}
+                          <a href="tel:1-877-277-0772">1.877.277.0772</a>
+                        </p>
+                      </div>
+                      <div className="confirmation-form-checkbox">
                         <Checkbox
-                          id={field.name}
-                          {...field}
-                          inputId="consent"
-                          checked={field.value}
-                          onChange={(e) => field.onChange(e.checked)}
+                          inputId="declaration"
+                          checked={declaration}
+                          onChange={(e) => setDeclaration(e.checked)}
                         />
-                      )}
-                    />
+                        <label
+                          htmlFor="declaration"
+                          style={
+                            declaration ? { color: "green" } : { color: "red" }
+                          }
+                        >
+                          I declare the information provided in this
+                          registration to be accurate.
+                        </label>
+                      </div>
+                    </div>
+                    <div className="consent-true">
+                      <h5>Would you like to participate in our survey?</h5>
+                      <div className="confirmation-form-checkbox">
+                        <Controller
+                          name="consent"
+                          defaultValue={false}
+                          control={control}
+                          render={({ field }) => (
+                            <Checkbox
+                              id={field.name}
+                              {...field}
+                              inputId="consent"
+                              checked={field.value}
+                              onChange={(e) => {
+                                setConsentChecked(e.checked);
+                                field.onChange(e.checked);
+                              }}
+                            />
+                          )}
+                        />
+                        <label
+                          htmlFor={`consent`}
+                          className="block"
+                          style={
+                            consentChecked
+                              ? { color: "green" }
+                              : { color: "red" }
+                          }
+                        >
+                          Yes, I would like to participate in the LSA survey.
+                        </label>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </AppPanel>
                 {!registrationReady && declaration ? (
                   <label
                     id="confirmation-final-submission-details-help"
@@ -537,6 +654,9 @@ export default function Confirmation() {
                 >
                   <ConfirmDialog />
                   <AppButton
+                    passClass="final-confirmation-button"
+                    tooltip={!declaration ? "Declaration Required." : null}
+                    tooltipOptions={{ showOnDisabled: true, position: "top" }}
                     secondary
                     onClick={(e) => {
                       e.preventDefault();
@@ -544,7 +664,7 @@ export default function Confirmation() {
                     }}
                     disabled={!declaration || !registrationReady}
                   >
-                    Confirm/Submit
+                    Confirm/Submit Registration
                   </AppButton>
                 </div>
               </form>

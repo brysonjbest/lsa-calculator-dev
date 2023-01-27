@@ -7,6 +7,9 @@ import { getUserData, getRegistrationData } from "./api/api.services";
 import { Toast } from "primereact/toast";
 import { ProgressSpinner } from "primereact/progressspinner";
 
+import apiRoutesRegistrations from "./api/api-routes-registrations";
+import apiRoutesUsers from "./api/api-routes.users";
+
 /**
  * Main application. Loads user, registration, and messaging states prior to mounting main application.
  * @returns
@@ -23,18 +26,41 @@ export default function App() {
     [registration, setRegistration]
   );
 
+  // const [items, setItems] = useState([]);
+
+  // useEffect(() => {
+  //   const {session = null, SMSESSION=''} = req.cookies || {};
+  //   const items = JSON.parse(localStorage.getItem("user"));
+  //   console.log(localStorage, "this is local storage", session, SMSESSION);
+  //   if (items) {
+  //     setItems(items);
+  //   }
+  // }, []);
+
   useEffect(() => {
     const fetchUser = async () => {
       const data = await getUserData();
+      // const data1 = await apiRoutesUsers.getLogin();
+      // console.log(data1, "this is user data");
+      console.log("user data");
       setUser(data);
+      return data;
     };
-    const fetchRegistration = async () => {
-      const data = await getRegistrationData(user);
-      setRegistration(data);
+    const fetchRegistration = async (userData) => {
+      const data = await getRegistrationData(userData);
+      // const data = {};
+      let finalData = data;
+      // Parses single date stored in UTC needed on frontend
+      if (data.retirementdate) {
+        finalData.retirementdate = new Date(data.retirementdate);
+      }
+      setRegistration(finalData);
+      return finalData;
     };
     fetchUser()
-      .then(() => {
-        fetchRegistration();
+      .then((data) => {
+        console.log(data);
+        fetchRegistration(data);
       })
       .catch(console.error)
       .finally(() => {

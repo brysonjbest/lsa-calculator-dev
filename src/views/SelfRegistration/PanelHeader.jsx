@@ -21,6 +21,7 @@ export default function PanelHeader() {
   const isLSAEligible = registration["personal-currentmilestone"] >= 25;
   const submitted = registration["submitted"];
 
+  //Page information for populating header on current page
   const currentPage = location.pathname.replace("/register/", "");
   const pageInfo = {
     self: { text: "Register", index: null },
@@ -43,6 +44,7 @@ export default function PanelHeader() {
     undefined: { text: "", index: null },
   };
 
+  //Loads steps array on initial load of page
   useEffect(() => {
     const stepsTemplate = isLSAEligible
       ? formServices.get("selfregistrationsteps")
@@ -54,6 +56,14 @@ export default function PanelHeader() {
     }));
     setSteps(finalSteps);
   }, [pageInfo[currentPage].index]);
+
+  //redirects to registration creation if user loads any page without first creating a registration
+  //this would be like if someone links to their own page, it will redirect a user through creating a new registration
+
+  useEffect(() => {
+    if (typeof submitted === "undefined") navigate("/register/self");
+    if (submitted === true) navigate("/register/confirmation");
+  }, []);
 
   return (
     <>
@@ -70,23 +80,38 @@ export default function PanelHeader() {
           />
         ) : null}
         {submitted && currentPage !== "confirmation" ? (
-          <AppPanel header={`Registration - Submitted`}>
-            <div>
-              You have already submitted your registration for this year. Please
-              review your application details here:
-            </div>
-            <div>
-              <AppButton
-                onClick={() => {
-                  navigate("/register/confirmation");
-                }}
-              >
-                Confirmation Page
-              </AppButton>
-            </div>
-            <div>
-              If you believe you are seeing this message in error, please
-              contact support.
+          <AppPanel
+            header={
+              <>
+                <span>
+                  <>Registration - </>
+                  <span style={{ color: "green" }}>Submitted</span>
+                </span>
+              </>
+            }
+          >
+            <div className="confirmation-redirection-panel">
+              <div>
+                You have already submitted your registration for this year.
+                Please review your application details here:
+              </div>
+              <div>
+                <AppButton
+                  onClick={() => {
+                    navigate("/register/confirmation");
+                  }}
+                >
+                  Confirmation Page
+                </AppButton>
+              </div>
+              <div>
+                If you believe you are seeing this message in error, please
+                contact support at{" "}
+                <a href="mailto: LongServiceAwards@gov.bc.ca">
+                  LongServiceAwards@gov.bc.ca
+                </a>
+                .
+              </div>
             </div>
           </AppPanel>
         ) : (
