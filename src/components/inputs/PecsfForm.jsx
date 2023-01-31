@@ -12,7 +12,7 @@ import "./PecsfForm.css";
  * Pecsf Award Options Component.
  * @param {object} props
  * @param {object} errors Inherited form errors object
- * @returns
+ * @returns pecsf award and options
  */
 
 export default function PecsfForm({ errors }) {

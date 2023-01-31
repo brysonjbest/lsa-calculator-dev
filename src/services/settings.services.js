@@ -147,9 +147,9 @@ const schemaData = {
   profileFormFields: [
     { field: "firstname", header: "First Name" },
     { field: "lastname", header: "Last Name" },
-    { field: "governmentemail", header: "Government Email" },
-    { field: "governmentphone", header: "Government Phone Number" },
-    { field: "employeenumber", header: "Employee Number" },
+    { field: "office_email", header: "Government Email" },
+    { field: "office_phone", header: "Government Phone Number" },
+    { field: "employee_number", header: "Employee Number" },
     {
       field: "organization",
       header: "Ministry / Organization",
@@ -171,8 +171,8 @@ const schemaData = {
     },
   ],
   personalContactFormFields: [
-    { field: "personalphone", header: "Personal Phone Number" },
-    { field: "personalemail", header: "Alternate Email Address" },
+    { field: "personal_phone", header: "Personal Phone Number" },
+    { field: "personal_email", header: "Alternate Email Address" },
     { field: "streetaddress", header: "Address Line 1" },
     { field: "streetaddress2", header: "Address Line 2" },
     { field: "citycommunity", header: "City / Community" },
@@ -188,7 +188,7 @@ const schemaData = {
   supervisorFormFields: [
     { field: "firstname", header: "First Name" },
     { field: "lastname", header: "Last Name" },
-    { field: "governmentemail", header: "Government Email" },
+    { field: "office_email", header: "Government Email" },
     { field: "streetaddress", header: "Address Line 1" },
     { field: "streetaddress2", header: "Address Line 2" },
     { field: "citycommunity", header: "City / Community" },
@@ -265,8 +265,8 @@ const schemaData = {
     { field: "employee", header: "Employee" },
     { field: "firstname", header: "First Name" },
     { field: "lastname", header: "Last Name" },
-    { field: "governmentemail", header: "Government Email" },
-    { field: "employeenumber", header: "Employee Number" },
+    { field: "office_email", header: "Government Email" },
+    { field: "employee_number", header: "Employee Number" },
     {
       field: "organization",
       header: "Ministry / Organization",

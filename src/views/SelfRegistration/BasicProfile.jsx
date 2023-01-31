@@ -25,11 +25,13 @@ export default function BasicProfile() {
   const stateData = location.state ? location.state : null;
 
   const defaultFormValues = {
-    "personal-firstname": "",
-    "personal-lastname": "",
-    "personal-governmentemail": "",
-    "personal-governmentphone": "",
-    "personal-employeenumber": "",
+    contact: {
+      firstname: "",
+      lastname: "",
+      office_email: "",
+      office_phone: "",
+    },
+    employee_number: "",
     organization: null,
     branch: "",
   };

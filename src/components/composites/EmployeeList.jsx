@@ -54,8 +54,8 @@ const EmployeeList = ({ errors }) => {
         {
           firstname: "",
           lastname: "",
-          governmentemail: "",
-          employeenumber: "",
+          office_email: "",
+          employee_number: "",
           organization: null,
           yearsofservice: "",
           currentmilestone: "",
@@ -128,8 +128,8 @@ const EmployeeList = ({ errors }) => {
             append({
               firstname: "",
               lastname: "",
-              governmentemail: "",
-              employeenumber: "",
+              office_email: "",
+              employee_number: "",
               organization: null,
               yearsofservice: "",
               currentmilestone: "",

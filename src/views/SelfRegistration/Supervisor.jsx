@@ -23,14 +23,21 @@ export default function Supervisor() {
   const [formComplete, setFormComplete] = useState(false);
 
   const defaultFormValues = {
-    "supervisor-firstname": "",
-    "supervisor-lastname": "",
-    "supervisor-governmentemail": "",
-    supervisorstreetaddress: "",
-    supervisorstreetaddress2: "",
-    supervisorcitycommunity: "",
-    supervisorpostalcode: "",
-    supervisorpobox: "",
+    supervisor: {
+      firstname: "",
+      lastname: "",
+      office_email: "",
+      office_phone: "",
+      office_address: {
+        pobox: "",
+        street1: "",
+        street2: "",
+        postal_code: "",
+        community: "",
+        province: "",
+        country: "",
+      },
+    },
   };
 
   const methods = useForm({
@@ -127,8 +134,9 @@ export default function Supervisor() {
             >
               <AddressInput
                 pobox
-                addressIdentifier="supervisor"
+                addressIdentifier="office"
                 errors={errors}
+                contactType="supervisor"
               />
             </AppPanel>
             <div className="submission-buttons">

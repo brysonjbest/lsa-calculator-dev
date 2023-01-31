@@ -34,17 +34,17 @@ export default function RegistrationHandler() {
   const registrationProgress = async () => {
     let route = `profile`;
     if (registration) {
-      if (registration["personal-firstname"]) {
+      if (registration["contact"]["firstname"]) {
         route = "milestone";
       }
       if (registration["personal-yearsofservice"]) {
         route = "details";
       }
-      if (registration["personalstreetaddress"]) {
+      if (registration["contact"]["personal_address"]["street1"]) {
         isLSAEligible ? (route = "attendance") : (route = "supervisor");
       }
 
-      if (registration["personal-retiringcurrentyear"] != null) {
+      if (registration["retiringcurrentyear"] != null) {
         isLSAEligible ? (route = "award") : (route = "supervisor");
       }
 
@@ -52,7 +52,7 @@ export default function RegistrationHandler() {
         route = "supervisor";
       }
 
-      if (registration["supervisor-firstname"]) {
+      if (registration["supervisor"]["firstname"]) {
         route = "confirmation";
       }
     }

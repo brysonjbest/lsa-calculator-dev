@@ -1,29 +1,56 @@
 {
+  "employee_number": "2138adse12",
   "confirmed": false,
-  "personal-firstname": "testapifirstname",
-  "personal-lastname": "testlastname",
-  "personal-governmentemail": "testemail@test.com",
-  "personal-governmentphone": "(604) 525-2525",
-  "personal-employeenumber": "2138adse12",
   "organization": "org-10",
   "branch": "testbranch",
+  "retirement_date": 1683702000000,
+  "retiringcurrentyear": true,
+  "bcgeu": true,
+  "ceremony_opt_out": true,
+  "survey_participation": true,
+  "contact": {
+    "firstname": "testapifirstname",
+    "lastname": "testlastname",
+    "office_email": "testemail@test.com",
+    "office_phone": "(604) 525-2525",
+    "personal_email": "personalEmail@test.com",
+    "personal_phone": "(778) 525-2525",
+    "office_address": {
+      "pobox": "",
+      "street1": "855 Broadview Avenue",
+      "street2": "",
+      "postal_code": "M4K 2P9",
+      "community": "Toronto",
+      "province": "Ontario",
+      "country": "Canada"
+    },
+    "personal_address": {
+      "pobox": "",
+      "street1": "785 East El Camino Real",
+      "street2": "",
+      "postal_code": "94086-2919",
+      "community": "Sunnyvale",
+      "province": "California",
+      "country": "United States"
+    }
+  },
+  "supervisor": {
+    "firstname": "testingSuperFirst",
+    "lastname": "testingSuperLast",
+    "office_email": "superemail@test.com",
+    "office_address": {
+      "pobox": "98563",
+      "street1": "123 Fake Street",
+      "street2": "Apartment 2",
+      "postal_code": "V8T0R2",
+      "community": "Victoria"
+    }
+  },
+
   "personal-currentmilestone": 25,
   "personal-priormilestones": [20, 15],
   "personal-qualifyingyear": 2023,
   "personal-yearsofservice": 25,
-  "officecitycommunity": "Toronto",
-  "officecountry": "Canada",
-  "officepostalcode": "M4K 2P9",
-  "officestreetaddress": "855 Broadview Avenue",
-  "officestreetaddress2": "",
-  "personal-personalemail": "personalEmail@test.com",
-  "personal-personalphone": "(778) 525-2525",
-  "personalcitycommunity": "Sunnyvale",
-  "personalcountry": "United States",
-  "personalpostalcode": "94086-2919",
-  "personalprovincestate": "California",
-  "personalstreetaddress": "785 East El Camino Real",
-  "personalstreetaddress2": "",
   "awardID": "1001",
   "awarddescription": "A magnificent painting of a Whale Tail",
   "awardname": "Whale Tail Painting",
@@ -34,18 +61,5 @@
       "whaletype": "orca",
       "paintingtools": ["fork", "brush", "spoon"]
     }
-  ],
-  "supervisor-firstname": "testingSuperFirst",
-  "supervisor-lastname": "testingSuperLast",
-  "supervisor-governmentemail": "superemail@test.com",
-  "supervisorstreetaddress": "123 Fake Street",
-  "supervisorstreetaddress2": "Apartment 2",
-  "supervisorcitycommunity": "Victoria",
-  "supervisorpostalcode": "V8T0R2",
-  "supervisorpobox": "98563",
-  "retirement_date": 1683702000000,
-  "retiringcurrentyear": true,
-  "bcgeu": true,
-  "ceremony_opt_out": true,
-  "survey_participation": true
+  ]
 }

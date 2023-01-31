@@ -69,14 +69,17 @@ export default function Confirmation() {
 
     if (!isLSAEligible) {
       const defaultFormReset = {
-        "personal-personalemail": "",
-        "personal-personalphone": "",
-        personalcitycommunity: "",
-        personalcountry: "",
-        personalpostalcode: "",
-        personalprovincestate: "",
-        personalstreetaddress: "",
-        personalstreetaddress2: "",
+        personal_email: "",
+        personal_phone: "",
+        personal_address: {
+          pobox: "",
+          street1: "",
+          street2: "",
+          postal_code: "",
+          community: "",
+          province: "",
+          country: "",
+        },
         awardID: "",
         awarddescription: "",
         awardname: "",
@@ -123,45 +126,46 @@ export default function Confirmation() {
     ];
     const personalArray = [
       {
-        firstname: registration["personal-firstname"],
-        lastname: registration["personal-lastname"],
-        governmentemail: registration["personal-governmentemail"],
-        governmentphone: registration["personal-governmentphone"],
-        employeenumber: registration["personal-employeenumber"],
-        organization: registration["organization"],
-        branch: registration["branch"],
+        firstname: registration["contact"]["firstname"],
+        lastname: registration["contact"]["lastname"],
+        office_email: registration["contact"]["office_email"],
+        office_phone: registration["contact"]["office_phone"],
+        employee_number: registration["contact"]["employee_number"],
+        organization: registration["contact"]["organization"],
+        branch: registration["contact"]["branch"],
       },
     ];
     const officeArray = [
       {
-        citycommunity: registration["officecitycommunity"],
-        postalcode: registration["officepostalcode"],
-        streetaddress: registration["officestreetaddress"],
-        streetaddress2: registration["officestreetaddress2"],
+        community: registration["contact"]["office_address"]["community"],
+        postal_code: registration["contact"]["office_address"]["postal_code"],
+        street1: registration["contact"]["office_address"]["street1"],
+        street2: registration["contact"]["office_address"]["street2"],
       },
     ];
     const supervisorArray = [
       {
-        firstname: registration["supervisor-firstname"],
-        lastname: registration["supervisor-lastname"],
-        governmentemail: registration["supervisor-governmentemail"],
-        streetaddress: registration["supervisorstreetaddress"],
-        streetaddress2: registration["supervisorstreetaddress2"],
-        citycommunity: registration["supervisorcitycommunity"],
-        postalcode: registration["supervisorpostalcode"],
-        pobox: registration["supervisorpobox"],
+        firstname: registration["supervisor"]["firstname"],
+        lastname: registration["supervisor"]["lastname"],
+        office_email: registration["supervisor"]["office_email"],
+        street1: registration["supervisor"]["office_address"]["street1"],
+        street2: registration["supervisor"]["office_address"]["street2"],
+        community: registration["supervisor"]["office_address"]["community"],
+        postal_code:
+          registration["supervisor"]["office_address"]["postal_code"],
+        pobox: registration["supervisor"]["office_address"]["pobox"],
       },
     ];
 
     const contactArray = [
       {
-        personalphone: registration["personal-personalphone"],
-        personalemail: registration["personal-personalemail"],
-        streetaddress: registration["personalstreetaddress"],
-        streetaddress2: registration["personalstreetaddress2"],
-        citycommunity: registration["personalcitycommunity"],
-        postalcode: registration["personalpostalcode"],
-        provincestate: registration["personalprovincestate"],
+        personal_phone: registration["contact"]["personal_phone"],
+        personal_email: registration["contact"]["personal_email"],
+        street1: registration["contact"]["personal_address"]["street1"],
+        street2: registration["contact"]["personal_address"]["street2"],
+        community: registration["contact"]["personal_address"]["community"],
+        postal_code: registration["contact"]["personal_address"]["postal_code"],
+        province: registration["contact"]["personal_address"]["province"],
       },
     ];
     const awardArray = [
@@ -199,9 +203,9 @@ export default function Confirmation() {
     const finalData = isLSAEligible ? lsaDataSet : pinOnlyDataSet;
     const errorValues = {
       milestone: !registration["personal-yearsofservice"],
-      personal: !registration["personal-firstname"],
-      office: !registration["officestreetaddress"],
-      supervisor: !registration["supervisor-firstname"],
+      personal: !registration["contact"]["firstname"],
+      office: !registration["contact"]["office_address"]["street1"],
+      supervisor: !registration["supervisor"]["firstname"],
 
       award: isLSAEligible
         ? !registration["awardname"] ||
@@ -209,7 +213,9 @@ export default function Confirmation() {
             registration["awardoptions"].length === 0)
         : false,
       lsa: false,
-      contact: isLSAEligible ? !registration["personalstreetaddress"] : false,
+      contact: isLSAEligible
+        ? !registration["contact"]["personal_address"]["street1"]
+        : false,
     };
     setErrorsRegistration((state) => ({
       ...state,

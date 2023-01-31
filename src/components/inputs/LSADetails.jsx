@@ -12,7 +12,7 @@ import classNames from "classnames";
  * @param {object} props.errors inherited form errors object
  * @param {string} props.panelName string describing what panel these contact details belong to ex: Supervisor, Personal
   * @param {integer} props.itemNumber index of item within sublist; when used multiple times in a form, contact details will be registered as a separate item on form
- * @returns
+ * @returns retiring current year status, retiring date, bcgeu member status, ceremony opt out status
  */
 
 export default function LSADetails({ errors, panelName, itemNumber }) {

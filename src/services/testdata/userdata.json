@@ -8,8 +8,8 @@
       "priormilestones": [10, 5],
       "firstname": "Steve",
       "lastname": "Jimmy",
-      "governmentemail": "test@test.com",
-      "employeenumber": "1234567",
+      "office_email": "test@test.com",
+      "employee_number": "1234567",
 
       "organization": "Ministry of Social Development"
     },
@@ -21,8 +21,8 @@
       "priormilestones": [5],
       "firstname": "Jane",
       "lastname": "Doe",
-      "governmentemail": "test@test.com",
-      "employeenumber": "7654321",
+      "office_email": "test@test.com",
+      "employee_number": "7654321",
       "organization": "Office of the Premier"
     }
   ]

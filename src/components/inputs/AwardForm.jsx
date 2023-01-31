@@ -11,7 +11,7 @@ import classNames from "classnames";
  * Common Award Options Component.
  * @param {object} props
  * @param {object} props.option Award option object
- * @returns
+ * @returns variable award options for text, radio buttons, multiselect, and dropdown
  */
 
 export default function AwardForm({ option, errors }) {

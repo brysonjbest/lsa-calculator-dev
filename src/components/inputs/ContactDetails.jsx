@@ -11,7 +11,7 @@ import formServices from "../../services/settings.services";
 import "./ContactDetails.css";
 
 /**
- * Address Input reusable component. Conditional PO Box requirement for address's identified for supervisors.
+ * Contact Details Reusable component.
  * @param {object} props
  * @param {(index) => void} props.ministryRef function for minstry choice to be handled by parent component
  * @param {integer} props.index index of item within form
@@ -22,7 +22,7 @@ import "./ContactDetails.css";
  * @param {string} props.panelName string describing what panel these contact details belong to ex: Supervisor, Personal
  * @param {integer} props.itemNumber index of item within sublist; when used multiple times in a form, contact details will be registered as a separate item on form
  * @param {object} props.errors inherited errors object
- * @returns
+ * @returns firstname, lastname, office email, office phone, employee number, organization, branch, personal phone, personal email
  */
 
 export default function ContactDetails({
@@ -47,6 +47,9 @@ export default function ContactDetails({
   let panelGroupName = panelName
     ? `${panelName.replace(/\s/g, "")}`
     : "default";
+  if (panelName === "personal") {
+    panelGroupName = "contact";
+  }
   if (panelName && itemNumber) {
     panelGroupName += ` ${itemNumber}`;
   }
@@ -59,7 +62,9 @@ export default function ContactDetails({
 
   const formItemName = itemNumber
     ? `${panelName}.${itemNumber - 1}.`
-    : `${panelGroupName}-`;
+    : `${panelGroupName}.`;
+
+  const formItemBase = itemNumber ? `${panelName}.${itemNumber - 1}.` : ``;
 
   //On blur of ministry selection runs callback with given form value
   const onBlurMinistry = (event) => {
@@ -68,6 +73,8 @@ export default function ContactDetails({
       formServices.lookup("currentPinsOnlyOrganizations", event);
     ministryRef ? ministryRef(index, currentFormValue) : null;
   };
+
+  //To fix error handling to make sure naming convention works
 
   return (
     <div className={`contact-details-form-${panelGroupName}`}>
@@ -145,15 +152,15 @@ export default function ContactDetails({
               </div>
               <div className="contact-form-field-container">
                 <label
-                  htmlFor={`${formItemName}governmentemail`}
+                  htmlFor={`${formItemName}office_email`}
                   className={classNames("block", {
-                    "p-error": !!errors.governmentemail,
+                    "p-error": !!errors.office_email,
                   })}
                 >
                   {`${panelTitle} Government Email`}
                 </label>
                 <Controller
-                  name={`${formItemName}governmentemail`}
+                  name={`${formItemName}office_email`}
                   control={control}
                   rules={{
                     required: "Error: Government email is required.",
@@ -176,11 +183,11 @@ export default function ContactDetails({
                   )}
                 />
                 {getFormErrorMessage(
-                  `${panelGroupName}-governmentemail`,
+                  `${panelGroupName}-office_email`,
                   errors,
                   panelName,
                   itemNumber - 1,
-                  "governmentemail"
+                  "office_email"
                 )}
               </div>
             </div>
@@ -190,15 +197,15 @@ export default function ContactDetails({
               {extended ? (
                 <div className="contact-form-field-container">
                   <label
-                    htmlFor={`${formItemName}governmentphone`}
+                    htmlFor={`${formItemName}office_phone`}
                     className={classNames("block", {
-                      "p-error": errors.governmentphone,
+                      "p-error": errors.office_phone,
                     })}
                   >
                     {`${panelTitle} Government Phone Number`}
                   </label>
                   <Controller
-                    name={`${formItemName}governmentphone`}
+                    name={`${formItemName}office_phone`}
                     control={control}
                     rules={{
                       required: "Error: Government phone number is required.",
@@ -223,26 +230,26 @@ export default function ContactDetails({
                     )}
                   />
                   {getFormErrorMessage(
-                    `${panelGroupName}-governmentphone`,
+                    `${panelGroupName}-office_phone`,
                     errors,
                     panelName,
                     itemNumber - 1,
-                    "governmentphone"
+                    "office_phone"
                   )}
                 </div>
               ) : null}
               {extended || delegated ? (
                 <div className="contact-form-field-container">
                   <label
-                    htmlFor={`${formItemName}employeenumber`}
+                    htmlFor={`${formItemBase}employee_number`}
                     className={classNames("block", {
-                      "p-error": errors.employeenumber,
+                      "p-error": errors.employee_number,
                     })}
                   >
                     {`${panelTitle} Employee Number`}
                   </label>
                   <Controller
-                    name={`${formItemName}employeenumber`}
+                    name={`${formItemBase}employee_number`}
                     control={control}
                     rules={{
                       required: "Error: Employee number is required.",
@@ -250,7 +257,7 @@ export default function ContactDetails({
                     render={({ field, fieldState }) => (
                       <InputText
                         id={`${field.name}`}
-                        aria-describedby={`${panelGroupName}-employeenumber-help`}
+                        aria-describedby={`${panelGroupName}-employee_number-help`}
                         {...field}
                         className={classNames("form-field block", {
                           "p-invalid": fieldState.error,
@@ -260,18 +267,18 @@ export default function ContactDetails({
                     )}
                   />
                   {getFormErrorMessage(
-                    `${panelGroupName}-employeenumber`,
+                    `${panelGroupName}-employee_number`,
                     errors,
                     panelName,
                     itemNumber - 1,
-                    "employeenumber"
+                    "employee_number"
                   )}
                 </div>
               ) : null}
               {extended || delegated ? (
                 <div className="contact-form-field-container">
                   <label
-                    htmlFor={`organization`}
+                    htmlFor={`${formItemBase}organization`}
                     className={classNames("block", {
                       "p-error": errors.organization,
                     })}
@@ -279,7 +286,7 @@ export default function ContactDetails({
                     {`${panelTitle} Ministry/Organization`}
                   </label>
                   <Controller
-                    name={`organization`}
+                    name={`${formItemBase}organization`}
                     control={control}
                     rules={{
                       required: "Error: Ministry or Organization is required.",
@@ -314,7 +321,7 @@ export default function ContactDetails({
               {extended ? (
                 <div className="contact-form-field-container">
                   <label
-                    htmlFor={`branch`}
+                    htmlFor={`${formItemBase}branch`}
                     className={classNames("block", {
                       "p-error": errors.branch,
                     })}
@@ -322,7 +329,7 @@ export default function ContactDetails({
                     {`${panelTitle} Branch`}
                   </label>
                   <Controller
-                    name={`branch`}
+                    name={`${formItemBase}branch`}
                     control={control}
                     rules={{ required: "Error: Branch is required." }}
                     render={({ field, fieldState }) => (
@@ -352,15 +359,15 @@ export default function ContactDetails({
             <div className="contact-form-personalcontact-details">
               <div className="contact-form-field-container">
                 <label
-                  htmlFor={`${formItemName}personalphone`}
+                  htmlFor={`${formItemName}personal_phone`}
                   className={classNames("block", {
-                    "p-error": errors.personalphone,
+                    "p-error": errors.personal_phone,
                   })}
                 >
                   {`${panelTitle} Personal Phone Number`}
                 </label>
                 <Controller
-                  name={`${formItemName}personalphone`}
+                  name={`${formItemName}personal_phone`}
                   control={control}
                   rules={{
                     required: "Error: Personal phone number is required.",
@@ -377,7 +384,7 @@ export default function ContactDetails({
                       autoClear={false}
                       {...field}
                       placeholder={`${panelPlaceholder} personal phone number Ex. (999) 999-9999 x99999`}
-                      aria-describedby={`${panelGroupName}-personalphone-help`}
+                      aria-describedby={`${panelGroupName}-personal_phone-help`}
                       className={classNames("form-field block", {
                         "p-invalid": fieldState.error,
                       })}
@@ -385,24 +392,24 @@ export default function ContactDetails({
                   )}
                 />
                 {getFormErrorMessage(
-                  `${panelGroupName}-personalphone`,
+                  `${panelGroupName}-personal_phone`,
                   errors,
                   panelName,
                   itemNumber - 1,
-                  "personalphone"
+                  "personal_phone"
                 )}
               </div>
               <div className="contact-form-field-container">
                 <label
-                  htmlFor={`${formItemName}personalemail`}
+                  htmlFor={`${formItemName}personal_email`}
                   className={classNames("block", {
-                    "p-error": !!errors.personalemail,
+                    "p-error": !!errors.personal_email,
                   })}
                 >
                   {`${panelTitle} Personal Email Address`}
                 </label>
                 <Controller
-                  name={`${formItemName}personalemail`}
+                  name={`${formItemName}personal_email`}
                   control={control}
                   rules={{
                     required: "Error: Personal email address is required.",
@@ -415,7 +422,7 @@ export default function ContactDetails({
                     <InputText
                       id={`${field.name}`}
                       type="text"
-                      aria-describedby={`${panelGroupName}-personalemail-help`}
+                      aria-describedby={`${panelGroupName}-personal_email-help`}
                       placeholder={`${panelPlaceholder} personal email address`}
                       {...field}
                       className={classNames("form-field block", {
@@ -425,11 +432,11 @@ export default function ContactDetails({
                   )}
                 />
                 {getFormErrorMessage(
-                  `${panelGroupName}-personalemail`,
+                  `${panelGroupName}-personal_email`,
                   errors,
                   panelName,
                   itemNumber - 1,
-                  "personalemail"
+                  "personal_email"
                 )}
               </div>
             </div>

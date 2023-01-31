@@ -10,11 +10,13 @@ import "./AddressInput.css";
 /**
  * Address Input reusable component. Conditional PO Box requirement for address's identified for supervisors.
  * @param {object} props
+ * @param {object} props.errors inherited errors object from form control
  * @param {boolean} props.manualComplete state variable boolean for controlling if autocomplete is used
  * @param {boolean} props.pobox state variable boolean for controlling P.O. Box field required
  * @param {boolean} props.province state variable boolean for controlling province field required
  * @param {string} props.addressIdentifier string describing what field this address belongs to ex: Supervisor, Office, Personal
- * @returns
+ * @param {string} props.contactType string describing contact to apply address details to in form, ex: contact / supervisor
+ * @returns address line 1, address line 2, city/community, province/state, postal code, po box
  */
 
 export default function AddressInput({
@@ -23,6 +25,7 @@ export default function AddressInput({
   province,
   addressIdentifier,
   errors,
+  contactType,
 }) {
   const address = useRef();
   const methods = useFormContext();
@@ -33,6 +36,8 @@ export default function AddressInput({
     ? formServices.capitalize(addressIdentifier)
     : "default";
 
+  const formGroupAddress = `${contactType}.${addressIdentifier}_address.`;
+
   const { setFocus, setValue, getValues, control } = methods;
 
   const handleAddressSelect = async () => {
@@ -40,25 +45,17 @@ export default function AddressInput({
       autoCompleteBody
     );
     address.current.value = fullAddressObject.streetAddress;
-    setValue(
-      `${addressIdentifier}streetaddress`,
-      fullAddressObject.streetAddress
-    );
-    setValue(
-      `${addressIdentifier}citycommunity`,
-      fullAddressObject.cityCommunity
-    );
+    setValue(`${formGroupAddress}street1`, fullAddressObject.streetAddress);
+    setValue(`${formGroupAddress}community`, fullAddressObject.cityCommunity);
     province &&
       setValue(
-        `${addressIdentifier}provincestate`,
+        `${formGroupAddress}province`,
         fullAddressObject.provinceStateLong
       );
-    setPoBoxField(
-      getValues(`${addressIdentifier}citycommunity`).match(/Victoria/i)
-    );
-    setValue(`${addressIdentifier}country`, fullAddressObject.countryLong);
-    setValue(`${addressIdentifier}postalcode`, fullAddressObject.postalCode);
-    setFocus(`${addressIdentifier}streetaddress2`);
+    setPoBoxField(getValues(`${formGroupAddress}community`).match(/Victoria/i));
+    setValue(`${formGroupAddress}country`, fullAddressObject.countryLong);
+    setValue(`${formGroupAddress}postal_code`, fullAddressObject.postalCode);
+    setFocus(`${formGroupAddress}street2`);
   };
 
   useEffect(() => {
@@ -85,21 +82,18 @@ export default function AddressInput({
     <div className="container">
       <div className="address-container">
         <div className="address-form-field-container">
-          <label
-            htmlFor={`${addressIdentifier}streetaddress`}
-            className="block"
-          >
+          <label htmlFor={`${formGroupAddress}street1`} className="block">
             {`${addressGroupName} Street Address 1`}
           </label>
           <Controller
-            name={`${addressIdentifier}streetaddress`}
+            name={`${formGroupAddress}street1`}
             control={control}
             rules={{ required: "Error: Street address is required." }}
             render={({ field: { ref, ...field }, fieldState }) => (
               <InputText
                 id={`${field.name}`}
                 ref={address}
-                aria-describedby={`${addressIdentifier}-streetaddress-help`}
+                aria-describedby={`${formGroupAddress}-street1-help`}
                 {...field}
                 className={classNames("form-field block", {
                   "p-invalid": fieldState.error,
@@ -108,22 +102,19 @@ export default function AddressInput({
               />
             )}
           />
-          {getFormErrorMessage(`${addressIdentifier}streetaddress`, errors)}
+          {getFormErrorMessage(`${formGroupAddress}street1`, errors)}
         </div>
         <div className="address-form-field-container">
-          <label
-            htmlFor={`${addressIdentifier}streetaddress2`}
-            className="block"
-          >
+          <label htmlFor={`${formGroupAddress}street2`} className="block">
             {`${addressGroupName} Street Address 2`}
           </label>
           <Controller
-            name={`${addressIdentifier}streetaddress2`}
+            name={`${formGroupAddress}street2`}
             control={control}
             render={({ field, fieldState }) => (
               <InputText
                 id={`${field.name}`}
-                aria-describedby={`${addressIdentifier}-streetaddress2-help`}
+                aria-describedby={`${formGroupAddress}-street2-help`}
                 {...field}
                 className={classNames("form-field block", {
                   "p-invalid": fieldState.error,
@@ -132,28 +123,23 @@ export default function AddressInput({
               />
             )}
           />
-          {getFormErrorMessage(`${addressIdentifier}streetaddress2`, errors)}
+          {getFormErrorMessage(`${formGroupAddress}street2`, errors)}
         </div>
         <div className="address-form-field-container">
-          <label
-            htmlFor={`${addressIdentifier}citycommunity`}
-            className="block"
-          >
+          <label htmlFor={`${formGroupAddress}community`} className="block">
             {`${addressGroupName} City/Community`}
           </label>
           <Controller
-            name={`${addressIdentifier}citycommunity`}
+            name={`${formGroupAddress}community`}
             control={control}
             rules={{ required: "Error: City/Community is required." }}
             render={({ field, fieldState }) => (
               <InputText
                 id={`${field.name}`}
-                aria-describedby={`${addressIdentifier}-citycommunity-help`}
+                aria-describedby={`${formGroupAddress}-community-help`}
                 onBlurCapture={() => {
                   setPoBoxField(
-                    getValues(`${addressIdentifier}citycommunity`).match(
-                      /Victoria/i
-                    )
+                    getValues(`${formGroupAddress}community`).match(/Victoria/i)
                   );
                 }}
                 {...field}
@@ -164,24 +150,21 @@ export default function AddressInput({
               />
             )}
           />
-          {getFormErrorMessage(`${addressIdentifier}citycommunity`, errors)}
+          {getFormErrorMessage(`${formGroupAddress}community`, errors)}
         </div>
         {province ? (
           <div className="address-form-field-container">
-            <label
-              htmlFor={`${addressIdentifier}provincestate`}
-              className="block"
-            >
+            <label htmlFor={`${formGroupAddress}province`} className="block">
               {`${addressGroupName} Province/State`}
             </label>
             <Controller
-              name={`${addressIdentifier}provincestate`}
+              name={`${formGroupAddress}province`}
               control={control}
               rules={{ required: "Error: Province/State is required." }}
               render={({ field, fieldState }) => (
                 <InputText
                   id={`${field.name}`}
-                  aria-describedby={`${addressIdentifier}-provincestate-help`}
+                  aria-describedby={`${formGroupAddress}-province-help`}
                   {...field}
                   className={classNames("form-field block", {
                     "p-invalid": fieldState.error,
@@ -190,21 +173,21 @@ export default function AddressInput({
                 />
               )}
             />
-            {getFormErrorMessage(`${addressIdentifier}provincestate`, errors)}
+            {getFormErrorMessage(`${formGroupAddress}province`, errors)}
           </div>
         ) : null}
         <div className="address-form-field-container">
-          <label htmlFor={`${addressIdentifier}postalcode`} className="block">
+          <label htmlFor={`${formGroupAddress}postal_code`} className="block">
             {`${addressGroupName} Postal Code`}
           </label>
           <Controller
-            name={`${addressIdentifier}postalcode`}
+            name={`${formGroupAddress}postal_code`}
             control={control}
             rules={{ required: "Error: Postal Code is required." }}
             render={({ field, fieldState }) => (
               <InputText
                 id={`${field.name}`}
-                aria-describedby={`${addressIdentifier}-postalcode-help`}
+                aria-describedby={`${formGroupAddress}-postal_code-help`}
                 {...field}
                 className={classNames("form-field block", "short-form-field", {
                   "p-invalid": fieldState.error,
@@ -213,17 +196,17 @@ export default function AddressInput({
               />
             )}
           />
-          {getFormErrorMessage(`${addressIdentifier}postalcode`, errors)}
+          {getFormErrorMessage(`${formGroupAddress}postal_code`, errors)}
         </div>
       </div>
 
-      {pobox && addressIdentifier.match(/supervisor/i) ? (
+      {pobox && formGroupAddress.match(/supervisor/i) ? (
         <div className="address-form-field-container">
-          <label htmlFor={`${addressIdentifier}pobox`} className="block">
+          <label htmlFor={`${formGroupAddress}pobox`} className="block">
             {`${addressGroupName} P.O. Box`}
           </label>
           <Controller
-            name={`${addressIdentifier}pobox`}
+            name={`${formGroupAddress}pobox`}
             control={control}
             rules={{
               required: poBoxField,
@@ -231,7 +214,7 @@ export default function AddressInput({
             render={({ field, fieldState }) => (
               <InputText
                 id={`${field.name}`}
-                aria-describedby={`${addressIdentifier}-pobox-help`}
+                aria-describedby={`${formGroupAddress}-pobox-help`}
                 {...field}
                 className={classNames("form-field block", {
                   "p-invalid": fieldState.error,
@@ -240,7 +223,7 @@ export default function AddressInput({
               />
             )}
           />
-          {getFormErrorMessage(`${addressIdentifier}pobox`, errors) ? (
+          {getFormErrorMessage(`${formGroupAddress}pobox`, errors) ? (
             <small
               id={`pobox-${addressGroupName}-help`}
               className="validation-error p-error block"

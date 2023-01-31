@@ -26,17 +26,28 @@ export default function ProfileDetails() {
   const [formComplete, setFormComplete] = useState(false);
 
   const defaultFormValues = {
-    "personal-personalphone": "",
-    "personal-personalemail": "",
-    officecitycommunity: "",
-    officepostalcode: "",
-    officestreetaddress: "",
-    officestreetaddress2: "",
-    personalcitycommunity: "",
-    personalpostalcode: "",
-    personalprovincestate: "",
-    personalstreetaddress: "",
-    personalstreetaddress2: "",
+    contact: {
+      personal_phone: "",
+      personal_email: "",
+      office_address: {
+        pobox: "",
+        street1: "",
+        street2: "",
+        postal_code: "",
+        community: "",
+        province: "",
+        country: "",
+      },
+      personal_address: {
+        pobox: "",
+        street1: "",
+        street2: "",
+        postal_code: "",
+        community: "",
+        province: "",
+        country: "",
+      },
+    },
   };
 
   const methods = useForm({
@@ -145,6 +156,7 @@ export default function ProfileDetails() {
                     province
                     addressIdentifier="personal"
                     errors={errors}
+                    contactType="contact"
                   />
                 </AppPanel>
               </>
@@ -163,7 +175,11 @@ export default function ProfileDetails() {
                 </>
               }
             >
-              <AddressInput addressIdentifier="office" errors={errors} />
+              <AddressInput
+                addressIdentifier="office"
+                errors={errors}
+                contactType="contact"
+              />
             </AppPanel>
             <div className="submission-buttons">
               <AppButton secondary onClick={handleSubmit(saveData)}>
