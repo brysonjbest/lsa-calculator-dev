@@ -30,8 +30,8 @@ export default function BasicProfile() {
     "personal-governmentemail": "",
     "personal-governmentphone": "",
     "personal-employeenumber": "",
-    "personal-ministryorganization": null,
-    "personal-branch": "",
+    organization: null,
+    branch: "",
   };
 
   const methods = useForm({
@@ -95,7 +95,7 @@ export default function BasicProfile() {
       //submit to api
       //then statement
       //navigate to next page on success
-      const ministryData = getValues("personal-ministryorganization");
+      const ministryData = getValues("organization");
       const newState = { ...stateData, ministryData };
       navigate("/register/milestone", { state: newState });
     } catch (error) {}

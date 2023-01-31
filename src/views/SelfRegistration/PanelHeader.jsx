@@ -19,7 +19,7 @@ export default function PanelHeader() {
   const [steps, setSteps] = useState([]);
   const { registration, setRegistration } = useContext(RegistrationContext);
   const isLSAEligible = registration["personal-currentmilestone"] >= 25;
-  const submitted = registration["submitted"];
+  const submitted = registration["confirmed"];
 
   //Page information for populating header on current page
   const currentPage = location.pathname.replace("/register/", "");

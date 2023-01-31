@@ -1,12 +1,12 @@
 {
-  "submitted": false,
+  "confirmed": false,
   "personal-firstname": "testapifirstname",
   "personal-lastname": "testlastname",
   "personal-governmentemail": "testemail@test.com",
   "personal-governmentphone": "(604) 525-2525",
   "personal-employeenumber": "2138adse12",
-  "personal-ministryorganization": "org-10",
-  "personal-branch": "testbranch",
+  "organization": "org-10",
+  "branch": "testbranch",
   "personal-currentmilestone": 25,
   "personal-priormilestones": [20, 15],
   "personal-qualifyingyear": 2023,
@@ -43,8 +43,9 @@
   "supervisorcitycommunity": "Victoria",
   "supervisorpostalcode": "V8T0R2",
   "supervisorpobox": "98563",
-  "retirementdate": 1683702000000,
+  "retirement_date": 1683702000000,
   "retiringcurrentyear": true,
-  "bcgeumember": true,
-  "ceremonyoptout": true
+  "bcgeu": true,
+  "ceremony_opt_out": true,
+  "survey_participation": true
 }

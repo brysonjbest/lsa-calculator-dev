@@ -31,7 +31,7 @@ export default function CalculatorDelegated() {
         lastname: "",
         governmentemail: "",
         employeenumber: "",
-        ministryorganization: null,
+        organization: null,
         yearsofservice: "",
         currentmilestone: "",
         qualifyingyear: "",

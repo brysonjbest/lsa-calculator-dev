@@ -11,7 +11,7 @@
       "governmentemail": "test@test.com",
       "employeenumber": "1234567",
 
-      "ministryorganization": "Ministry of Social Development"
+      "organization": "Ministry of Social Development"
     },
     {
       "employee": 2,
@@ -23,7 +23,7 @@
       "lastname": "Doe",
       "governmentemail": "test@test.com",
       "employeenumber": "7654321",
-      "ministryorganization": "Office of the Premier"
+      "organization": "Office of the Premier"
     }
   ]
 }

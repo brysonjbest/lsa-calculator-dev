@@ -41,21 +41,21 @@ export default function LSADetails({ errors, panelName, itemNumber }) {
           <div className="lsa-attendance-details">
             <div className="lsa-attendance-form-field-container">
               <label
-                htmlFor={`bcgeumember`}
+                htmlFor={`bcgeu`}
                 className={classNames("block", {
-                  "p-error": errors.bcgeumember,
+                  "p-error": errors.bcgeu,
                 })}
               >
                 {`Are you a BCGEU member?`}
               </label>
               <div>
                 <Controller
-                  name="bcgeumember"
+                  name="bcgeu"
                   control={control}
                   render={({ field, fieldState }) => (
                     <Checkbox
                       id={`${field.name}`}
-                      aria-describedby={`bcgeumember-help`}
+                      aria-describedby={`bcgeu-help`}
                       {...field}
                       className={classNames("form-field block", {
                         "p-invalid": fieldState.error,
@@ -68,7 +68,7 @@ export default function LSADetails({ errors, panelName, itemNumber }) {
                 />
                 <small>Yes, I am a BCGEU member.</small>
               </div>
-              {getFormErrorMessage(`bcgeumember`, errors)}
+              {getFormErrorMessage(`bcgeu`, errors)}
             </div>
 
             <div className="lsa-attendance-form-field-container">
@@ -94,7 +94,7 @@ export default function LSADetails({ errors, panelName, itemNumber }) {
                       })}
                       inputId={field.name}
                       onChange={(e) => {
-                        setValue("retirementdate", null);
+                        setValue("retirement_date", null);
                         field.onChange(e.checked);
                       }}
                       checked={field.value}
@@ -108,16 +108,16 @@ export default function LSADetails({ errors, panelName, itemNumber }) {
             {isRetiring ? (
               <div className="lsa-attendance-form-field-container">
                 <label
-                  htmlFor={`retirementdate`}
+                  htmlFor={`retirement_date`}
                   className={classNames("block", {
-                    "p-error": errors.retirementdate,
+                    "p-error": errors.retirement_date,
                   })}
                 >
                   {`Please select your retirement date:`}
                 </label>
 
                 <Controller
-                  name="retirementdate"
+                  name="retirement_date"
                   control={control}
                   rules={{
                     required:
@@ -126,7 +126,7 @@ export default function LSADetails({ errors, panelName, itemNumber }) {
                   render={({ field, fieldState }) => (
                     <Calendar
                       id={`${field.name}`}
-                      aria-describedby={`retirementdate-help`}
+                      aria-describedby={`retirement_date-help`}
                       className={classNames("form-field block", {
                         "p-invalid": fieldState.error,
                       })}
@@ -145,26 +145,26 @@ export default function LSADetails({ errors, panelName, itemNumber }) {
                 />
                 <small>Please select your retirement date.</small>
 
-                {getFormErrorMessage(`retirementdate`, errors)}
+                {getFormErrorMessage(`retirement_date`, errors)}
               </div>
             ) : null}
             <div className="lsa-attendance-form-field-container">
               <label
-                htmlFor={`ceremonyoptout`}
+                htmlFor={`ceremony_opt_out`}
                 className={classNames("block", {
-                  "p-error": errors.ceremonyoptout,
+                  "p-error": errors.ceremony_opt_out,
                 })}
               >
                 {`Would you prefer to opt out of the Long Service Awards Ceremony?`}
               </label>
               <div>
                 <Controller
-                  name="ceremonyoptout"
+                  name="ceremony_opt_out"
                   control={control}
                   render={({ field, fieldState }) => (
                     <Checkbox
                       id={`${field.name}`}
-                      aria-describedby={`ceremonyoptout-help`}
+                      aria-describedby={`ceremony_opt_out-help`}
                       {...field}
                       className={classNames("form-field block", {
                         "p-invalid": fieldState.error,
@@ -180,7 +180,7 @@ export default function LSADetails({ errors, panelName, itemNumber }) {
                   the ceremony.
                 </small>
               </div>
-              {getFormErrorMessage(`ceremonyoptout`, errors)}
+              {getFormErrorMessage(`ceremony_opt_out`, errors)}
             </div>
           </div>
         </div>

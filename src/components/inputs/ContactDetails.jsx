@@ -271,15 +271,15 @@ export default function ContactDetails({
               {extended || delegated ? (
                 <div className="contact-form-field-container">
                   <label
-                    htmlFor={`${formItemName}ministryorganization`}
+                    htmlFor={`organization`}
                     className={classNames("block", {
-                      "p-error": errors.ministryorganization,
+                      "p-error": errors.organization,
                     })}
                   >
                     {`${panelTitle} Ministry/Organization`}
                   </label>
                   <Controller
-                    name={`${formItemName}ministryorganization`}
+                    name={`organization`}
                     control={control}
                     rules={{
                       required: "Error: Ministry or Organization is required.",
@@ -292,7 +292,7 @@ export default function ContactDetails({
                           onBlurMinistry(e.value);
                           field.onChange(e.value);
                         }}
-                        aria-describedby={`${panelGroupName}-ministryorganization-help`}
+                        aria-describedby={`${panelGroupName}-organization-help`}
                         options={fullOrgList}
                         optionLabel="text"
                         className={classNames("form-field block", {
@@ -303,18 +303,18 @@ export default function ContactDetails({
                     )}
                   />
                   {getFormErrorMessage(
-                    `${panelGroupName}-ministryorganization`,
+                    `${panelGroupName}-organization`,
                     errors,
                     panelName,
                     itemNumber - 1,
-                    "ministryorganization"
+                    "organization"
                   )}
                 </div>
               ) : null}
               {extended ? (
                 <div className="contact-form-field-container">
                   <label
-                    htmlFor={`${formItemName}branch`}
+                    htmlFor={`branch`}
                     className={classNames("block", {
                       "p-error": errors.branch,
                     })}
@@ -322,7 +322,7 @@ export default function ContactDetails({
                     {`${panelTitle} Branch`}
                   </label>
                   <Controller
-                    name={`${formItemName}branch`}
+                    name={`branch`}
                     control={control}
                     rules={{ required: "Error: Branch is required." }}
                     render={({ field, fieldState }) => (

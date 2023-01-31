@@ -1,8 +1,8 @@
 import api from "./api.services";
 
 class UsersDataService {
-  postDelegatedUser() {
-    return api.post("/users/register");
+  login() {
+    return api.get("/register/users/login");
   }
 }
 export default new UsersDataService();

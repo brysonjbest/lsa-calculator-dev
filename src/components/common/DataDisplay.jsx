@@ -19,17 +19,17 @@ export default function DataDisplay(props) {
   const columns = props.category ? formServices.get(formField) : [];
 
   const ministryOrgLookup = (rowData) => {
-    return rowData.ministryorganization
-      ? formServices.lookup("organizations", rowData.ministryorganization) ||
+    return rowData.organization
+      ? formServices.lookup("organizations", rowData.organization) ||
           formServices.lookup(
             "currentPinsOnlyOrganizations",
-            rowData.ministryorganization
+            rowData.organization
           )
       : null;
   };
 
   const dynamicColumns = columns.map((col, i) => {
-    if (col.field === "ministryorganization") {
+    if (col.field === "organization") {
       return (
         <Column
           key={col.field}

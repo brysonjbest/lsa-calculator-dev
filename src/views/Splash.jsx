@@ -13,7 +13,7 @@ import "./Splash.css";
 export default function Splash() {
   const navigate = useNavigate();
   const { registration } = useContext(RegistrationContext);
-  const submittedRegistration = registration ? registration.submitted : null;
+  const submittedRegistration = registration ? registration.confirmed : null;
   const activeRegistration = JSON.stringify(registration) !== "{}";
 
   const registerRedirect = () => {

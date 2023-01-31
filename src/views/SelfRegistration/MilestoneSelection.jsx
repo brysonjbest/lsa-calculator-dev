@@ -30,8 +30,8 @@ export default function MilestoneSelection() {
     : null;
 
   const ministryRegistration =
-    registration && registration["personal-ministryorganization"]
-      ? registration["personal-ministryorganization"]
+    registration && registration["organization"]
+      ? registration["organization"]
       : null;
 
   const defaultFormValues = {

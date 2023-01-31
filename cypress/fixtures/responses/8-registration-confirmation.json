@@ -7,7 +7,7 @@
     "personal-governmentemail": "testemail@test.com",
     "personal-governmentphone": "(604) 525-2525",
     "personal-employeenumber": "2138adse12",
-    "personal-ministryorganization": "org-10",
+    "organization": "org-10",
     "personal-branch": "testbranch",
     "personal-currentmilestone": 25,
     "personal-priormilestones": [20, 15],

@@ -151,7 +151,7 @@ const schemaData = {
     { field: "governmentphone", header: "Government Phone Number" },
     { field: "employeenumber", header: "Employee Number" },
     {
-      field: "ministryorganization",
+      field: "organization",
       header: "Ministry / Organization",
     },
     { field: "branch", header: "Branch" },
@@ -206,11 +206,11 @@ const schemaData = {
       },
     },
     {
-      field: "retirementdate",
+      field: "retirement_date",
       header: "Retirement Date",
       body: (rowData) => {
-        const retireDate = rowData.retirementdate
-          ? rowData.retirementdate.toDateString()
+        const retireDate = rowData.retirement_date
+          ? rowData.retirement_date.toDateString()
           : null;
         return rowData.retiringcurrentyear
           ? retireDate
@@ -218,19 +218,19 @@ const schemaData = {
       },
     },
     {
-      field: "bcgeumember",
+      field: "bcgeu",
       header: "Are you a BCGEU Member?",
       body: (rowData) => {
-        return rowData.bcgeumember
+        return rowData.bcgeu
           ? "Yes, I am a BCGEU Member."
           : "No, I am not a BCGEU Member.";
       },
     },
     {
-      field: "ceremonyoptout",
+      field: "ceremony_opt_out",
       header: "I Plan to Attend The Awards Ceremony",
       body: (rowData) => {
-        return !rowData.ceremonyoptout
+        return !rowData.ceremony_opt_out
           ? "Yes, I plan to attend the awards ceremony."
           : "No, I do not plan to attend the awards ceremony.";
       },
@@ -268,7 +268,7 @@ const schemaData = {
     { field: "governmentemail", header: "Government Email" },
     { field: "employeenumber", header: "Employee Number" },
     {
-      field: "ministryorganization",
+      field: "organization",
       header: "Ministry / Organization",
     },
     { field: "yearsofservice", header: "Current Years of Service" },

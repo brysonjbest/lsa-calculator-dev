@@ -29,7 +29,7 @@ export default function Confirmation() {
 
   //Load default form values and
   const defaultFormValues = {
-    consent: false,
+    survey_participation: false,
   };
 
   const methods = useForm({
@@ -39,7 +39,7 @@ export default function Confirmation() {
     }, [registration]),
   });
 
-  const [submitted, setSubmitted] = useState(registration["submitted"]);
+  const [submitted, setSubmitted] = useState(registration["confirmed"]);
   const [errorsRegistration, setErrorsRegistration] = useState({
     milestone: true,
     award: true,
@@ -64,7 +64,7 @@ export default function Confirmation() {
     let registrationUpdate = {
       ...registrationData,
       ...finalData,
-      ...{ submitted: true, loading: true },
+      ...{ confirmed: true, loading: true },
     };
 
     if (!isLSAEligible) {
@@ -81,10 +81,10 @@ export default function Confirmation() {
         awarddescription: "",
         awardname: "",
         awardoptions: [],
-        retirementdate: null,
+        retirement_date: null,
         retiringcurrentyear: false,
-        bcgeumember: false,
-        ceremonyoptout: false,
+        bcgeu: false,
+        ceremony_opt_out: false,
       };
       registrationUpdate = { ...registrationUpdate, ...defaultFormReset };
     }
@@ -128,8 +128,8 @@ export default function Confirmation() {
         governmentemail: registration["personal-governmentemail"],
         governmentphone: registration["personal-governmentphone"],
         employeenumber: registration["personal-employeenumber"],
-        ministryorganization: registration["personal-ministryorganization"],
-        branch: registration["personal-branch"],
+        organization: registration["organization"],
+        branch: registration["branch"],
       },
     ];
     const officeArray = [
@@ -174,9 +174,9 @@ export default function Confirmation() {
     const lsaArray = [
       {
         retiringcurrentyear: registration["retiringcurrentyear"],
-        retirementdate: registration["retirementdate"],
-        ceremonyoptout: registration["ceremonyoptout"],
-        bcgeumember: registration["bcgeumember"],
+        retirement_date: registration["retirement_date"],
+        ceremony_opt_out: registration["ceremony_opt_out"],
+        bcgeu: registration["bcgeu"],
       },
     ];
     const lsaDataSet = {
@@ -604,14 +604,14 @@ export default function Confirmation() {
                       <h5>Would you like to participate in our survey?</h5>
                       <div className="confirmation-form-checkbox">
                         <Controller
-                          name="consent"
+                          name="survey_participation"
                           defaultValue={false}
                           control={control}
                           render={({ field }) => (
                             <Checkbox
                               id={field.name}
                               {...field}
-                              inputId="consent"
+                              inputId="survey_participation"
                               checked={field.value}
                               onChange={(e) => {
                                 setConsentChecked(e.checked);
@@ -621,7 +621,7 @@ export default function Confirmation() {
                           )}
                         />
                         <label
-                          htmlFor={`consent`}
+                          htmlFor={`survey_participation`}
                           className="block"
                           style={
                             consentChecked

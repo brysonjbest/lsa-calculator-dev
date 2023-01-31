@@ -23,9 +23,9 @@ export default function RegistrationHandler() {
   const navigate = useNavigate();
   const isLSAEligible = registration["personal-currentmilestone"] >= 25;
 
-  const regType = typeof registration["submitted"];
+  const regType = typeof registration["confirmed"];
   const activeRegistration = regType !== "undefined";
-  const [submitted, setSubmitted] = useState(registration["submitted"]);
+  const [submitted, setSubmitted] = useState(registration["confirmed"]);
   const [createNew, setCreateNew] = useState(false);
 
   const stateData = location.state;

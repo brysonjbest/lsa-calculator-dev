@@ -26,17 +26,6 @@ export default function App() {
     [registration, setRegistration]
   );
 
-  // const [items, setItems] = useState([]);
-
-  // useEffect(() => {
-  //   const {session = null, SMSESSION=''} = req.cookies || {};
-  //   const items = JSON.parse(localStorage.getItem("user"));
-  //   console.log(localStorage, "this is local storage", session, SMSESSION);
-  //   if (items) {
-  //     setItems(items);
-  //   }
-  // }, []);
-
   useEffect(() => {
     const fetchUser = async () => {
       const data = await getUserData();
@@ -51,8 +40,8 @@ export default function App() {
       // const data = {};
       let finalData = data;
       // Parses single date stored in UTC needed on frontend
-      if (data.retirementdate) {
-        finalData.retirementdate = new Date(data.retirementdate);
+      if (data.retirement_date) {
+        finalData.retirement_date = new Date(data.retirement_date);
       }
       setRegistration(finalData);
       return finalData;

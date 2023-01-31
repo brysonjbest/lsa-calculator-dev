@@ -23,9 +23,9 @@ export default function LSAAttendance() {
 
   const defaultFormValues = {
     retiringcurrentyear: false,
-    retirementdate: null,
-    ceremonyoptout: false,
-    bcgeumember: false,
+    retirement_date: null,
+    ceremony_opt_out: false,
+    bcgeu: false,
   };
 
   const methods = useForm({
@@ -46,8 +46,8 @@ export default function LSAAttendance() {
   const saveData = (data) => {
     const registrationData = registration;
     const finalData = Object.assign({}, data);
-    const date = finalData.retirementdate
-      ? new Date(finalData.retirementdate).getTime()
+    const date = finalData.retirement_date
+      ? new Date(finalData.retirement_date).getTime()
       : null;
     console.log("this is date", date);
     try {
@@ -66,7 +66,7 @@ export default function LSAAttendance() {
       );
       const finalRegistrationPost = {
         ...registrationUpdate,
-        ...{ retirementdate: date },
+        ...{ retirement_date: date },
       };
       console.log(
         "this should be posted and needs testing - but posts final date to api in utc",
