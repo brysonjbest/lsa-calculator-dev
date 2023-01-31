@@ -4,7 +4,7 @@
   "organization": "org-10",
   "branch": "testbranch",
   "retirement_date": 1683702000000,
-  "retiringcurrentyear": true,
+  "retiring_current_year": true,
   "bcgeu": true,
   "ceremony_opt_out": true,
   "survey_participation": false,
@@ -50,8 +50,6 @@
     {
       "award": {
         "id": 1001,
-        "type": "bracelet",
-        "milestone": 35,
         "label": "Whale Tail Painting",
         "description": "A magnificent painting of a Whale Tail",
         "image_url": "wp-content/uploads/2022/03/bracelet-compass.jpg",
@@ -69,8 +67,8 @@
     }
   ],
 
-  "personal-currentmilestone": 25,
-  "personal-priormilestones": [20, 15],
-  "personal-qualifyingyear": 2023,
-  "personal-yearsofservice": 25
+  "milestone": 25,
+  "prior_milestones": [20, 15],
+  "qualifying_year": 2023,
+  "years_of_service": 25
 }

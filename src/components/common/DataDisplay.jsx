@@ -29,6 +29,10 @@ export default function DataDisplay(props) {
   };
 
   const dynamicColumns = columns.map((col, i) => {
+   const columnClass = `${col.header
+     .replace(/\s+/g, "-")
+     .replace(/\//g, "")
+     .toLowerCase()}-column`;
     if (col.field === "organization") {
       return (
         <Column
@@ -36,6 +40,7 @@ export default function DataDisplay(props) {
           field={col.field}
           header={col.header}
           body={ministryOrgLookup}
+          className={columnClass}
         />
       );
     } else if (col.body) {
@@ -45,10 +50,11 @@ export default function DataDisplay(props) {
           field={col.field}
           header={col.header}
           body={col.body}
+          className={columnClass}
         />
       );
-    } else {
-      return <Column key={col.field} field={col.field} header={col.header} />;
+    } else {     
+          return <Column key={col.field} field={col.field} header={col.header} className={columnClass} />;
     }
   });
 

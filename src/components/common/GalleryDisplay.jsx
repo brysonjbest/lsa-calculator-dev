@@ -68,7 +68,6 @@ export default function GalleryDisplay(props) {
               alt={data.label}
             />
             <div className="item-name">{data.label}</div>
-            {/* <div className="item-description">{data.description}</div> */}
           </div>
           <div className="item-grid-item-bottom">
             <AppButton

@@ -21,7 +21,7 @@ export default function RegistrationHandler() {
   const toast = useContext(ToastContext);
   const location = useLocation();
   const navigate = useNavigate();
-  const isLSAEligible = registration["personal-currentmilestone"] >= 25;
+  const isLSAEligible = registration["milestone"] >= 25;
 
   const regType = typeof registration["confirmed"];
   const activeRegistration = regType !== "undefined";
@@ -37,18 +37,18 @@ export default function RegistrationHandler() {
       if (registration["contact"]["firstname"]) {
         route = "milestone";
       }
-      if (registration["personal-yearsofservice"]) {
+      if (registration["years_of_service"]) {
         route = "details";
       }
       if (registration["contact"]["personal_address"]["street1"]) {
         isLSAEligible ? (route = "attendance") : (route = "supervisor");
       }
 
-      if (registration["retiringcurrentyear"] != null) {
+      if (registration["retiring_current_year"] != null) {
         isLSAEligible ? (route = "award") : (route = "supervisor");
       }
 
-      if (registration["awardname"]) {
+      if (registration["awards"][0]["award"]["label"]) {
         route = "supervisor";
       }
 

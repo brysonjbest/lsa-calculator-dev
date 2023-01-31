@@ -127,8 +127,8 @@ export default function Award() {
 
   useEffect(() => {
     const setAwards = async () => {
-      const currentMilestone = registration["personal-currentmilestone"]
-        ? registration["personal-currentmilestone"]
+      const currentMilestone = registration["milestone"]
+        ? registration["milestone"]
         : null;
       const data = await getAvailableAwards(currentMilestone);
       setAvailableAwards(data);
@@ -142,7 +142,7 @@ export default function Award() {
 
   if (!isLSAEligible) return <LSAIneligible />;
 
-  const currentMilestone = registration["personal-currentmilestone"] || null;
+  const currentMilestone = registration["milestone"] || null;
 
   return (
     <>

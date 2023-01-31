@@ -44,9 +44,7 @@ export default function MilestoneSelector({
       ? "your"
       : formServices.capitalize(panelName) || "";
 
-  const itemName = itemNumber
-    ? `${panelName}.${itemNumber - 1}.`
-    : `${panelGroupName}-`;
+  const itemName = itemNumber ? `${panelName}.${itemNumber - 1}.` : ``;
 
   const milestones = formServices.get("milestones") || [];
 
@@ -81,23 +79,24 @@ export default function MilestoneSelector({
   //Monitor years of service change and update fields any time anything new is entered
 
   const onYearsOfServiceChange = () => {
-    resetField(`${itemName}currentmilestone`, { defaultValue: null });
-    resetField(`${itemName}priormilestones`, { defaultValue: [] });
-    resetField(`${itemName}qualifyingyear`, { defaultValue: "" });
+    resetField(`${itemName}milestone`, { defaultValue: null });
+    resetField(`${itemName}prior_milestones`, { defaultValue: [] });
+    resetField(`${itemName}qualifying_year`, { defaultValue: "" });
 
     const milestones = formServices.get("milestones") || [];
     const filteredMilestones = milestones.filter(
       (milestone) =>
-        milestone["value"] <= getValues(`${itemName}yearsofservice`)
+        milestone["value"] <= getValues(`${itemName}years_of_service`)
     );
     const filteredPriorMilestones = milestones.filter(
-      (milestone) => milestone["value"] < getValues(`${itemName}yearsofservice`)
+      (milestone) =>
+        milestone["value"] < getValues(`${itemName}years_of_service`)
     );
     setAvailableMilestones(filteredMilestones);
     setPriorMilestonesAvailable(filteredPriorMilestones);
   };
 
-  const watchYearsOfService = watch(`${itemName}yearsofservice`);
+  const watchYearsOfService = watch(`${itemName}years_of_service`);
 
   useEffect(() => {
     onYearsOfServiceChange();
@@ -126,8 +125,8 @@ export default function MilestoneSelector({
 
   const calculateTotal = (newValue) => {
     if (newValue !== 0) {
-      setValue(`${itemName}yearsofservice`, newValue);
-      clearErrors(`${itemName}yearsofservice`);
+      setValue(`${itemName}years_of_service`, newValue);
+      clearErrors(`${itemName}years_of_service`);
     }
   };
 
@@ -140,15 +139,15 @@ export default function MilestoneSelector({
           <div className="milestone-form-field-container yearsofservice-block">
             <div className="milestone-form-yearsofservice-block">
               <label
-                htmlFor={`${itemName}yearsofservice`}
+                htmlFor={`${itemName}years_of_service`}
                 className={classNames("block", {
-                  "p-error": errors.yearsofservice,
+                  "p-error": errors.years_of_service,
                 })}
               >
                 {`${panelTitle} Years of Service`}
               </label>
               <Controller
-                name={`${itemName}yearsofservice`}
+                name={`${itemName}years_of_service`}
                 control={control}
                 rules={{ required: "Error: Years of Service is required." }}
                 render={({ field, fieldState }) => (
@@ -161,7 +160,7 @@ export default function MilestoneSelector({
                     onChange={(e) => {
                       field.onChange(e.value);
                     }}
-                    aria-describedby={`${panelGroupName}-yearsofservice-help`}
+                    aria-describedby={`${panelGroupName}-years_of_service-help`}
                     className={classNames("form-field block", {
                       "p-invalid": fieldState.error,
                     })}
@@ -172,11 +171,11 @@ export default function MilestoneSelector({
                 )}
               />
               {getFormErrorMessage(
-                `${panelGroupName}-yearsofservice`,
+                `${panelGroupName}-years_of_service`,
                 errors,
                 panelName,
                 itemNumber - 1,
-                "yearsofservice"
+                "years_of_service"
               )}
             </div>
             <div className="calculator-button-toggle">
@@ -199,15 +198,15 @@ export default function MilestoneSelector({
           ) : null}
           <div className="milestone-form-field-container">
             <label
-              htmlFor={`${itemName}currentmilestone`}
+              htmlFor={`${itemName}milestone`}
               className={classNames("block", {
-                "p-error": errors.currentmilestone,
+                "p-error": errors.milestone,
               })}
             >
               {`${panelTitle} Current Milestone`}
             </label>
             <Controller
-              name={`${itemName}currentmilestone`}
+              name={`${itemName}milestone`}
               control={control}
               rules={{
                 required: {
@@ -217,14 +216,14 @@ export default function MilestoneSelector({
               }}
               render={({ field, fieldState }) => (
                 <Dropdown
-                  disabled={!getValues(`${itemName}yearsofservice`)}
+                  disabled={!getValues(`${itemName}years_of_service`)}
                   id={`${field.name}`}
                   value={field.value}
                   onChange={(e) => {
                     field.onChange(e.value);
                     onMilestoneSelection(e);
                   }}
-                  aria-describedby={`${panelGroupName}-currentmilestone-help`}
+                  aria-describedby={`${panelGroupName}-milestone-help`}
                   options={availableMilestones}
                   optionLabel="text"
                   className={classNames("form-field block", {
@@ -237,39 +236,39 @@ export default function MilestoneSelector({
               )}
             />
             {getFormErrorMessage(
-              `${panelGroupName}-currentmilestone`,
+              `${panelGroupName}-milestone`,
               errors,
               panelName,
               itemNumber - 1,
-              "currentmilestone"
+              "milestone"
             )}
           </div>
-          {getValues(`${itemName}currentmilestone`) && selfregister ? (
+          {getValues(`${itemName}milestone`) && selfregister ? (
             <div className="milestone-form-field-container">
               <label
-                htmlFor={`${itemName}qualifyingyear`}
+                htmlFor={`${itemName}qualifying_year`}
                 className={classNames("block", {
-                  "p-error": errors.qualifyingyear,
+                  "p-error": errors.qualifying_year,
                 })}
               >
                 {`${panelTitle} Qualifying Year`}
               </label>
               <Controller
-                name={`${itemName}qualifyingyear`}
+                name={`${itemName}qualifying_year`}
                 control={control}
                 rules={{
                   required: {
-                    value: getValues(`${itemName}currentmilestone`),
+                    value: getValues(`${itemName}milestone`),
                     message: "Error: Qualifying Year is required.",
                   },
                 }}
                 render={({ field, fieldState }) => (
                   <Dropdown
-                    disabled={!getValues(`${itemName}yearsofservice`)}
+                    disabled={!getValues(`${itemName}years_of_service`)}
                     id={`${field.name}`}
                     value={field.value}
                     onChange={(e) => field.onChange(e.value)}
-                    aria-describedby={`${panelGroupName}-qualifyingyear-help`}
+                    aria-describedby={`${panelGroupName}-qualifying_year-help`}
                     options={qualifyingYears}
                     optionLabel="text"
                     tooltip="Select the year that qualified for the current milestone."
@@ -282,11 +281,11 @@ export default function MilestoneSelector({
                 )}
               />
               {getFormErrorMessage(
-                `${panelGroupName}-qualifyingyear`,
+                `${panelGroupName}-qualifying_year`,
                 errors,
                 panelName,
                 itemNumber - 1,
-                "qualifyingyear"
+                "qualifying_year"
               )}
             </div>
           ) : null}
@@ -294,19 +293,19 @@ export default function MilestoneSelector({
           {ministryEligible ? (
             <div className="milestone-form-field-container">
               <label
-                htmlFor={`${itemName}priormilestones`}
+                htmlFor={`${itemName}prior_milestones`}
                 className={classNames("block", {
-                  "p-error": errors.priormilestones,
+                  "p-error": errors.prior_milestones,
                 })}
               >
                 {`${panelTitle} Prior Unclaimed Milestone(s) Selected`}
               </label>
               <Controller
-                name={`${itemName}priormilestones`}
+                name={`${itemName}prior_milestones`}
                 control={control}
                 render={({ field, fieldState }) => (
                   <MultiSelect
-                    disabled={!getValues(`${itemName}yearsofservice`)}
+                    disabled={!getValues(`${itemName}years_of_service`)}
                     id={`${field.name}`}
                     display="chip"
                     value={field.value}
@@ -314,7 +313,7 @@ export default function MilestoneSelector({
                       field.onChange(e.value);
                       onMilestoneSelection(e);
                     }}
-                    aria-describedby={`${panelGroupName}-priormilestones-help`}
+                    aria-describedby={`${panelGroupName}-prior_milestones-help`}
                     options={priorMilestonesAvailable}
                     optionLabel="text"
                     tooltip="If prior Service Pins have not been claimed, use this field to submit a claim of eligibility for those years."
@@ -327,11 +326,11 @@ export default function MilestoneSelector({
                 )}
               />
               {getFormErrorMessage(
-                `${panelGroupName}-priormilestones`,
+                `${panelGroupName}-prior_milestones`,
                 errors,
                 panelName,
                 itemNumber - 1,
-                "priormilestones"
+                "prior_milestones"
               )}
             </div>
           ) : null}

@@ -157,15 +157,15 @@ const schemaData = {
     { field: "branch", header: "Branch" },
   ],
   milestoneFormFields: [
-    { field: "yearsofservice", header: "Current Years of Service" },
-    { field: "currentmilestone", header: "Current Milestone" },
-    { field: "qualifyingyear", header: "Milestone Qualifying Year" },
+    { field: "years_of_service", header: "Current Years of Service" },
+    { field: "milestone", header: "Current Milestone" },
+    { field: "qualifying_year", header: "Milestone Qualifying Year" },
     {
-      field: "priormilestones",
+      field: "prior_milestones",
       header: "Prior Unclaimed Milestones",
       body: (rowData) => {
-        return rowData.priormilestones
-          ? rowData.priormilestones.map((each) => `${each} years `)
+        return rowData.prior_milestones
+          ? rowData.prior_milestones.map((each) => `${each} years `)
           : null;
       },
     },
@@ -195,10 +195,10 @@ const schemaData = {
   ],
   lsaFormFields: [
     {
-      field: "retiringcurrentyear",
+      field: "retiring_current_year",
       header: "I Plan to Retire This Year",
       body: (rowData) => {
-        return rowData.retiringcurrentyear
+        return rowData.retiring_current_year
           ? "Yes, I plan to retire this year."
           : "No, I do not plan to retire this year.";
       },
@@ -210,7 +210,7 @@ const schemaData = {
         const retireDate = rowData.retirement_date
           ? rowData.retirement_date.toDateString()
           : null;
-        return rowData.retiringcurrentyear
+        return rowData.retiring_current_year
           ? retireDate
           : "Not retiring this year.";
       },
@@ -269,15 +269,15 @@ const schemaData = {
       field: "organization",
       header: "Ministry / Organization",
     },
-    { field: "yearsofservice", header: "Current Years of Service" },
-    { field: "currentmilestone", header: "Current Milestone" },
-    { field: "qualifyingyear", header: "Milestone Qualifying Year" },
+    { field: "years_of_service", header: "Current Years of Service" },
+    { field: "milestone", header: "Current Milestone" },
+    { field: "qualifying_year", header: "Milestone Qualifying Year" },
     {
-      field: "priormilestones",
+      field: "prior_milestones",
       header: "Prior Unclaimed Milestones",
       body: (rowData) => {
-        return rowData.priormilestones
-          ? rowData.priormilestones.map((each) => `${each} years; `)
+        return rowData.prior_milestones
+          ? rowData.prior_milestones.map((each) => `${each} years; `)
           : null;
       },
     },

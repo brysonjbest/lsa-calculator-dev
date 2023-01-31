@@ -18,7 +18,7 @@ export default function PanelHeader() {
   const location = useLocation();
   const [steps, setSteps] = useState([]);
   const { registration, setRegistration } = useContext(RegistrationContext);
-  const isLSAEligible = registration["personal-currentmilestone"] >= 25;
+  const isLSAEligible = registration["milestone"] >= 25;
   const submitted = registration["confirmed"];
 
   //Page information for populating header on current page

@@ -91,7 +91,7 @@ export default function Confirmation() {
           },
         ],
         retirement_date: null,
-        retiringcurrentyear: false,
+        retiring_current_year: false,
         bcgeu: false,
         ceremony_opt_out: false,
       };
@@ -124,10 +124,10 @@ export default function Confirmation() {
   useEffect(() => {
     const milestoneArray = [
       {
-        yearsofservice: registration["personal-yearsofservice"],
-        currentmilestone: registration["personal-currentmilestone"],
-        qualifyingyear: registration["personal-qualifyingyear"],
-        priormilestones: registration["personal-priormilestones"],
+        years_of_service: registration["years_of_service"],
+        milestone: registration["milestone"],
+        qualifying_year: registration["qualifying_year"],
+        prior_milestones: registration["prior_milestones"],
       },
     ];
     const personalArray = [
@@ -183,7 +183,7 @@ export default function Confirmation() {
     ];
     const lsaArray = [
       {
-        retiringcurrentyear: registration["retiringcurrentyear"],
+        retiring_current_year: registration["retiring_current_year"],
         retirement_date: registration["retirement_date"],
         ceremony_opt_out: registration["ceremony_opt_out"],
         bcgeu: registration["bcgeu"],
@@ -208,7 +208,7 @@ export default function Confirmation() {
 
     const finalData = isLSAEligible ? lsaDataSet : pinOnlyDataSet;
     const errorValues = {
-      milestone: !registration["personal-yearsofservice"],
+      milestone: !registration["years_of_service"],
       personal: !registration["contact"]["firstname"],
       office: !registration["contact"]["office_address"]["street1"],
       supervisor: !registration["supervisor"]["firstname"],

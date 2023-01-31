@@ -57,10 +57,10 @@ const EmployeeList = ({ errors }) => {
           office_email: "",
           employee_number: "",
           organization: null,
-          yearsofservice: "",
-          currentmilestone: "",
-          qualifyingyear: "",
-          priormilestones: "",
+          years_of_service: "",
+          milestone: "",
+          qualifying_year: "",
+          prior_milestones: "",
         },
       ],
     });
@@ -131,10 +131,10 @@ const EmployeeList = ({ errors }) => {
               office_email: "",
               employee_number: "",
               organization: null,
-              yearsofservice: "",
-              currentmilestone: "",
-              qualifyingyear: "",
-              priormilestones: "",
+              years_of_service: "",
+              milestone: "",
+              qualifying_year: "",
+              prior_milestones: "",
             });
           }}
         >

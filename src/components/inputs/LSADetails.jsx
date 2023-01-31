@@ -32,7 +32,7 @@ export default function LSADetails({ errors, panelName, itemNumber }) {
 
   const { control, watch, setValue } = useFormContext();
 
-  const isRetiring = watch("retiringcurrentyear");
+  const isRetiring = watch("retiring_current_year");
 
   return (
     <div className={`lsa-attendance-form-${panelGroupName}`}>
@@ -73,21 +73,21 @@ export default function LSADetails({ errors, panelName, itemNumber }) {
 
             <div className="lsa-attendance-form-field-container">
               <label
-                htmlFor={`retiringcurrentyear`}
+                htmlFor={`retiring_current_year`}
                 className={classNames("block", {
-                  "p-error": errors.retiringcurrentyear,
+                  "p-error": errors.retiring_current_year,
                 })}
               >
                 {`Are you retiring this year?`}
               </label>
               <div>
                 <Controller
-                  name="retiringcurrentyear"
+                  name="retiring_current_year"
                   control={control}
                   render={({ field, fieldState }) => (
                     <Checkbox
                       id={`${field.name}`}
-                      aria-describedby={`retiringcurrentyear-help`}
+                      aria-describedby={`retiring_current_year-help`}
                       {...field}
                       className={classNames("form-field block", {
                         "p-invalid": fieldState.error,
@@ -103,7 +103,7 @@ export default function LSADetails({ errors, panelName, itemNumber }) {
                 />
                 <small>Yes, I am retiring this year.</small>
               </div>
-              {getFormErrorMessage(`retiringcurrentyear`, errors)}
+              {getFormErrorMessage(`retiring_current_year`, errors)}
             </div>
             {isRetiring ? (
               <div className="lsa-attendance-form-field-container">

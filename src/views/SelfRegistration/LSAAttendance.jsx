@@ -22,7 +22,7 @@ export default function LSAAttendance() {
   const { registration, setRegistration } = useContext(RegistrationContext);
 
   const defaultFormValues = {
-    retiringcurrentyear: false,
+    retiring_current_year: false,
     retirement_date: null,
     ceremony_opt_out: false,
     bcgeu: false,

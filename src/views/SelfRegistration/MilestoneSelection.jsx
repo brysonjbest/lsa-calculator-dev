@@ -35,10 +35,20 @@ export default function MilestoneSelection() {
       : null;
 
   const defaultFormValues = {
-    "personal-yearsofservice": "",
-    "personal-currentmilestone": null,
-    "personal-qualifyingyear": "",
-    "personal-priormilestones": [],
+    // awards: [
+    //   {
+    //     award: {
+    //       // years_of_service: null,
+    //       milestone: null,
+    //       qualifying_year: null,
+    //       prior_milestones: [],
+    //     },
+    //   },
+    // ],
+    years_of_service: "",
+    milestone: null,
+    qualifying_year: "",
+    prior_milestones: [],
   };
 
   const methods = useForm({
@@ -61,9 +71,8 @@ export default function MilestoneSelection() {
   const saveData = (data) => {
     let updateData = {};
     if (
-      data["personal-currentmilestone"] !==
-        registration["personal-currentmilestone"] &&
-      registration["awardname"]
+      data["milestone"] !== registration["milestone"] &&
+      registration[awards][0][award]["label"]
     ) {
       updateData = {
         awards: [
@@ -135,7 +144,7 @@ export default function MilestoneSelection() {
         (await formServices.lookup("currentPinsOnlyOrganizations", minData)) ||
         "";
       setMinistrySelected(ministry);
-      yearsData ? setValue("personal-yearsofservice", yearsData) : null;
+      yearsData ? setValue("years_of_service", yearsData) : null;
     };
     getMinistry();
   }, []);
