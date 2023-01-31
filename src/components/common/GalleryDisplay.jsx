@@ -31,12 +31,12 @@ export default function GalleryDisplay(props) {
       <div>
         <div className="item-list-item">
           <img
-            src={`images/item/${data.image_url}`}
+            src={`${import.meta.env.LSA_REGISTRATION_APP_URL}${data.image_url}`}
             onError={(e) => (e.target.src = logo)}
-            alt={data.name}
+            alt={data.label}
           />
           <div className="item-list-detail">
-            <div className="item-name">{data.name}</div>
+            <div className="item-name">{data.label}</div>
           </div>
           <div className="item-list-action">
             <AppButton
@@ -61,12 +61,13 @@ export default function GalleryDisplay(props) {
         <div className="item-grid-item card">
           <div className="item-grid-item-content">
             <img
-              // src={`images/items/${data.image_url}`}
-              src={`${data.image_url}`}
+              src={`${import.meta.env.LSA_REGISTRATION_APP_URL}${
+                data.image_url
+              }`}
               onError={(e) => (e.target.src = logo)}
-              alt={data.name}
+              alt={data.label}
             />
-            <div className="item-name">{data.name}</div>
+            <div className="item-name">{data.label}</div>
             {/* <div className="item-description">{data.description}</div> */}
           </div>
           <div className="item-grid-item-bottom">

@@ -59,7 +59,7 @@ export default function AwardSelector({
           {getFormErrorMessage(
             `${option.name}`,
             errors,
-            "awardoptions",
+            "award_options",
             0,
             option.name
           )}
@@ -89,9 +89,9 @@ export default function AwardSelector({
             <AppButton
               onClick={handleSubmit(() => {
                 submitAward ? submitAward(data) : null;
-                setValue("awardID", data.id);
-                setValue("awardname", data.name);
-                setValue("awarddescription", data.description);
+                setValue("awards.0.award.id", data.id);
+                setValue("awards.0.award.label", data.label);
+                setValue("awards.0.award.description", data.description);
                 setAwardDialog(false);
                 setAwardChosen(data.id);
               })}
@@ -115,7 +115,7 @@ export default function AwardSelector({
   const awardHide = () => {
     setAwardDialog(false);
     setAwardOptions([]);
-    setValue("awardoptions", []);
+    setValue("awards.0.award.award_options", []);
   };
 
   const optionDisplay = renderAwardOptions(awardOptions);

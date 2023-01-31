@@ -66,10 +66,16 @@ export default function MilestoneSelection() {
       registration["awardname"]
     ) {
       updateData = {
-        awardID: "",
-        awardname: "",
-        awarddescription: "",
-        awardoptions: [],
+        awards: [
+          {
+            award: {
+              id: "",
+              label: "",
+              description: "",
+              award_options: [],
+            },
+          },
+        ],
       };
     }
     const registrationData = registration;

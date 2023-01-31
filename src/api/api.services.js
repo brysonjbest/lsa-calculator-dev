@@ -41,17 +41,17 @@ export async function getAvailableAwards(milestone) {
   const allOptions = {
     options25: [
       {
-        id: "1002",
+        id: 1002,
         vendor: "zz21cz3c1",
-        name: "Blue Band",
+        label: "Blue Band",
         description: "Product Description",
         image_url: "https://picsum.photos/200",
         options: [],
       },
       {
-        id: "1000",
+        id: 1000,
         vendor: "f230fh0g3",
-        name: "PECSF Donation",
+        label: "PECSF Donation",
         description: "PECSF Donation Options",
         image_url: "https://picsum.photos/200",
         options: [
@@ -117,9 +117,9 @@ export async function getAvailableAwards(milestone) {
         ],
       },
       {
-        id: "1001",
+        id: 1001,
         vendor: "nvklal433",
-        name: "Whale Tail Painting",
+        label: "Whale Tail Painting",
         description: "Whale Tail Painting",
         image_url: "https://picsum.photos/200",
         options: [
@@ -167,9 +167,9 @@ export async function getAvailableAwards(milestone) {
     ],
     options30: [
       {
-        id: "1001",
+        id: 1001,
         vendor: "nvklal433",
-        name: "Whale Tail Painting",
+        label: "Whale Tail Painting",
         description: "Whale Tail Painting",
         image_url: "https://picsum.photos/200",
         options: [
@@ -215,17 +215,17 @@ export async function getAvailableAwards(milestone) {
         ],
       },
       {
-        id: "1002",
+        id: 1002,
         vendor: "zz21cz3c1",
-        name: "Blue Band",
+        label: "Blue Band",
         description: "Product Description",
         image_url: "https://picsum.photos/200",
         options: [],
       },
       {
-        id: "1003",
+        id: 1003,
         vendor: "244wgerg2",
-        name: "Blue T-Shirt",
+        label: "Blue T-Shirt",
         description: "Product Description",
         image_url: "https://picsum.photos/200",
       },

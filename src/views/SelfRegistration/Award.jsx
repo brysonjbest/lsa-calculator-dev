@@ -23,10 +23,16 @@ export default function Award() {
   const { registration, setRegistration } = useContext(RegistrationContext);
 
   const defaultFormValues = {
-    awardID: "",
-    awardname: "",
-    awarddescription: "",
-    awardoptions: [],
+    awards: [
+      {
+        award: {
+          id: "",
+          label: "",
+          description: "",
+          award_options: [],
+        },
+      },
+    ],
   };
 
   const methods = useForm({
@@ -71,7 +77,9 @@ export default function Award() {
       setTimeout(() => {
         toast.current.replace(formServices.lookup("messages", "savesuccess"));
         setRegistration((state) => ({ ...state, loading: false }));
-        registrationUpdate["awardname"] ? setAwardSelected(true) : false;
+        registrationUpdate["awards"][0]["award"]["label"]
+          ? setAwardSelected(true)
+          : false;
       }, 3000);
     } catch (error) {
       toast.current.replace(formServices.lookup("messages", "saveerror"));
@@ -81,8 +89,10 @@ export default function Award() {
   };
 
   const submitSelection = (data) => {
-    const testValues = getValues("awardoptions")[0];
+    const testValues = getValues("awards.0.award.award_options")[0];
+    console.log(testValues, "these are award test values");
     const testData = data.options.map((each) => each.name);
+    console.log(testData, "these are award test data");
     const finalOptions = {};
 
     testData.forEach((element) => {
@@ -91,8 +101,11 @@ export default function Award() {
         : null;
     });
 
-    setValue("awardoptions", [finalOptions]);
-    const registrationData = { ...registration, ...{ awardoptions: [] } };
+    setValue("awards.0.award.award_options", [finalOptions]);
+    const registrationData = {
+      ...registration,
+      ...{ awards: [{ award: { award_options: [] } }] },
+    };
     const finalData = Object.assign({}, data);
     setChosenAward(data.id);
     setRegistration(registrationData);
@@ -120,8 +133,8 @@ export default function Award() {
       const data = await getAvailableAwards(currentMilestone);
       setAvailableAwards(data);
     };
-    if (registration["awardID"]) {
-      setChosenAward(registration["awardID"]);
+    if (registration["awards"][0]["award"]["id"]) {
+      setChosenAward(registration["awards"][0]["award"]["id"]);
       setAwardSelected(true);
     }
     setAwards();

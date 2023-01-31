@@ -7,7 +7,7 @@
   "retiringcurrentyear": true,
   "bcgeu": true,
   "ceremony_opt_out": true,
-  "survey_participation": true,
+  "survey_participation": false,
   "contact": {
     "firstname": "testapifirstname",
     "lastname": "testlastname",
@@ -46,20 +46,31 @@
       "community": "Victoria"
     }
   },
+  "awards": [
+    {
+      "award": {
+        "id": 1001,
+        "type": "bracelet",
+        "milestone": 35,
+        "label": "Whale Tail Painting",
+        "description": "A magnificent painting of a Whale Tail",
+        "image_url": "wp-content/uploads/2022/03/bracelet-compass.jpg",
+        "award_options": [
+          {
+            "inscription": "testing",
+            "paintingtype": "oil",
+            "whaletype": "orca",
+            "paintingtools": ["fork", "brush", "spoon"]
+          }
+        ]
+      },
+      "milestone": 35,
+      "qualifying_year": 2023
+    }
+  ],
 
   "personal-currentmilestone": 25,
   "personal-priormilestones": [20, 15],
   "personal-qualifyingyear": 2023,
-  "personal-yearsofservice": 25,
-  "awardID": "1001",
-  "awarddescription": "A magnificent painting of a Whale Tail",
-  "awardname": "Whale Tail Painting",
-  "awardoptions": [
-    {
-      "inscription": "testing",
-      "paintingtype": "oil",
-      "whaletype": "orca",
-      "paintingtools": ["fork", "brush", "spoon"]
-    }
-  ]
+  "personal-yearsofservice": 25
 }

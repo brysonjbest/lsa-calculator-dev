@@ -173,26 +173,24 @@ const schemaData = {
   personalContactFormFields: [
     { field: "personal_phone", header: "Personal Phone Number" },
     { field: "personal_email", header: "Alternate Email Address" },
-    { field: "streetaddress", header: "Address Line 1" },
-    { field: "streetaddress2", header: "Address Line 2" },
-    { field: "citycommunity", header: "City / Community" },
-    { field: "provincestate", header: "Province / State" },
-    { field: "postalcode", header: "Postal Code" },
+    { field: "street1", header: "Address Line 1" },
+    { field: "street2", header: "Address Line 2" },
+    { field: "community", header: "City / Community" },
+    { field: "postal_code", header: "Postal Code" },
   ],
   officeFormFields: [
-    { field: "streetaddress", header: "Address Line 1" },
-    { field: "streetaddress2", header: "Address Line 2" },
-    { field: "citycommunity", header: "City / Community" },
-    { field: "postalcode", header: "Postal Code" },
+    { field: "street1", header: "Address Line 1" },
+    { field: "street2", header: "Address Line 2" },
+    { field: "community", header: "City / Community" },
+    { field: "postal_code", header: "Postal Code" },
   ],
   supervisorFormFields: [
     { field: "firstname", header: "First Name" },
     { field: "lastname", header: "Last Name" },
-    { field: "office_email", header: "Government Email" },
-    { field: "streetaddress", header: "Address Line 1" },
-    { field: "streetaddress2", header: "Address Line 2" },
-    { field: "citycommunity", header: "City / Community" },
-    { field: "postalcode", header: "Postal Code" },
+    { field: "street1", header: "Address Line 1" },
+    { field: "street2", header: "Address Line 2" },
+    { field: "community", header: "City / Community" },
+    { field: "postal_code", header: "Postal Code" },
     { field: "pobox", header: "P.O. Box" },
   ],
   lsaFormFields: [
@@ -237,14 +235,14 @@ const schemaData = {
     },
   ],
   awardFormFields: [
-    { field: "awardname", header: "Award Name" },
-    { field: "awarddescription", header: "Description" },
+    { field: "label", header: "Award Name" },
+    { field: "description", header: "Description" },
     {
-      field: "awardoptions",
+      field: "award_options",
       header: "Options",
       body: (rowData) => {
-        const optionsObject = rowData.awardoptions
-          ? rowData.awardoptions[0]
+        const optionsObject = rowData.award_options
+          ? rowData.award_options[0]
           : {};
         const optionsArray = [];
         const format = (text) => text?.charAt(0).toUpperCase() + text?.slice(1);

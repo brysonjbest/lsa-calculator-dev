@@ -22,7 +22,8 @@ export default function AwardForm({ option, errors }) {
 
   const renderRadioButtons = (data) => {
     const radioOptions = data.options ? data.options : [];
-    const optionName = `awardoptions.${0}.${data.name}`;
+    const optionName = `awards.${0}.award.award_options.${0}.${data.name}`;
+    console.log(optionName);
     const radioMap = radioOptions.map((option, index) => (
       <div key={index}>
         <li className="award-option-block-radio">
@@ -48,7 +49,7 @@ export default function AwardForm({ option, errors }) {
 
     return (
       <div>
-        <ul className={`${data.name}-radio-options`}>{radioMap}</ul>
+        <ul className={`${data.label}-radio-options`}>{radioMap}</ul>
       </div>
     );
   };
@@ -59,7 +60,7 @@ export default function AwardForm({ option, errors }) {
     <>
       {type === "text" ? (
         <Controller
-          name={`awardoptions.${0}.${option.name}`}
+          name={`awards.${0}.award.award_options.${0}.${option.name}`}
           control={control}
           defaultValue=""
           rules={{
@@ -87,7 +88,7 @@ export default function AwardForm({ option, errors }) {
 
       {type === "dropdown" ? (
         <Controller
-          name={`awardoptions.${0}.${option.name}`}
+          name={`awards.${0}.award.award_options.${0}.${option.name}`}
           control={control}
           defaultValue=""
           rules={{
@@ -114,7 +115,7 @@ export default function AwardForm({ option, errors }) {
 
       {type === "multiselect" ? (
         <Controller
-          name={`awardoptions.${0}.${option.name}`}
+          name={`awards.${0}.award.award_options.${0}.${option.name}`}
           control={control}
           defaultValue=""
           rules={{

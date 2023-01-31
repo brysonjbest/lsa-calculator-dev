@@ -80,10 +80,16 @@ export default function Confirmation() {
           province: "",
           country: "",
         },
-        awardID: "",
-        awarddescription: "",
-        awardname: "",
-        awardoptions: [],
+        awards: [
+          {
+            award: {
+              id: "",
+              label: "",
+              description: "",
+              award_options: [],
+            },
+          },
+        ],
         retirement_date: null,
         retiringcurrentyear: false,
         bcgeu: false,
@@ -130,9 +136,9 @@ export default function Confirmation() {
         lastname: registration["contact"]["lastname"],
         office_email: registration["contact"]["office_email"],
         office_phone: registration["contact"]["office_phone"],
-        employee_number: registration["contact"]["employee_number"],
-        organization: registration["contact"]["organization"],
-        branch: registration["contact"]["branch"],
+        employee_number: registration["employee_number"],
+        organization: registration["organization"],
+        branch: registration["branch"],
       },
     ];
     const officeArray = [
@@ -170,9 +176,9 @@ export default function Confirmation() {
     ];
     const awardArray = [
       {
-        awardname: registration["awardname"],
-        awarddescription: registration["awarddescription"],
-        awardoptions: registration["awardoptions"],
+        label: registration["awards"][0]["award"]["label"],
+        description: registration["awards"][0]["award"]["description"],
+        award_options: registration["awards"][0]["award"]["award_options"],
       },
     ];
     const lsaArray = [
@@ -208,9 +214,9 @@ export default function Confirmation() {
       supervisor: !registration["supervisor"]["firstname"],
 
       award: isLSAEligible
-        ? !registration["awardname"] ||
-          (registration["awardname"] === "PECSF Donation" &&
-            registration["awardoptions"].length === 0)
+        ? !registration["awards"][0]["award"]["label"] ||
+          (registration["awards"][0]["award"]["label"] === "PECSF Donation" &&
+            registration["awards"][0]["award"]["award_options"].length === 0)
         : false,
       lsa: false,
       contact: isLSAEligible

@@ -16,7 +16,7 @@ import "./PecsfForm.css";
  */
 
 export default function PecsfForm({ errors }) {
-  const formName = `awardoptions.${0}`;
+  const formName = `awards.0.award.award_options.${0}`;
   const [regions1, setRegions1] = useState([
     "Vancouver",
     "Victoria",
@@ -78,9 +78,9 @@ export default function PecsfForm({ errors }) {
           )}
         />
         {getFormErrorMessage(
-          `awardoptions.${0}.${name}`,
+          `award_options.${0}.${name}`,
           errors,
-          "awardoptions",
+          "award_options",
           0,
           name
         )}
@@ -168,8 +168,8 @@ export default function PecsfForm({ errors }) {
               }}
               value="choosecharity"
               className={classNames("form-field block", {
-                "p-invalid": errors["awardoptions"]
-                  ? errors["awardoptions"][0]["donation-choice"]
+                "p-invalid": errors["award_options"]
+                  ? errors["award_options"][0]["donation-choice"]
                   : false,
               })}
             />
@@ -183,7 +183,7 @@ export default function PecsfForm({ errors }) {
           {getFormErrorMessage(
             `${"donation-choice"}`,
             errors,
-            "awardoptions",
+            "awar_doptions",
             0,
             "donation-choice"
           )}
@@ -319,7 +319,7 @@ export default function PecsfForm({ errors }) {
         {getFormErrorMessage(
           `donation-certificate`,
           errors,
-          "awardoptions",
+          "award_options",
           0,
           "donation-certificate"
         )}
