@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useForm, FormProvider, Controller } from "react-hook-form";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { RegistrationContext, ToastContext } from "../../UserContext";
+import { RegistrationContext } from "../../UserContext";
 import { Checkbox } from "primereact/checkbox";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 
 import classNames from "classnames";
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
-import formServices from "../../services/settings.services";
 import DataDisplay from "../../components/common/DataDisplay";
 import "./Confirmation.css";
 
@@ -19,9 +18,9 @@ import "./Confirmation.css";
 
 export default function Confirmation() {
   const navigate = useNavigate();
-  const isLSAEligible = useOutletContext();
+  const [isLSAEligible, postupdateRegistration] = useOutletContext();
+
   const { registration, setRegistration } = useContext(RegistrationContext);
-  const toast = useContext(ToastContext);
 
   //set todays date and populate end of year based on current date
   const today = new Date().getFullYear();
@@ -58,7 +57,7 @@ export default function Confirmation() {
 
   const { control, reset, handleSubmit } = methods;
 
-  const submitData = (data) => {
+  const submitData = async (data) => {
     const registrationData = registration;
     const finalData = Object.assign({}, data);
     let registrationUpdate = {
@@ -97,28 +96,10 @@ export default function Confirmation() {
       };
       registrationUpdate = { ...registrationUpdate, ...defaultFormReset };
     }
-    try {
-      toast.current.show(formServices.lookup("messages", "submit"));
-      // setLoading(true);
-      //submit to api
-      //then statement
-      //activates next page if valid
-      console.log(
-        registrationUpdate,
-        "this update is checking spread operator"
-      );
+    await postupdateRegistration(registrationUpdate).then(() => {
       setRegistration(registrationUpdate);
-      //this would change to api dependent
-      setTimeout(() => {
-        toast.current.replace(formServices.lookup("messages", "savesuccess"));
-        setRegistration((state) => ({ ...state, loading: false }));
-        setSubmitted(true);
-      }, 3000);
-    } catch (error) {
-      toast.current.replace(formServices.lookup("messages", "saveerror"));
-    } finally {
-      //update when using real api call to set here vs in try
-    }
+      setSubmitted(true);
+    });
   };
 
   useEffect(() => {

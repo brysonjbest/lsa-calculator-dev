@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useLocation, useNavigate, useOutletContext } from "react-router";
-import { RegistrationContext, ToastContext } from "../../UserContext";
+import { RegistrationContext } from "../../UserContext";
 
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
 import ContactDetails from "../../components/inputs/ContactDetails";
 import InfoToolTip from "../../components/common/InfoToolTip";
-import formServices from "../../services/settings.services";
 import "./BasicProfile.css";
 
 /**
@@ -18,8 +17,7 @@ import "./BasicProfile.css";
 export default function BasicProfile() {
   const navigate = useNavigate();
   const location = useLocation();
-  const isLSAEligible = useOutletContext();
-  const toast = useContext(ToastContext);
+  const [isLSAEligible, postupdateRegistration] = useOutletContext();
   const { registration, setRegistration } = useContext(RegistrationContext);
 
   const stateData = location.state ? location.state : null;
@@ -48,44 +46,32 @@ export default function BasicProfile() {
     getValues,
     handleSubmit,
     reset,
+    watch,
   } = methods;
 
   const [submissionData, setSubmissionData] = useState({});
   const [formComplete, setFormComplete] = useState(false);
 
-  const saveData = (data) => {
+  const formCompleteStatus = watch();
+
+  useEffect(() => {
+    setFormComplete(false);
+  }, [formCompleteStatus]);
+
+  const saveData = async (data) => {
     const registrationData = registration;
     const finalData = Object.assign({}, data);
     setSubmissionData(finalData);
-    try {
-      toast.current.show(formServices.lookup("messages", "save"));
-
-      setRegistration((state) => ({ ...state, loading: true }));
-      //submit to api - submits current registration to api and updates current registration context with return from api
-      //then statement
-      //activates next page if valid
-      const registrationUpdate = {
-        ...registrationData,
-        ...finalData,
-        ...{ loading: true },
-      };
-      console.log(
-        registrationUpdate,
-        "this update is checking spread operator"
-      );
+    const registrationUpdate = {
+      ...registrationData,
+      ...finalData,
+      ...{ loading: true },
+    };
+    console.log(registrationUpdate, "this update is checking spread operator");
+    await postupdateRegistration(registrationUpdate).then(() => {
       setRegistration(registrationUpdate);
       setFormComplete(true);
-
-      //this would change to api dependent
-      setTimeout(() => {
-        toast.current.replace(formServices.lookup("messages", "savesuccess"));
-        setRegistration((state) => ({ ...state, loading: false }));
-      }, 3000);
-    } catch (error) {
-      toast.current.replace(formServices.lookup("messages", "saveerror"));
-    } finally {
-      //update when using real api call to set here vs in try
-    }
+    });
   };
 
   const submitData = (e) => {
@@ -94,9 +80,6 @@ export default function BasicProfile() {
     setSubmissionData(finalData);
     console.log(submissionData, "this is final submission data");
     try {
-      //submit to api
-      //then statement
-      //navigate to next page on success
       const ministryData = getValues("organization");
       const newState = { ...stateData, ministryData };
       navigate("/register/milestone", { state: newState });

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useNavigate, useLocation, useOutletContext } from "react-router";
-import { RegistrationContext, ToastContext } from "../../UserContext";
+import { RegistrationContext } from "../../UserContext";
 
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
@@ -19,8 +19,7 @@ export default function MilestoneSelection() {
   const navigate = useNavigate();
   const pageIndex = 1;
   const location = useLocation();
-  const isLSAEligible = useOutletContext();
-  const toast = useContext(ToastContext);
+  const [isLSAEligible, postupdateRegistration] = useOutletContext();
 
   const { registration, setRegistration } = useContext(RegistrationContext);
 
@@ -58,7 +57,6 @@ export default function MilestoneSelection() {
     }, [registration]),
   });
 
-  const [formComplete, setFormComplete] = useState(false);
   const [ministrySelected, setMinistrySelected] = useState("");
 
   const {
@@ -67,13 +65,19 @@ export default function MilestoneSelection() {
     setValue,
     handleSubmit,
     reset,
+    watch,
   } = methods;
-  const saveData = (data) => {
+
+  const [formComplete, setFormComplete] = useState(false);
+  const formCompleteStatus = watch();
+
+  useEffect(() => {
+    setFormComplete(false);
+  }, [formCompleteStatus]);
+
+  const saveData = async (data) => {
     let updateData = {};
-    if (
-      data["milestone"] !== registration["milestone"] &&
-      registration[awards][0][award]["label"]
-    ) {
+    if (data["milestone"] !== registration["milestone"]) {
       updateData = {
         awards: [
           {
@@ -89,34 +93,17 @@ export default function MilestoneSelection() {
     }
     const registrationData = registration;
     const finalData = Object.assign({}, data);
-    try {
-      toast.current.show(formServices.lookup("messages", "save"));
-      // setLoading(true);
-      //submit to api
-      //then statement
-      //activates next page if valid
-      const registrationUpdate = {
-        ...registrationData,
-        ...finalData,
-        ...updateData,
-        ...{ loading: true },
-      };
-      console.log(
-        registrationUpdate,
-        "this update is checking spread operator"
-      );
+    const registrationUpdate = {
+      ...registrationData,
+      ...finalData,
+      ...updateData,
+      ...{ loading: true },
+    };
+    console.log(registrationUpdate, "this update is checking spread operator");
+    postupdateRegistration(registrationUpdate).then(() => {
       setRegistration(registrationUpdate);
       setFormComplete(true);
-      //this would change to api dependent
-      setTimeout(() => {
-        toast.current.replace(formServices.lookup("messages", "savesuccess"));
-        setRegistration((state) => ({ ...state, loading: false }));
-      }, 3000);
-    } catch (error) {
-      toast.current.replace(formServices.lookup("messages", "saveerror"));
-    } finally {
-      //update when using real api call to set here vs in try
-    }
+    });
   };
 
   const submitData = (e) => {

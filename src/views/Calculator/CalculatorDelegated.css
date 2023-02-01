@@ -71,3 +71,8 @@ ul {
 .p-datatable-tbody .ministry--organization-column {
     white-space: break-spaces;
 }
+
+.p-datatable-tbody .prior-unclaimed-milestones-column {
+    white-space: inherit;
+
+}

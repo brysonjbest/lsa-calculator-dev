@@ -1,6 +1,10 @@
 import { useContext, useState, useEffect } from "react";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
-import { RegistrationContext } from "../../UserContext";
+import {
+  RegistrationContext,
+  ToastContext,
+  UserContext,
+} from "../../UserContext";
 
 import PageHeader from "../../components/common/PageHeader";
 import AppButton from "../../components/common/AppButton";
@@ -8,18 +12,23 @@ import AppPanel from "../../components/common/AppPanel";
 import FormSteps from "../../components/common/FormSteps";
 
 import formServices from "../../services/settings.services";
+import apiRoutesRegistrations from "../../api/api-routes-registrations";
 
 /**
  * Panel Header for common component management in registration flow
  */
 
 export default function PanelHeader() {
+  const { updateRegistration } = apiRoutesRegistrations;
+  const toast = useContext(ToastContext);
   const navigate = useNavigate();
   const location = useLocation();
   const [steps, setSteps] = useState([]);
   const { registration, setRegistration } = useContext(RegistrationContext);
+  const { user, setUser } = useContext(UserContext);
   const isLSAEligible = registration["milestone"] >= 25;
   const submitted = registration["confirmed"];
+  const [loading, setLoading] = useState(false);
 
   //Page information for populating header on current page
   const currentPage = location.pathname.replace("/register/", "");
@@ -64,6 +73,46 @@ export default function PanelHeader() {
     if (typeof submitted === "undefined") navigate("/register/self");
     if (submitted === true) navigate("/register/confirmation");
   }, []);
+
+  const postupdateRegistration = async (data, callback) => {
+    setLoading(true);
+    const asyncTemp = new Promise(function (myResolve, myReject) {
+      //to be replaced by async api call
+      // const registrationID = user.id;
+      // updateRegistration(registrationID, data);
+      myResolve(); // when successful
+      myReject(); // when error
+    });
+    try {
+      toast.current.show(formServices.lookup("messages", "submit"));
+      await asyncTemp
+        .then(() => {
+          console.log("posting to registration", data);
+        })
+        .then(() => {
+          setTimeout(() => {
+            toast.current.replace(
+              formServices.lookup("messages", "savesuccess")
+            );
+            setLoading(false);
+          }, 3000);
+        });
+    } catch (error) {
+      console.error(error);
+      toast.current.replace(formServices.lookup("messages", "saveerror"));
+      setLoading(false);
+    } finally {
+      callback ? callback() : null;
+    }
+  };
+
+  useEffect(() => {
+    const loadState = loading;
+    setRegistration((state) => ({
+      ...state,
+      loading: loadState,
+    }));
+  }, [loading]);
 
   return (
     <>
@@ -115,7 +164,7 @@ export default function PanelHeader() {
             </div>
           </AppPanel>
         ) : (
-          <Outlet context={[isLSAEligible]} />
+          <Outlet context={[isLSAEligible, postupdateRegistration]} />
         )}
       </div>
     </>

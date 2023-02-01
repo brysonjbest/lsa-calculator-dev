@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useForm, FormProvider } from "react-hook-form";
+import { RegistrationContext, ToastContext } from "../../UserContext";
+import formServices from "../../services/settings.services";
 
 import AppButton from "../../components/common/AppButton";
 import AppPanel from "../../components/common/AppPanel";
@@ -11,11 +13,16 @@ import ContactDetails from "../../components/inputs/ContactDetails";
 import AddressInput from "../../components/inputs/AddressInput";
 import "./CalculatorDelegated.css";
 
+import apiRoutesRegistrations from "../../api/api-routes-registrations";
+
 /**
  * Delegated Calculator Page. Allows users to submit delegated applications for LSA/Service Pin registration.
  */
 
 export default function CalculatorDelegated() {
+  const { registration, setRegistration } = useContext(RegistrationContext);
+  const toast = useContext(ToastContext);
+  const { postDelegatedRegistration } = apiRoutesRegistrations;
   const defaultValues = {
     supervisor: {
       firstname: "",
@@ -76,9 +83,22 @@ export default function CalculatorDelegated() {
 
   //Final step in creating submission - will be api call to backend to update
 
-  const submitDelegated = (e) => {
+  const submitDelegated = async (e) => {
     e.preventDefault();
     console.log(submissionData, "this is final submission data");
+    setRegistration((state) => ({ ...state, loading: true }));
+    try {
+      toast.current.show(formServices.lookup("messages", "submit"));
+      // await postDelegatedRegistration(submissionData)
+      setTimeout(() => {
+        toast.current.replace(formServices.lookup("messages", "savesuccess"));
+        setRegistration((state) => ({ ...state, loading: false }));
+      }, 3000);
+    } catch (error) {
+      toast.current.replace(formServices.lookup("messages", "saveerror"));
+    } finally {
+      // setRegistration((state) => ({ ...state, loading: false }));
+    }
   };
 
   return (

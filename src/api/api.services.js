@@ -35,6 +35,14 @@ export async function getRegistrationData(userData) {
   }
 }
 
+export async function getPecsfData(userData) {
+  if (userData.idir === "BBEST") {
+    return temp;
+  } else {
+    return {};
+  }
+}
+
 export async function getAvailableAwards(milestone) {
   //testing options, to make actual api call later
   const index = `options${milestone}`;
@@ -228,6 +236,7 @@ export async function getAvailableAwards(milestone) {
         label: "Blue T-Shirt",
         description: "Product Description",
         image_url: "https://picsum.photos/200",
+        options: [],
       },
     ],
   };
