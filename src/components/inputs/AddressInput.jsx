@@ -78,6 +78,9 @@ export default function AddressInput({
       : null;
   }, [addressIdentifier]);
 
+  const enforceFormatting =
+    addressIdentifier === "supervisor" || addressIdentifier === "office";
+
   return (
     <div className="container">
       <div className="address-container">
@@ -207,7 +210,15 @@ export default function AddressInput({
           <Controller
             name={`${formGroupAddress}postal_code`}
             control={control}
-            rules={{ required: "Error: Postal Code is required." }}
+            rules={{
+              required: "Error: Postal Code is required.",
+              pattern: {
+                value: enforceFormatting
+                  ? /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i
+                  : null,
+                message: "Invalid postal code. E.g. A0A 0A0",
+              },
+            }}
             render={({ field, fieldState }) => (
               <InputText
                 id={`${field.name}`}
