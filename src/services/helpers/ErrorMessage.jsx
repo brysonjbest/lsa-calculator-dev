@@ -27,8 +27,8 @@ export default function getFormErrorMessage(
     errors[category][index] &&
     errors[category][index][optionname];
 
-  console.log(topLevelError, "nested error", nestedError);
-  console.log(name, errors, category, index, optionname, "all error options");
+  // console.log(topLevelError, "nested error", nestedError);
+  // console.log(name, errors, category, index, optionname, "all error options");
 
   return (
     <>

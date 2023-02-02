@@ -25,6 +25,7 @@ const EmployeeList = ({ errors }) => {
   });
 
   const [employees, setEmployees] = useState({});
+  const [employeeCount, setEmployeeCount] = useState(1);
   const [resetList, setResetList] = useState(false);
 
   const acceptreset = () => {
@@ -34,6 +35,7 @@ const EmployeeList = ({ errors }) => {
       detail: "Form Reset",
       life: 2000,
     });
+    setEmployeeCount(1);
     setResetList(!resetList);
   };
 
@@ -90,6 +92,7 @@ const EmployeeList = ({ errors }) => {
                         danger
                         onClick={(e) => {
                           e.preventDefault();
+                          setEmployeeCount((state) => state - 1);
                           remove(index);
                         }}
                       ></AppButton>
@@ -123,8 +126,10 @@ const EmployeeList = ({ errors }) => {
       <div className="employee-list-options">
         <AppButton
           info
+          disabled={employeeCount >= 5}
           onClick={(e) => {
             e.preventDefault();
+            setEmployeeCount((state) => state + 1);
             append({
               firstname: "",
               lastname: "",
