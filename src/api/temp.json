@@ -66,9 +66,21 @@
       "qualifying_year": 2023
     }
   ],
-
-  "milestone": 25,
-  "prior_milestones": [20, 15],
-  "qualifying_year": 2023,
-  "years_of_service": 25
+  "service": [
+    {
+      "milestone": 25,
+      "qualifying_year": 2023,
+      "service_years": 35
+    },
+    {
+      "milestone": 35,
+      "qualifying_year": 2023,
+      "service_years": 35
+    },
+    {
+      "milestone": 30,
+      "qualifying_year": 2023,
+      "service_years": 35
+    }
+  ]
 }

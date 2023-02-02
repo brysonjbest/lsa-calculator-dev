@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AppButton from "../common/AppButton";
 import ServiceCalculator from "./ServiceCalculator";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { Dropdown } from "primereact/dropdown";
 import { MultiSelect } from "primereact/multiselect";
 import { InputNumber } from "primereact/inputnumber";
@@ -20,7 +20,8 @@ import InfoToolTip from "../common/InfoToolTip";
  * @param {object} props.errors inherited form errors object
  * @param {string} props.panelName string describing what panel these contact details belong to ex: Supervisor, Personal
  * @param {integer} props.itemNumber index of item within sublist; when used multiple times in a form, contact details will be registered as a separate item on form
- * @returns years of service, current milestone, qualifying year, prior milestones, 
+ * @param {*} props.activateWatch tells when to activate watching of form inputs
+ * @returns years of service, current milestone, qualifying year, prior milestones,
  */
 
 export default function MilestoneSelector({
@@ -29,6 +30,7 @@ export default function MilestoneSelector({
   errors,
   panelName,
   itemNumber,
+  activateWatch,
 }) {
   //Form input name formatting
   let panelGroupName = panelName
@@ -85,22 +87,34 @@ export default function MilestoneSelector({
 
     const milestones = formServices.get("milestones") || [];
     const filteredMilestones = milestones.filter(
-      (milestone) =>
-        milestone["value"] <= getValues(`${itemName}years_of_service`)
+      (milestone) => milestone["value"] <= getValues(`${itemName}service_years`)
     );
     const filteredPriorMilestones = milestones.filter(
-      (milestone) =>
-        milestone["value"] < getValues(`${itemName}years_of_service`)
+      (milestone) => milestone["value"] < getValues(`${itemName}service_years`)
     );
     setAvailableMilestones(filteredMilestones);
     setPriorMilestonesAvailable(filteredPriorMilestones);
   };
 
-  const watchYearsOfService = watch(`${itemName}years_of_service`);
+  const [activateWatcher, setActivateWatcher] = useState(false);
+  const [watchCount, setWatchCount] = useState(0);
+
+  const watchYearsOfService = watch(`${itemName}service_years`);
 
   useEffect(() => {
-    onYearsOfServiceChange();
+    if (watchCount !== 0) {
+      if (activateWatch && activateWatcher) {
+        onYearsOfServiceChange();
+      }
+    }
+    setWatchCount((state) => state + 1);
   }, [watchYearsOfService]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setActivateWatcher(true);
+    }, 1000);
+  }, []);
 
   const onMilestoneSelection = (e) => {
     e.value.length > 0 || e.value > 0
@@ -125,8 +139,8 @@ export default function MilestoneSelector({
 
   const calculateTotal = (newValue) => {
     if (newValue !== 0) {
-      setValue(`${itemName}years_of_service`, newValue);
-      clearErrors(`${itemName}years_of_service`);
+      setValue(`${itemName}service_years`, newValue);
+      clearErrors(`${itemName}service_years`);
     }
   };
 
@@ -141,43 +155,46 @@ export default function MilestoneSelector({
           <div className="milestone-form-field-container yearsofservice-block">
             <div className="milestone-form-yearsofservice-block">
               <label
-                htmlFor={`${itemName}years_of_service`}
+                htmlFor={`${itemName}service_years`}
                 className={classNames("block", {
-                  "p-error": errors.years_of_service,
+                  "p-error": errors.service_years,
                 })}
               >
                 {`${panelTitle} Years of Service`}
               </label>
               <Controller
-                name={`${itemName}years_of_service`}
+                name={`${itemName}service_years`}
                 control={control}
                 rules={{ required: "Error: Years of Service is required." }}
                 render={({ field, fieldState }) => (
-                  <InputNumber
-                    inputId="withoutgrouping"
-                    min={0}
-                    max={99}
-                    id={`${field.name}`}
-                    value={field.value}
-                    onChange={(e) => {
-                      field.onChange(e.value);
-                    }}
-                    aria-describedby={`${panelGroupName}-years_of_service-help`}
-                    className={classNames("form-field block", {
-                      "p-invalid": fieldState.error,
-                    })}
-                    placeholder={`Enter ${panelPlaceholder} years of service`}
-                    tooltip="Enter total years of service. Only individuals with 25+ years of service are eligible for the Long Service Awards."
-                    tooltipOptions={{ position: "right" }}
-                  />
+                  <>
+                    {/* {console.log(field.value)} */}
+                    <InputNumber
+                      inputId="withoutgrouping"
+                      min={0}
+                      max={99}
+                      id={`${field.name}`}
+                      value={field.value}
+                      onChange={(e) => {
+                        field.onChange(e.value);
+                      }}
+                      aria-describedby={`${panelGroupName}-years_of_service-help`}
+                      className={classNames("form-field block", {
+                        "p-invalid": fieldState.error,
+                      })}
+                      placeholder={`Enter ${panelPlaceholder} years of service`}
+                      tooltip="Enter total years of service. Only individuals with 25+ years of service are eligible for the Long Service Awards."
+                      tooltipOptions={{ position: "right" }}
+                    />
+                  </>
                 )}
               />
               {getFormErrorMessage(
-                `years_of_service`,
+                `service_years`,
                 errors,
                 errorBodyName,
                 itemNumber - 1,
-                "years_of_service"
+                "service_years"
               )}
             </div>
             <div className="calculator-button-toggle">
@@ -217,24 +234,27 @@ export default function MilestoneSelector({
                 },
               }}
               render={({ field, fieldState }) => (
-                <Dropdown
-                  disabled={!getValues(`${itemName}years_of_service`)}
-                  id={`${field.name}`}
-                  value={field.value}
-                  onChange={(e) => {
-                    field.onChange(e.value);
-                    onMilestoneSelection(e);
-                  }}
-                  aria-describedby={`${panelGroupName}-milestone-help`}
-                  options={availableMilestones}
-                  optionLabel="text"
-                  className={classNames("form-field block", {
-                    "p-invalid": fieldState.error,
-                  })}
-                  placeholder={`Select ${panelPlaceholder} current milestone.`}
-                  tooltip="Service Pin Milestone Years include: 5, 10, 15, 20. Service Pin and LSA Milestone Years include: 25, 30, 35, 40, 45, 50."
-                  tooltipOptions={{ position: "top" }}
-                />
+                <>
+                  {/* {console.log(field.value, "field value dropdown milestone")} */}
+                  <Dropdown
+                    disabled={!getValues(`${itemName}service_years`)}
+                    id={`${field.name}`}
+                    value={field.value}
+                    onChange={(e) => {
+                      field.onChange(e.value);
+                      onMilestoneSelection(e);
+                    }}
+                    aria-describedby={`${panelGroupName}-milestone-help`}
+                    options={availableMilestones}
+                    optionLabel="text"
+                    className={classNames("form-field block", {
+                      "p-invalid": fieldState.error,
+                    })}
+                    placeholder={`Select ${panelPlaceholder} current milestone.`}
+                    tooltip="Service Pin Milestone Years include: 5, 10, 15, 20. Service Pin and LSA Milestone Years include: 25, 30, 35, 40, 45, 50."
+                    tooltipOptions={{ position: "top" }}
+                  />
+                </>
               )}
             />
             {getFormErrorMessage(
@@ -245,52 +265,50 @@ export default function MilestoneSelector({
               "milestone"
             )}
           </div>
-          {getValues(`${itemName}milestone`) && selfregister ? (
-            <div className="milestone-form-field-container">
-              <label
-                htmlFor={`${itemName}qualifying_year`}
-                className={classNames("block", {
-                  "p-error": errors.qualifying_year,
-                })}
-              >
-                {`${panelTitle} Qualifying Year`}
-              </label>
-              <Controller
-                name={`${itemName}qualifying_year`}
-                control={control}
-                rules={{
-                  required: {
-                    value: getValues(`${itemName}milestone`),
-                    message: "Error: Qualifying Year is required.",
-                  },
-                }}
-                render={({ field, fieldState }) => (
-                  <Dropdown
-                    disabled={!getValues(`${itemName}years_of_service`)}
-                    id={`${field.name}`}
-                    value={field.value}
-                    onChange={(e) => field.onChange(e.value)}
-                    aria-describedby={`${panelGroupName}-qualifying_year-help`}
-                    options={qualifyingYears}
-                    optionLabel="text"
-                    tooltip="Select the year that qualified for the current milestone."
-                    tooltipOptions={{ position: "top" }}
-                    className={classNames("form-field block", {
-                      "p-invalid": fieldState.error,
-                    })}
-                    placeholder={`During which year was this milestone reached.`}
-                  />
-                )}
-              />
-              {getFormErrorMessage(
-                `qualifying_year`,
-                errors,
-                errorBodyName,
-                itemNumber - 1,
-                "qualifying_year"
+          <div className="milestone-form-field-container">
+            <label
+              htmlFor={`${itemName}qualifying_year`}
+              className={classNames("block", {
+                "p-error": errors.qualifying_year,
+              })}
+            >
+              {`${panelTitle} Qualifying Year`}
+            </label>
+            <Controller
+              name={`${itemName}qualifying_year`}
+              control={control}
+              rules={{
+                required: {
+                  value: getValues(`${itemName}milestone`),
+                  message: "Error: Qualifying Year is required.",
+                },
+              }}
+              render={({ field, fieldState }) => (
+                <Dropdown
+                  disabled={!getValues(`${itemName}service_years`)}
+                  id={`${field.name}`}
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.value)}
+                  aria-describedby={`${panelGroupName}-qualifying_year-help`}
+                  options={qualifyingYears}
+                  optionLabel="text"
+                  tooltip="Select the year that qualified for the current milestone."
+                  tooltipOptions={{ position: "top" }}
+                  className={classNames("form-field block", {
+                    "p-invalid": fieldState.error,
+                  })}
+                  placeholder={`During which year was this milestone reached.`}
+                />
               )}
-            </div>
-          ) : null}
+            />
+            {getFormErrorMessage(
+              `qualifying_year`,
+              errors,
+              errorBodyName,
+              itemNumber - 1,
+              "qualifying_year"
+            )}
+          </div>
 
           {ministryEligible ? (
             <div className="milestone-form-field-container">
@@ -307,7 +325,7 @@ export default function MilestoneSelector({
                 control={control}
                 render={({ field, fieldState }) => (
                   <MultiSelect
-                    disabled={!getValues(`${itemName}years_of_service`)}
+                    disabled={!getValues(`${itemName}service_years`)}
                     id={`${field.name}`}
                     display="chip"
                     value={field.value}

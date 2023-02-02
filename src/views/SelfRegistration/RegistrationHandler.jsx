@@ -37,7 +37,7 @@ export default function RegistrationHandler() {
       if (registration["contact"]["firstname"]) {
         route = "milestone";
       }
-      if (registration["years_of_service"]) {
+      if (registration["service"][0]["service_years"]) {
         route = "details";
       }
       if (registration["contact"]["personal_address"]["street1"]) {

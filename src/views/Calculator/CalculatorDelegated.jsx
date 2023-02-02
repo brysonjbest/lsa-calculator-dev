@@ -46,7 +46,7 @@ export default function CalculatorDelegated() {
         office_email: "",
         employee_number: "",
         organization: null,
-        years_of_service: "",
+        service_years: "",
         milestone: "",
         qualifying_year: "",
         prior_milestones: "",

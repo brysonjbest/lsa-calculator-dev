@@ -31,7 +31,6 @@ export default function App() {
       const data = await getUserData();
       // const data1 = await apiRoutesUsers.getLogin();
       // console.log(data1, "this is user data");
-      console.log("user data");
       setUser(data);
       return data;
     };
@@ -48,7 +47,6 @@ export default function App() {
     };
     fetchUser()
       .then((data) => {
-        console.log(data);
         fetchRegistration(data);
       })
       .catch(console.error)

@@ -105,7 +105,7 @@ export default function Confirmation() {
   useEffect(() => {
     const milestoneArray = [
       {
-        years_of_service: registration["years_of_service"],
+        service_years: registration["service_years"],
         milestone: registration["milestone"],
         qualifying_year: registration["qualifying_year"],
         prior_milestones: registration["prior_milestones"],
@@ -189,7 +189,7 @@ export default function Confirmation() {
 
     const finalData = isLSAEligible ? lsaDataSet : pinOnlyDataSet;
     const errorValues = {
-      milestone: !registration["years_of_service"],
+      milestone: !registration["service"][0]["service_years"],
       personal: !registration["contact"]["firstname"],
       office: !registration["contact"]["office_address"]["street1"],
       supervisor: !registration["supervisor"]["firstname"],

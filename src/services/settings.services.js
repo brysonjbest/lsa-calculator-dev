@@ -157,7 +157,7 @@ const schemaData = {
     { field: "branch", header: "Branch" },
   ],
   milestoneFormFields: [
-    { field: "years_of_service", header: "Current Years of Service" },
+    { field: "service_years", header: "Current Years of Service" },
     { field: "milestone", header: "Current Milestone" },
     { field: "qualifying_year", header: "Milestone Qualifying Year" },
     {
@@ -269,7 +269,7 @@ const schemaData = {
       field: "organization",
       header: "Ministry / Organization",
     },
-    { field: "years_of_service", header: "Current Years of Service" },
+    { field: "service_years", header: "Current Years of Service" },
     { field: "milestone", header: "Current Milestone" },
     { field: "qualifying_year", header: "Milestone Qualifying Year" },
     {

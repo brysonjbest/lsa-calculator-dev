@@ -17,9 +17,9 @@ import formServices from "../../services/settings.services";
 
 export default function MilestoneSelection() {
   const navigate = useNavigate();
-  const pageIndex = 1;
   const location = useLocation();
   const [isLSAEligible, postupdateRegistration] = useOutletContext();
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   const { registration, setRegistration } = useContext(RegistrationContext);
 
@@ -44,15 +44,58 @@ export default function MilestoneSelection() {
     //     },
     //   },
     // ],
-    years_of_service: "",
+    service_years: "",
     milestone: null,
-    qualifying_year: "",
+    qualifying_year: null,
     prior_milestones: [],
+    // "milestone": 25,
+    // "prior_milestones": [20, 15],
+    // "qualifying_year": 2023,
+    // "years_of_service": 25
   };
 
   const methods = useForm({
     defaultValues: useMemo(() => {
-      const defaultSetting = { ...defaultFormValues, ...registration };
+      // Function maps the service array of objects to a singular entry for the react hook forms management
+      const mapProperty = (propertyList, variable) => {
+        const maxValue = Math.max.apply(
+          null,
+          propertyList.map(function (o) {
+            return o[variable];
+          })
+        );
+        return maxValue;
+      };
+
+      const defaultReg = registration["service"] || [];
+      const currentYear = mapProperty(defaultReg, "service_years");
+      const currentMilestone = mapProperty(defaultReg, "milestone");
+      const currentQualifyingYear = mapProperty(defaultReg, "qualifying_year");
+
+      const remainingMilestones = defaultReg
+        .map((each) => each.milestone)
+        .filter((year) => year !== currentMilestone);
+
+      const milestoneFormObject = {
+        service_years: currentYear,
+        milestone: currentMilestone,
+        qualifying_year: currentQualifyingYear,
+        prior_milestones: remainingMilestones,
+      };
+
+      const defaultValues = {
+        ...defaultFormValues,
+        ...milestoneFormObject,
+      };
+
+      const defaultSetting = {
+        ...defaultValues,
+        ...registration,
+      };
+
+      // console.log(defaultValues, defaultSetting, "examples");
+      setHasLoaded(true);
+
       return defaultSetting;
     }, [registration]),
   });
@@ -91,6 +134,25 @@ export default function MilestoneSelection() {
         ],
       };
     }
+    const mappedData = () => {
+      const serviceData = data || {};
+      console.log(serviceData, "this is serviceData");
+      const serviceArray = [];
+      const milestoneArray = [
+        serviceData.milestone,
+        ...serviceData.prior_milestones,
+      ];
+      milestoneArray.forEach((element) => {
+        serviceArray.push({
+          milestone: element,
+          qualifying_year: serviceData.qualifying_year,
+          service_years: serviceData.service_years,
+        });
+      });
+      return serviceArray;
+    };
+    const service = mappedData();
+    console.log(service, "this is mapped array data");
     const registrationData = registration;
     const finalData = Object.assign({}, data);
     const registrationUpdate = {
@@ -98,8 +160,8 @@ export default function MilestoneSelection() {
       ...finalData,
       ...updateData,
       ...{ loading: true },
+      ...{ service: service },
     };
-    console.log(registrationUpdate, "this update is checking spread operator");
     postupdateRegistration(registrationUpdate).then(() => {
       setRegistration(registrationUpdate);
       setFormComplete(true);
@@ -131,12 +193,17 @@ export default function MilestoneSelection() {
         (await formServices.lookup("currentPinsOnlyOrganizations", minData)) ||
         "";
       setMinistrySelected(ministry);
-      yearsData ? setValue("years_of_service", yearsData) : null;
+      yearsData ? setValue("service_years", yearsData) : null;
     };
     getMinistry();
   }, []);
 
   useEffect(() => {
+    console.log(
+      "registration setting twice",
+      registration,
+      "this is registration"
+    );
     reset(registration);
   }, [registration]);
 
@@ -195,6 +262,7 @@ export default function MilestoneSelection() {
                 panelName="personal"
                 errors={errors}
                 ministry={ministrySelected}
+                activateWatch={hasLoaded}
               />
             </AppPanel>
             <div className="submission-buttons">

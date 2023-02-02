@@ -2,7 +2,7 @@
   "exampleData2": [
     {
       "employee": 1,
-      "years_of_service": 15,
+      "service_years": 15,
       "milestone": 15,
       "qualifying_year": 2019,
       "prior_milestones": [10, 5],
@@ -15,7 +15,7 @@
     },
     {
       "employee": 2,
-      "years_of_service": 10,
+      "service_years": 10,
       "milestone": 10,
       "qualifying_year": 2022,
       "prior_milestones": [5],
