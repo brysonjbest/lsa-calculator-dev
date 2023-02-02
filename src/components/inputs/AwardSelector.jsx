@@ -4,7 +4,6 @@ import { Dialog } from "primereact/dialog";
 
 import AppButton from "../common/AppButton";
 import { useFormContext } from "react-hook-form";
-import getFormErrorMessage from "../../services/helpers/ErrorMessage";
 
 import classNames from "classnames";
 import "./AwardSelector.css";
@@ -56,13 +55,20 @@ export default function AwardSelector({
             {option.description}
           </label>
           <AwardForm errors={errors} option={option} />
-          {getFormErrorMessage(
-            `${option.name}`,
-            errors,
-            "award_options",
-            0,
-            option.name
-          )}
+          {errors &&
+          errors["awards"] &&
+          errors["awards"][0] &&
+          errors["awards"][0]["award"] &&
+          errors["awards"][0]["award"]["award_options"] &&
+          errors["awards"][0]["award"]["award_options"][0] &&
+          errors["awards"][0]["award"]["award_options"][0][option.name] ? (
+            <small className={`p-error ${option.name}-help`}>
+              {
+                errors["awards"][0]["award"]["award_options"][0][option.name]
+                  .message
+              }
+            </small>
+          ) : null}
         </li>
       </div>
     ));
@@ -74,10 +80,7 @@ export default function AwardSelector({
             {!pecsfOptions ? (
               <img
                 src={`${data.image_url}`}
-                onError={(e) =>
-                  (e.target.src =
-                    "https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png")
-                }
+                onError={(e) => (e.target.src = logo)}
                 alt={data.name}
               />
             ) : null}

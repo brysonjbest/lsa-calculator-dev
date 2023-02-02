@@ -66,6 +66,8 @@ export default function ContactDetails({
 
   const formItemBase = itemNumber ? `${panelName}.${itemNumber - 1}.` : ``;
 
+  const errorBodyName = panelName === "personal" ? "contact" : panelName;
+
   //On blur of ministry selection runs callback with given form value
   const onBlurMinistry = (event) => {
     const currentFormValue =
@@ -100,7 +102,7 @@ export default function ContactDetails({
                   render={({ field, fieldState }) => (
                     <InputText
                       id={`${field.name}`}
-                      aria-describedby={`${panelGroupName}-firstname-help`}
+                      aria-describedby={`${formItemName}firstname-help`}
                       {...field}
                       className={classNames("form-field block", {
                         "p-invalid": fieldState.error,
@@ -110,9 +112,9 @@ export default function ContactDetails({
                   )}
                 />
                 {getFormErrorMessage(
-                  `${panelGroupName}-firstname`,
+                  `${formItemName}firstname`,
                   errors,
-                  panelName,
+                  errorBodyName,
                   itemNumber - 1,
                   "firstname"
                 )}
@@ -143,9 +145,9 @@ export default function ContactDetails({
                   )}
                 />
                 {getFormErrorMessage(
-                  `${panelGroupName}-lastname`,
+                  `${formItemName}lastname`,
                   errors,
-                  panelName,
+                  errorBodyName,
                   itemNumber - 1,
                   "lastname"
                 )}
@@ -183,9 +185,9 @@ export default function ContactDetails({
                   )}
                 />
                 {getFormErrorMessage(
-                  `${panelGroupName}-office_email`,
+                  `${formItemName}office_email`,
                   errors,
-                  panelName,
+                  errorBodyName,
                   itemNumber - 1,
                   "office_email"
                 )}
@@ -230,9 +232,9 @@ export default function ContactDetails({
                     )}
                   />
                   {getFormErrorMessage(
-                    `${panelGroupName}-office_phone`,
+                    `${formItemName}office_phone`,
                     errors,
-                    panelName,
+                    errorBodyName,
                     itemNumber - 1,
                     "office_phone"
                   )}
@@ -267,9 +269,9 @@ export default function ContactDetails({
                     )}
                   />
                   {getFormErrorMessage(
-                    `${panelGroupName}-employee_number`,
+                    `${formItemName}employee_number`,
                     errors,
-                    panelName,
+                    errorBodyName,
                     itemNumber - 1,
                     "employee_number"
                   )}
@@ -310,9 +312,9 @@ export default function ContactDetails({
                     )}
                   />
                   {getFormErrorMessage(
-                    `${panelGroupName}-organization`,
+                    `organization`,
                     errors,
-                    panelName,
+                    errorBodyName,
                     itemNumber - 1,
                     "organization"
                   )}
@@ -345,9 +347,9 @@ export default function ContactDetails({
                     )}
                   />
                   {getFormErrorMessage(
-                    `${panelGroupName}-branch`,
+                    `branch`,
                     errors,
-                    panelName,
+                    errorBodyName,
                     itemNumber - 1,
                     "branch"
                   )}
@@ -392,9 +394,9 @@ export default function ContactDetails({
                   )}
                 />
                 {getFormErrorMessage(
-                  `${panelGroupName}-personal_phone`,
+                  `${formItemName}personal_phone`,
                   errors,
-                  panelName,
+                  errorBodyName,
                   itemNumber - 1,
                   "personal_phone"
                 )}
@@ -432,9 +434,9 @@ export default function ContactDetails({
                   )}
                 />
                 {getFormErrorMessage(
-                  `${panelGroupName}-personal_email`,
+                  `${formItemName}personal_email`,
                   errors,
-                  panelName,
+                  errorBodyName,
                   itemNumber - 1,
                   "personal_email"
                 )}

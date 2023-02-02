@@ -130,6 +130,8 @@ export default function MilestoneSelector({
     }
   };
 
+  const errorBodyName = panelName === "personal" ? "contact" : panelName;
+
   return (
     <div className={`milestone-form-${panelGroupName}`}>
       <div className="container">
@@ -171,9 +173,9 @@ export default function MilestoneSelector({
                 )}
               />
               {getFormErrorMessage(
-                `${panelGroupName}-years_of_service`,
+                `years_of_service`,
                 errors,
-                panelName,
+                errorBodyName,
                 itemNumber - 1,
                 "years_of_service"
               )}
@@ -236,9 +238,9 @@ export default function MilestoneSelector({
               )}
             />
             {getFormErrorMessage(
-              `${panelGroupName}-milestone`,
+              `milestone`,
               errors,
-              panelName,
+              errorBodyName,
               itemNumber - 1,
               "milestone"
             )}
@@ -281,9 +283,9 @@ export default function MilestoneSelector({
                 )}
               />
               {getFormErrorMessage(
-                `${panelGroupName}-qualifying_year`,
+                `qualifying_year`,
                 errors,
-                panelName,
+                errorBodyName,
                 itemNumber - 1,
                 "qualifying_year"
               )}
@@ -326,9 +328,9 @@ export default function MilestoneSelector({
                 )}
               />
               {getFormErrorMessage(
-                `${panelGroupName}-prior_milestones`,
+                `prior_milestones`,
                 errors,
-                panelName,
+                errorBodyName,
                 itemNumber - 1,
                 "prior_milestones"
               )}

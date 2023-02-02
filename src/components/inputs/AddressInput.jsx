@@ -102,7 +102,13 @@ export default function AddressInput({
               />
             )}
           />
-          {getFormErrorMessage(`${formGroupAddress}street1`, errors)}
+          {getFormErrorMessage(
+            `${formGroupAddress}street1`,
+            errors,
+            contactType,
+            `${addressIdentifier}_address`,
+            "street1"
+          )}
         </div>
         <div className="address-form-field-container">
           <label htmlFor={`${formGroupAddress}street2`} className="block">
@@ -123,7 +129,13 @@ export default function AddressInput({
               />
             )}
           />
-          {getFormErrorMessage(`${formGroupAddress}street2`, errors)}
+          {getFormErrorMessage(
+            `${formGroupAddress}street2`,
+            errors,
+            contactType,
+            `${addressIdentifier}_address`,
+            "street2"
+          )}
         </div>
         <div className="address-form-field-container">
           <label htmlFor={`${formGroupAddress}community`} className="block">
@@ -150,7 +162,13 @@ export default function AddressInput({
               />
             )}
           />
-          {getFormErrorMessage(`${formGroupAddress}community`, errors)}
+          {getFormErrorMessage(
+            `${formGroupAddress}community`,
+            errors,
+            contactType,
+            `${addressIdentifier}_address`,
+            "community"
+          )}
         </div>
         {province ? (
           <div className="address-form-field-container">
@@ -173,7 +191,13 @@ export default function AddressInput({
                 />
               )}
             />
-            {getFormErrorMessage(`${formGroupAddress}province`, errors)}
+            {getFormErrorMessage(
+              `${formGroupAddress}province`,
+              errors,
+              contactType,
+              `${addressIdentifier}_address`,
+              "province"
+            )}
           </div>
         ) : null}
         <div className="address-form-field-container">
@@ -196,7 +220,13 @@ export default function AddressInput({
               />
             )}
           />
-          {getFormErrorMessage(`${formGroupAddress}postal_code`, errors)}
+          {getFormErrorMessage(
+            `${formGroupAddress}postal_code`,
+            errors,
+            contactType,
+            `${addressIdentifier}_address`,
+            "postal_code"
+          )}
         </div>
       </div>
 
@@ -223,7 +253,13 @@ export default function AddressInput({
               />
             )}
           />
-          {getFormErrorMessage(`${formGroupAddress}pobox`, errors) ? (
+          {getFormErrorMessage(
+            `${formGroupAddress}pobox`,
+            errors,
+            contactType,
+            `${addressIdentifier}_address`,
+            "pobox"
+          ) ? (
             <small
               id={`pobox-${addressGroupName}-help`}
               className="validation-error p-error block"

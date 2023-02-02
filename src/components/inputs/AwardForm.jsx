@@ -23,7 +23,6 @@ export default function AwardForm({ option, errors }) {
   const renderRadioButtons = (data) => {
     const radioOptions = data.options ? data.options : [];
     const optionName = `awards.${0}.award.award_options.${0}.${data.name}`;
-    console.log(optionName);
     const radioMap = radioOptions.map((option, index) => (
       <div key={index}>
         <li className="award-option-block-radio">
