@@ -14,7 +14,6 @@ export default function getFormErrorMessage(
   index = null,
   optionname = null
 ) {
-
   const helpid = `${name}-help`;
 
   const topLevelError = errors[name];

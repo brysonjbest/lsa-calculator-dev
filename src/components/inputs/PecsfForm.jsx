@@ -17,18 +17,10 @@ import "./PecsfForm.css";
 
 export default function PecsfForm({ errors }) {
   const formName = `awards.0.award.award_options.${0}`;
-  const [regions1, setRegions1] = useState([
-    "Vancouver",
-    "Victoria",
-    "Lower Mainland",
-  ]);
-  const [regions2, setRegions2] = useState([
-    "Prince George",
-    "Tofino",
-    "Cranbrook",
-  ]);
-  const [charity1, setCharity1] = useState(["Helping", "Testing", "charity1"]);
-  const [charity2, setCharity2] = useState(["Charlie", "Bobtail", "charity2"]);
+  const [regions1, setRegions1] = useState([]);
+  const [regions2, setRegions2] = useState([]);
+  const [charity1, setCharity1] = useState([]);
+  const [charity2, setCharity2] = useState([]);
 
   const methods = useFormContext();
   const { control, getValues, register, watch, setFocus } = methods;
@@ -39,6 +31,17 @@ export default function PecsfForm({ errors }) {
 
   //to update regions/charities by api
   useEffect(() => {}, []);
+
+  {
+    /* Added temporarily due to naming/nesting change */
+  }
+  const donationError =
+    errors &&
+    errors["awards"] &&
+    errors["awards"][0] &&
+    errors["awards"][0]["award"] &&
+    errors["awards"][0]["award"]["award_options"] &&
+    errors["awards"][0]["award"]["award_options"][0];
 
   //Reusable drop down form component
   function RenderDropdown({
@@ -77,13 +80,14 @@ export default function PecsfForm({ errors }) {
             />
           )}
         />
-        {getFormErrorMessage(
-          `award_options.${0}.${name}`,
-          errors,
-          "award_options",
-          0,
-          name
-        )}
+        {/* Added temporarily due to naming/nesting change */}
+        {donationError &&
+        errors["awards"][0]["award"]["award_options"][0][name] ? (
+          <small className={`p-error ${name}-help`}>
+            {errors["awards"][0]["award"]["award_options"][0][name].message}
+          </small>
+        ) : null}
+        {/* {getFormErrorMessage(name, errors, "award_options", 0, name)} */}
       </>
     );
   }
@@ -167,11 +171,6 @@ export default function PecsfForm({ errors }) {
                 setSelectedDonation(`${e.target.value}`);
               }}
               value="choosecharity"
-              className={classNames("form-field block", {
-                "p-invalid": errors["award_options"]
-                  ? errors["award_options"][0]["donation-choice"]
-                  : false,
-              })}
             />
             <label
               htmlFor={`${formName}.donation-choice-regionalpool`}
@@ -180,13 +179,26 @@ export default function PecsfForm({ errors }) {
               Donate to a registered charitable organization (maximum of two)
             </label>
           </div>
-          {getFormErrorMessage(
+          {/* Added temporarily due to naming/nesting change */}
+          {donationError &&
+          errors["awards"][0]["award"]["award_options"][0][
+            "donation-choice"
+          ] ? (
+            <small className={`p-error ${name}-help`}>
+              {
+                errors["awards"][0]["award"]["award_options"][0][
+                  "donation-choice"
+                ].message
+              }
+            </small>
+          ) : null}
+          {/* {getFormErrorMessage(
             `${"donation-choice"}`,
             errors,
             "awar_doptions",
             0,
             "donation-choice"
-          )}
+          )} */}
         </li>
       </div>
       <div className="pecsf-charity-selections">
@@ -313,16 +325,29 @@ export default function PecsfForm({ errors }) {
             />
           )}
         />
+        {/* Added temporarily due to naming/nesting change */}
+        {donationError &&
+        errors["awards"][0]["award"]["award_options"][0][
+          "donation-certificate"
+        ] ? (
+          <small className={`p-error ${name}-help`}>
+            {
+              errors["awards"][0]["award"]["award_options"][0][
+                "donation-certificate"
+              ].message
+            }
+          </small>
+        ) : null}
         <small>
           You can make the donation in memory or in honour of someone
         </small>
-        {getFormErrorMessage(
+        {/* {getFormErrorMessage(
           `donation-certificate`,
           errors,
           "award_options",
           0,
           "donation-certificate"
-        )}
+        )} */}
       </div>
     </div>
   );

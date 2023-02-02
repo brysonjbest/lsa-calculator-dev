@@ -40,8 +40,9 @@ export default function AwardSelector({
 
   const renderAwardOptions = (data) => {
     const options = data.options || [];
-    const pecsfOptions = data.name
-      ? data.name.toLowerCase().includes("pecsf")
+    console.log(data, "this is data");
+    const pecsfOptions = data.label
+      ? data.label.toLowerCase().includes("pecsf")
       : false;
     const listOptions = options.map((option, index) => (
       <div key={index}>
@@ -55,6 +56,7 @@ export default function AwardSelector({
             {option.description}
           </label>
           <AwardForm errors={errors} option={option} />
+          {/* Added temporarily due to naming/nesting change */}
           {errors &&
           errors["awards"] &&
           errors["awards"][0] &&
